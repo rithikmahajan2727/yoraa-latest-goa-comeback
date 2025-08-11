@@ -5,43 +5,93 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Image,
   SafeAreaView,
   Alert,
   Switch,
 } from 'react-native';
 import { Colors, FontSizes, FontWeights, Spacing, BorderRadius, Shadows } from '../constants';
 
-// Component definitions moved outside to fix React best practices
-const ProfileHeader = ({ profileData, onEditProfile }) => (
-  <View style={styles.headerContainer}>
-    <View style={styles.profileImageContainer}>
-      {profileData.profileImage ? (
-        <Image source={{ uri: profileData.profileImage }} style={styles.profileImage} />
-      ) : (
-        <View style={styles.profileImagePlaceholder}>
-          <Text style={styles.profileImageText}>
-            {profileData.name.split(' ').map(n => n[0]).join('').toUpperCase()}
-          </Text>
-        </View>
-      )}
-      <TouchableOpacity style={styles.editImageButton}>
-        <Text style={styles.editImageText}>✏️</Text>
-      </TouchableOpacity>
-    </View>
-    
-    <View style={styles.profileInfo}>
-      <Text style={styles.profileName}>{profileData.name}</Text>
-      <Text style={styles.profileEmail}>{profileData.email}</Text>
-      <Text style={styles.profileJoinDate}>{profileData.joinDate}</Text>
-    </View>
-    
-    <TouchableOpacity style={styles.editProfileButton} onPress={onEditProfile}>
-      <Text style={styles.editProfileText}>Edit Profile</Text>
-    </TouchableOpacity>
+// Icon Components
+const UserIcon = () => (
+  <View style={styles.userIconContainer}>
+    <View style={styles.userHead} />
+    <View style={styles.userBody} />
   </View>
 );
 
+const OrderIcon = () => (
+  <View style={styles.orderIconContainer}>
+    <View style={styles.orderBox} />
+    <View style={styles.orderTape} />
+  </View>
+);
+
+const LocationIcon = () => (
+  <View style={styles.locationIconContainer}>
+    <View style={styles.locationPin} />
+    <View style={styles.locationBase} />
+  </View>
+);
+
+const CardIcon = () => (
+  <View style={styles.cardIconContainer}>
+    <View style={styles.cardMain} />
+    <View style={styles.cardStripe} />
+  </View>
+);
+
+const HeartIcon = () => (
+  <View style={styles.heartIconContainer}>
+    <View style={styles.heartLeft} />
+    <View style={styles.heartRight} />
+    <View style={styles.heartBottom} />
+  </View>
+);
+
+const NotificationIcon = () => (
+  <View style={styles.notificationIconContainer}>
+    <View style={styles.bellBody} />
+    <View style={styles.bellTop} />
+    <View style={styles.bellDot} />
+  </View>
+);
+
+const SettingsIcon = () => (
+  <View style={styles.settingsIconContainer}>
+    <View style={styles.gearOuter} />
+    <View style={styles.gearInner} />
+  </View>
+);
+
+const HelpIcon = () => (
+  <View style={styles.helpIconContainer}>
+    <View style={styles.helpCircle} />
+    <View style={styles.helpQuestion} />
+  </View>
+);
+
+const PrivacyIcon = () => (
+  <View style={styles.privacyIconContainer}>
+    <View style={styles.shieldMain} />
+    <View style={styles.shieldCheck} />
+  </View>
+);
+
+const LogoutIcon = () => (
+  <View style={styles.logoutIconContainer}>
+    <View style={styles.logoutArrow} />
+    <View style={styles.logoutDoor} />
+  </View>
+);
+
+const ArrowIcon = () => (
+  <View style={styles.arrowIconContainer}>
+    <View style={styles.arrowLine} />
+    <View style={styles.arrowHead} />
+  </View>
+);
+
+// Menu Components
 const MenuSection = ({ title, children }) => (
   <View style={styles.menuSection}>
     <Text style={styles.sectionTitle}>{title}</Text>
@@ -49,49 +99,52 @@ const MenuSection = ({ title, children }) => (
   </View>
 );
 
-const MenuItem = ({ icon, title, subtitle, onPress, rightComponent }) => (
-  <TouchableOpacity style={styles.menuItem} onPress={onPress}>
+const MenuItem = ({ icon, title, subtitle, onPress, rightComponent, isLast = false }) => (
+  <TouchableOpacity 
+    style={[styles.menuItem, isLast && styles.lastMenuItem]} 
+    onPress={onPress}
+  >
     <View style={styles.menuItemLeft}>
-      <Text style={styles.menuIcon}>{icon}</Text>
-      <View style={styles.menuItemText}>
+      <View style={styles.menuIconContainer}>
+        {icon}
+      </View>
+      <View style={styles.menuItemContent}>
         <Text style={styles.menuItemTitle}>{title}</Text>
         {subtitle && <Text style={styles.menuItemSubtitle}>{subtitle}</Text>}
       </View>
     </View>
-    {rightComponent || (
-      <Text style={styles.menuItemArrow}>›</Text>
-    )}
+    {rightComponent || <ArrowIcon />}
   </TouchableOpacity>
 );
 
 const ProfileScreen = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [emailNotifications, setEmailNotifications] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Profile data (in a real app, this would come from state management or API)
+  // Profile data
   const profileData = {
     name: 'Rithik Mahajan',
     email: 'rithik@yoraa.com',
     phone: '+1 (555) 123-4567',
     joinDate: 'Member since Jan 2024',
-    profileImage: null, // Will use placeholder
+    orderCount: 12,
+    points: 2450,
   };
 
   const handleEditProfile = () => {
-    Alert.alert('Edit Profile', 'This feature will be implemented soon!');
+    Alert.alert('Edit Profile', 'Edit your personal information');
   };
 
   const handleOrderHistory = () => {
-    Alert.alert('Order History', 'Loading your order history...');
+    Alert.alert('Order History', 'View your past orders and track current ones');
   };
 
   const handleAddresses = () => {
-    Alert.alert('Addresses', 'Manage your shipping addresses');
+    Alert.alert('Shipping Addresses', 'Manage your delivery addresses');
   };
 
   const handlePaymentMethods = () => {
-    Alert.alert('Payment Methods', 'Manage your payment methods');
+    Alert.alert('Payment Methods', 'Add or update payment methods');
   };
 
   const handleWishlist = () => {
@@ -99,20 +152,31 @@ const ProfileScreen = () => {
   };
 
   const handleSettings = () => {
-    Alert.alert('Settings', 'App settings');
+    Alert.alert('Settings', 'App settings and preferences');
   };
 
   const handleHelp = () => {
-    Alert.alert('Help & Support', 'Get help with your account');
+    Alert.alert('Help & Support', 'Get help or contact customer support');
+  };
+
+  const handlePrivacy = () => {
+    Alert.alert('Privacy Policy', 'Read our privacy policy');
+  };
+
+  const handleTerms = () => {
+    Alert.alert('Terms of Service', 'View terms and conditions');
   };
 
   const handleLogout = () => {
     Alert.alert(
-      'Logout',
-      'Are you sure you want to logout?',
+      "Logout",
+      "Are you sure you want to logout?",
       [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Logout', style: 'destructive', onPress: () => console.log('Logged out') },
+        { text: "Cancel", style: "cancel" },
+        { text: "Logout", style: "destructive", onPress: () => {
+          // Handle logout logic
+          console.log("User logged out");
+        }}
       ]
     );
   };
@@ -120,108 +184,143 @@ const ProfileScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-        <ProfileHeader profileData={profileData} onEditProfile={handleEditProfile} />
-        
+        {/* Profile Header */}
+        <View style={styles.headerContainer}>
+          <View style={styles.profileImageContainer}>
+            <View style={styles.profileImagePlaceholder}>
+              <UserIcon />
+            </View>
+            <TouchableOpacity style={styles.editImageButton}>
+              <Text style={styles.editImageText}>✏️</Text>
+            </TouchableOpacity>
+          </View>
+          
+          <View style={styles.profileInfo}>
+            <Text style={styles.profileName}>{profileData.name}</Text>
+            <Text style={styles.profileEmail}>{profileData.email}</Text>
+          </View>
+
+          {/* Stats Row */}
+          <View style={styles.statsContainer}>
+            <View style={styles.statItem}>
+              <Text style={styles.statNumber}>{profileData.orderCount}</Text>
+              <Text style={styles.statLabel}>Orders</Text>
+            </View>
+            <View style={styles.statDivider} />
+            <View style={styles.statItem}>
+              <Text style={styles.statNumber}>{profileData.points}</Text>
+              <Text style={styles.statLabel}>Points</Text>
+            </View>
+            <View style={styles.statDivider} />
+            <View style={styles.statItem}>
+              <Text style={styles.statNumber}>Gold</Text>
+              <Text style={styles.statLabel}>Level</Text>
+            </View>
+          </View>
+          
+          <TouchableOpacity style={styles.editProfileButton} onPress={handleEditProfile}>
+            <Text style={styles.editProfileText}>Edit Profile</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Account Section */}
         <MenuSection title="Account">
           <MenuItem
-            icon="📦"
+            icon={<OrderIcon />}
             title="Order History"
-            subtitle="View your past orders"
+            subtitle="Track orders and view history"
             onPress={handleOrderHistory}
           />
           <MenuItem
-            icon="📍"
+            icon={<LocationIcon />}
             title="Shipping Addresses"
-            subtitle="Manage delivery addresses"
+            subtitle="Manage delivery locations"
             onPress={handleAddresses}
           />
           <MenuItem
-            icon="💳"
+            icon={<CardIcon />}
             title="Payment Methods"
-            subtitle="Manage payment options"
+            subtitle="Cards and payment options"
             onPress={handlePaymentMethods}
           />
           <MenuItem
-            icon="❤️"
+            icon={<HeartIcon />}
             title="Wishlist"
             subtitle="Your saved items"
             onPress={handleWishlist}
+            isLast={true}
           />
         </MenuSection>
 
+        {/* Preferences Section */}
         <MenuSection title="Preferences">
           <MenuItem
-            icon="🔔"
+            icon={<NotificationIcon />}
             title="Push Notifications"
-            subtitle="Get notified about updates"
+            subtitle="App notifications"
             rightComponent={
               <Switch
                 value={notificationsEnabled}
                 onValueChange={setNotificationsEnabled}
-                trackColor={{ false: '#E5E5E5', true: '#FF6B6B' }}
-                thumbColor={notificationsEnabled ? '#FFFFFF' : '#FFFFFF'}
+                trackColor={{ false: Colors.switchTrackFalse, true: Colors.switchTrackTrue }}
+                thumbColor={Colors.switchThumb}
               />
             }
           />
           <MenuItem
-            icon="📧"
+            icon={<NotificationIcon />}
             title="Email Notifications"
-            subtitle="Receive emails about orders"
+            subtitle="Marketing and updates"
             rightComponent={
               <Switch
                 value={emailNotifications}
                 onValueChange={setEmailNotifications}
-                trackColor={{ false: '#E5E5E5', true: '#FF6B6B' }}
-                thumbColor={emailNotifications ? '#FFFFFF' : '#FFFFFF'}
+                trackColor={{ false: Colors.switchTrackFalse, true: Colors.switchTrackTrue }}
+                thumbColor={Colors.switchThumb}
               />
             }
           />
           <MenuItem
-            icon="🌙"
-            title="Dark Mode"
-            subtitle="Switch app appearance"
-            rightComponent={
-              <Switch
-                value={isDarkMode}
-                onValueChange={setIsDarkMode}
-                trackColor={{ false: '#E5E5E5', true: '#FF6B6B' }}
-                thumbColor={isDarkMode ? '#FFFFFF' : '#FFFFFF'}
-              />
-            }
+            icon={<SettingsIcon />}
+            title="App Settings"
+            subtitle="Language, region, currency"
+            onPress={handleSettings}
+            isLast={true}
           />
         </MenuSection>
 
-        <MenuSection title="Support">
+        {/* Support Section */}
+        <MenuSection title="Support & Legal">
           <MenuItem
-            icon="⚙️"
-            title="Settings"
-            subtitle="App preferences"
-            onPress={handleSettings}
-          />
-          <MenuItem
-            icon="❓"
+            icon={<HelpIcon />}
             title="Help & Support"
-            subtitle="Get help or contact us"
+            subtitle="FAQs and contact support"
             onPress={handleHelp}
           />
           <MenuItem
-            icon="📋"
+            icon={<PrivacyIcon />}
             title="Privacy Policy"
-            onPress={() => Alert.alert('Privacy Policy', 'View our privacy policy')}
+            subtitle="How we protect your data"
+            onPress={handlePrivacy}
           />
           <MenuItem
-            icon="📄"
+            icon={<PrivacyIcon />}
             title="Terms of Service"
-            onPress={() => Alert.alert('Terms of Service', 'View terms of service')}
+            subtitle="Terms and conditions"
+            onPress={handleTerms}
+            isLast={true}
           />
         </MenuSection>
 
+        {/* Logout Section */}
         <View style={styles.logoutSection}>
           <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <LogoutIcon />
             <Text style={styles.logoutText}>Logout</Text>
           </TouchableOpacity>
         </View>
 
+        {/* App Info */}
         <View style={styles.appInfo}>
           <Text style={styles.appVersion}>YORAA v1.0.0</Text>
           <Text style={styles.appBuild}>Build 123</Text>
@@ -234,7 +333,7 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: Colors.backgroundSecondary,
   },
   scrollContainer: {
     flex: 1,
@@ -242,187 +341,511 @@ const styles = StyleSheet.create({
   
   // Header Styles
   headerContainer: {
-    backgroundColor: '#FFFFFF',
-    paddingTop: 40,
-    paddingBottom: 30,
-    paddingHorizontal: 20,
+    backgroundColor: Colors.background,
+    paddingTop: Spacing.xl,
+    paddingBottom: Spacing.xl,
+    paddingHorizontal: Spacing.xl,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
+    ...Shadows.medium,
   },
   profileImageContainer: {
     position: 'relative',
-    marginBottom: 16,
-  },
-  profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 3,
-    borderColor: '#FF6B6B',
+    marginBottom: Spacing.lg,
   },
   profileImagePlaceholder: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: '#FF6B6B',
+    backgroundColor: Colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 3,
-    borderColor: '#E5E5E5',
-  },
-  profileImageText: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+    borderColor: Colors.background,
+    ...Shadows.small,
   },
   editImageButton: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.background,
     borderRadius: 15,
     width: 30,
     height: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
+    ...Shadows.small,
   },
   editImageText: {
-    fontSize: 14,
+    fontSize: FontSizes.md,
   },
   profileInfo: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: Spacing.lg,
   },
   profileName: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333333',
-    marginBottom: 4,
+    fontSize: FontSizes.xxl,
+    fontWeight: FontWeights.bold,
+    color: Colors.textPrimary,
+    marginBottom: Spacing.xs,
   },
   profileEmail: {
-    fontSize: 16,
-    color: '#666666',
-    marginBottom: 4,
+    fontSize: FontSizes.md,
+    color: Colors.textSecondary,
   },
-  profileJoinDate: {
-    fontSize: 14,
-    color: '#999999',
+  statsContainer: {
+    flexDirection: 'row',
+    backgroundColor: Colors.backgroundSecondary,
+    borderRadius: BorderRadius.lg,
+    paddingVertical: Spacing.lg,
+    paddingHorizontal: Spacing.xl,
+    marginBottom: Spacing.lg,
+    alignItems: 'center',
+  },
+  statItem: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  statNumber: {
+    fontSize: FontSizes.xl,
+    fontWeight: FontWeights.bold,
+    color: Colors.primary,
+    marginBottom: Spacing.xs,
+  },
+  statLabel: {
+    fontSize: FontSizes.sm,
+    color: Colors.textSecondary,
+    textAlign: 'center',
+  },
+  statDivider: {
+    width: 1,
+    height: 30,
+    backgroundColor: Colors.border,
+    marginHorizontal: Spacing.lg,
   },
   editProfileButton: {
-    backgroundColor: '#FF6B6B',
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 25,
+    backgroundColor: Colors.primary,
+    paddingHorizontal: Spacing.xl,
+    paddingVertical: Spacing.md,
+    borderRadius: BorderRadius.xl,
   },
   editProfileText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
+    color: Colors.background,
+    fontSize: FontSizes.md,
+    fontWeight: FontWeights.semiBold,
   },
 
   // Menu Styles
   menuSection: {
-    backgroundColor: '#FFFFFF',
-    marginTop: 16,
-    marginHorizontal: 16,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+    backgroundColor: Colors.background,
+    marginTop: Spacing.lg,
+    marginHorizontal: Spacing.lg,
+    borderRadius: BorderRadius.lg,
+    ...Shadows.small,
+    overflow: 'hidden',
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333333',
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 12,
+    fontSize: FontSizes.lg,
+    fontWeight: FontWeights.bold,
+    color: Colors.textPrimary,
+    paddingHorizontal: Spacing.xl,
+    paddingTop: Spacing.xl,
+    paddingBottom: Spacing.md,
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingHorizontal: Spacing.xl,
+    paddingVertical: Spacing.lg,
     borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
+    borderBottomColor: Colors.borderLight,
+  },
+  lastMenuItem: {
+    borderBottomWidth: 0,
   },
   menuItemLeft: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
   },
-  menuIcon: {
-    fontSize: 20,
-    marginRight: 16,
-    width: 24,
-    textAlign: 'center',
+  menuIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: BorderRadius.xl,
+    backgroundColor: Colors.primaryLight,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: Spacing.lg,
   },
-  menuItemText: {
+  menuItemContent: {
     flex: 1,
   },
   menuItemTitle: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#333333',
+    fontSize: FontSizes.md,
+    fontWeight: FontWeights.medium,
+    color: Colors.textPrimary,
+    marginBottom: Spacing.xs,
   },
   menuItemSubtitle: {
-    fontSize: 14,
-    color: '#666666',
-    marginTop: 2,
-  },
-  menuItemArrow: {
-    fontSize: 20,
-    color: '#CCCCCC',
-    fontWeight: 'bold',
+    fontSize: FontSizes.sm,
+    color: Colors.textSecondary,
   },
 
   // Logout Styles
   logoutSection: {
-    margin: 16,
+    margin: Spacing.lg,
   },
   logoutButton: {
-    backgroundColor: '#FF4444',
-    paddingVertical: 16,
-    borderRadius: 12,
+    backgroundColor: Colors.error,
+    paddingVertical: Spacing.lg,
+    borderRadius: BorderRadius.lg,
     alignItems: 'center',
-    shadowColor: '#FF4444',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: Spacing.md,
+    ...Shadows.small,
   },
   logoutText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
+    color: Colors.background,
+    fontSize: FontSizes.md,
+    fontWeight: FontWeights.semiBold,
   },
 
   // App Info Styles
   appInfo: {
     alignItems: 'center',
-    paddingVertical: 20,
-    paddingHorizontal: 16,
+    paddingVertical: Spacing.xl,
+    paddingHorizontal: Spacing.lg,
   },
   appVersion: {
-    fontSize: 14,
-    color: '#999999',
-    marginBottom: 4,
+    fontSize: FontSizes.sm,
+    color: Colors.textTertiary,
+    marginBottom: Spacing.xs,
   },
   appBuild: {
-    fontSize: 12,
-    color: '#CCCCCC',
+    fontSize: FontSizes.xs,
+    color: Colors.textTertiary,
+  },
+
+  // Icon Styles
+  userIconContainer: {
+    width: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  userHead: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: Colors.background,
+    position: 'absolute',
+    top: 2,
+  },
+  userBody: {
+    width: 16,
+    height: 10,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: Colors.background,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    borderBottomWidth: 0,
+    position: 'absolute',
+    bottom: 2,
+  },
+  orderIconContainer: {
+    width: 20,
+    height: 20,
+    position: 'relative',
+  },
+  orderBox: {
+    width: 16,
+    height: 12,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: Colors.primary,
+    borderRadius: 2,
+    position: 'absolute',
+    bottom: 2,
+  },
+  orderTape: {
+    width: 10,
+    height: 2,
+    backgroundColor: Colors.primary,
+    position: 'absolute',
+    top: 0,
+    left: 3,
+  },
+  locationIconContainer: {
+    width: 20,
+    height: 20,
+    position: 'relative',
+  },
+  locationPin: {
+    width: 12,
+    height: 16,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: Colors.primary,
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 6,
+    borderBottomLeftRadius: 6,
+    borderBottomRightRadius: 0,
+    position: 'absolute',
+    top: 0,
+    left: 4,
+    transform: [{ rotate: '-45deg' }],
+  },
+  locationBase: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: Colors.primary,
+    position: 'absolute',
+    top: 3,
+    left: 8,
+  },
+  cardIconContainer: {
+    width: 20,
+    height: 20,
+    position: 'relative',
+  },
+  cardMain: {
+    width: 18,
+    height: 12,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: Colors.primary,
+    borderRadius: 2,
+    position: 'absolute',
+    top: 4,
+    left: 1,
+  },
+  cardStripe: {
+    width: 18,
+    height: 2,
+    backgroundColor: Colors.primary,
+    position: 'absolute',
+    top: 7,
+    left: 1,
+  },
+  heartIconContainer: {
+    width: 20,
+    height: 20,
+    position: 'relative',
+  },
+  heartLeft: {
+    width: 6,
+    height: 10,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: Colors.primary,
+    borderTopLeftRadius: 6,
+    borderBottomLeftRadius: 6,
+    borderRightWidth: 0,
+    position: 'absolute',
+    left: 3,
+    top: 3,
+    transform: [{ rotate: '-45deg' }],
+  },
+  heartRight: {
+    width: 6,
+    height: 10,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: Colors.primary,
+    borderTopRightRadius: 6,
+    borderBottomRightRadius: 6,
+    borderLeftWidth: 0,
+    position: 'absolute',
+    right: 3,
+    top: 3,
+    transform: [{ rotate: '45deg' }],
+  },
+  heartBottom: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 6,
+    borderRightWidth: 6,
+    borderTopWidth: 8,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopColor: Colors.primary,
+    position: 'absolute',
+    bottom: 3,
+    left: 4,
+  },
+  notificationIconContainer: {
+    width: 20,
+    height: 20,
+    position: 'relative',
+  },
+  bellBody: {
+    width: 12,
+    height: 12,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: Colors.primary,
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 6,
+    position: 'absolute',
+    bottom: 4,
+    left: 4,
+  },
+  bellTop: {
+    width: 4,
+    height: 2,
+    backgroundColor: Colors.primary,
+    borderRadius: 1,
+    position: 'absolute',
+    top: 2,
+    left: 8,
+  },
+  bellDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: Colors.error,
+    position: 'absolute',
+    top: 0,
+    right: 2,
+  },
+  settingsIconContainer: {
+    width: 20,
+    height: 20,
+    position: 'relative',
+  },
+  gearOuter: {
+    width: 16,
+    height: 16,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: Colors.primary,
+    borderRadius: 8,
+    position: 'absolute',
+    top: 2,
+    left: 2,
+  },
+  gearInner: {
+    width: 8,
+    height: 8,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: Colors.primary,
+    borderRadius: 4,
+    position: 'absolute',
+    top: 6,
+    left: 6,
+  },
+  helpIconContainer: {
+    width: 20,
+    height: 20,
+    position: 'relative',
+  },
+  helpCircle: {
+    width: 16,
+    height: 16,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: Colors.primary,
+    borderRadius: 8,
+    position: 'absolute',
+    top: 2,
+    left: 2,
+  },
+  helpQuestion: {
+    width: 2,
+    height: 6,
+    backgroundColor: Colors.primary,
+    borderRadius: 1,
+    position: 'absolute',
+    top: 5,
+    left: 9,
+  },
+  privacyIconContainer: {
+    width: 20,
+    height: 20,
+    position: 'relative',
+  },
+  shieldMain: {
+    width: 12,
+    height: 16,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: Colors.primary,
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 6,
+    borderBottomLeftRadius: 6,
+    borderBottomRightRadius: 6,
+    position: 'absolute',
+    top: 2,
+    left: 4,
+  },
+  shieldCheck: {
+    width: 6,
+    height: 3,
+    backgroundColor: 'transparent',
+    borderBottomWidth: 2,
+    borderRightWidth: 2,
+    borderColor: Colors.primary,
+    position: 'absolute',
+    top: 8,
+    left: 7,
+    transform: [{ rotate: '45deg' }],
+  },
+  logoutIconContainer: {
+    width: 20,
+    height: 20,
+    position: 'relative',
+  },
+  logoutArrow: {
+    width: 8,
+    height: 2,
+    backgroundColor: Colors.background,
+    position: 'absolute',
+    top: 9,
+    left: 2,
+  },
+  logoutDoor: {
+    width: 10,
+    height: 14,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: Colors.background,
+    borderLeftWidth: 0,
+    borderRadius: 2,
+    position: 'absolute',
+    top: 3,
+    right: 2,
+  },
+  arrowIconContainer: {
+    width: 20,
+    height: 20,
+    position: 'relative',
+  },
+  arrowLine: {
+    width: 8,
+    height: 2,
+    backgroundColor: Colors.textTertiary,
+    position: 'absolute',
+    top: 9,
+    left: 6,
+  },
+  arrowHead: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 4,
+    borderRightWidth: 0,
+    borderTopWidth: 3,
+    borderBottomWidth: 3,
+    borderLeftColor: Colors.textTertiary,
+    borderTopColor: 'transparent',
+    borderBottomColor: 'transparent',
+    position: 'absolute',
+    top: 7,
+    right: 2,
   },
 });
 
