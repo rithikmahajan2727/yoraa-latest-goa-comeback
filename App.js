@@ -14,7 +14,7 @@ import {
   Text,
   SafeAreaView,
 } from 'react-native';
-import Layout, { EnhancedLayout } from './ios/YoraaApp.xcodeproj/src/layout';
+import Layout, { EnhancedLayout } from './src/components/layout';
 
 // Main App Component with Routing
 function App() {
