@@ -117,7 +117,7 @@ const MenuItem = ({ icon, title, subtitle, onPress, rightComponent, isLast = fal
   </TouchableOpacity>
 );
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }) => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [emailNotifications, setEmailNotifications] = useState(false);
 
@@ -136,7 +136,11 @@ const ProfileScreen = () => {
   };
 
   const handleOrderHistory = () => {
-    Alert.alert('Order History', 'View your past orders and track current ones');
+    if (navigation) {
+      navigation.navigate('Orders');
+    } else {
+      Alert.alert('Order History', 'View your past orders and track current ones');
+    }
   };
 
   const handleAddresses = () => {

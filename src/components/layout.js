@@ -8,73 +8,47 @@ import {
 } from 'react-native';
 import BottomNavigationBar from './bottomnavigationbar';
 import { Colors, FontSizes, FontWeights, Spacing } from '../constants';
-import { HomeScreen, ShopScreen, CollectionScreen, RewardsScreen, ProfileScreen } from '../screens';
+import { HomeScreen, ShopScreen, CollectionScreen, RewardsScreen, ProfileScreen, OrdersScreen } from '../screens';
+
+// Navigation context for handling screen navigation
+const createNavigation = (setCurrentScreen, setActiveTab) => ({
+  navigate: (screenName, params) => {
+    if (['Home', 'Shop', 'Collection', 'Rewards', 'Profile'].includes(screenName)) {
+      setActiveTab(screenName);
+      setCurrentScreen(screenName);
+    } else {
+      setCurrentScreen(screenName);
+    }
+  },
+  goBack: () => {
+    setCurrentScreen('Profile');
+    setActiveTab('Profile');
+  },
+});
 
 // Placeholder content components for each tab
 const HomeContent = () => <HomeScreen />;
 const ShopContent = () => <ShopScreen />;
 const CollectionContent = () => <CollectionScreen />;
 const RewardsContent = () => <RewardsScreen />;
-const ProfileContent = () => <ProfileScreen />;
-
-// Main Layout Component
-const Layout = () => {
-  const [activeTab, setActiveTab] = useState('Home');
-
-  // Function to render content based on active tab
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'Home':
-        return <HomeContent />;
-      case 'Shop':
-        return <ShopContent />;
-      case 'Collection':
-        return <CollectionContent />;
-      case 'Rewards':
-        return <RewardsContent />;
-      case 'Profile':
-        return <ProfileContent />;
-      default:
-        return <HomeContent />;
-    }
-  };
-
-  return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-      
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>YORAA</Text>
-        <Text style={styles.headerSubtitle}>Fashion Forward</Text>
-      </View>
-
-      {/* Main Content Area */}
-      <View style={styles.mainContent}>
-        {renderContent()}
-      </View>
-
-      {/* Bottom Navigation */}
-      <BottomNavigationBar 
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-      />
-    </SafeAreaView>
-  );
-};
+const ProfileContent = ({ navigation }) => <ProfileScreen navigation={navigation} />;
 
 // Enhanced Layout with improved navigation handling
 const EnhancedLayout = () => {
   const [activeTab, setActiveTab] = useState('Home');
+  const [currentScreen, setCurrentScreen] = useState('Home');
   const [headerTitle, setHeaderTitle] = useState('YORAA');
+
+  const navigation = createNavigation(setCurrentScreen, setActiveTab);
 
   const handleTabChange = (tabName) => {
     setActiveTab(tabName);
+    setCurrentScreen(tabName);
     setHeaderTitle(tabName === 'Home' ? 'YORAA' : tabName);
   };
 
   const renderContent = () => {
-    switch (activeTab) {
+    switch (currentScreen) {
       case 'Home':
         return <HomeContent />;
       case 'Shop':
@@ -84,24 +58,30 @@ const EnhancedLayout = () => {
       case 'Rewards':
         return <RewardsContent />;
       case 'Profile':
-        return <ProfileContent />;
+        return <ProfileContent navigation={navigation} />;
+      case 'Orders':
+        return <OrdersScreen navigation={navigation} />;
       default:
         return <HomeContent />;
     }
   };
+
+  const shouldShowBottomNav = ['Home', 'Shop', 'Collection', 'Rewards', 'Profile'].includes(currentScreen);
 
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeContainer}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
         
-        {/* Dynamic Header */}
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>{headerTitle}</Text>
-          {activeTab === 'Home' && (
-            <Text style={styles.headerSubtitle}>Fashion Forward</Text>
-          )}
-        </View>
+        {/* Dynamic Header - Only show for main tabs */}
+        {shouldShowBottomNav && (
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>{headerTitle}</Text>
+            {activeTab === 'Home' && (
+              <Text style={styles.headerSubtitle}>Fashion Forward</Text>
+            )}
+          </View>
+        )}
 
         {/* Main Content Area */}
         <View style={styles.mainContent}>
@@ -109,11 +89,13 @@ const EnhancedLayout = () => {
         </View>
       </SafeAreaView>
 
-      {/* Bottom Navigation - Outside SafeAreaView for full-width */}
-      <BottomNavigationBar 
-        activeTab={activeTab}
-        onTabChange={handleTabChange}
-      />
+      {/* Bottom Navigation - Only show for main tabs */}
+      {shouldShowBottomNav && (
+        <BottomNavigationBar 
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
+        />
+      )}
     </View>
   );
 };
@@ -153,5 +135,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Layout;
 export { EnhancedLayout };
+export default EnhancedLayout;
