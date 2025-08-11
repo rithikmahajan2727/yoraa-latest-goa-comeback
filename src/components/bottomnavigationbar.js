@@ -6,7 +6,7 @@ import {
   StyleSheet,
   SafeAreaView,
 } from 'react-native';
-import { Colors, FontSizes, FontWeights, Spacing, Shadows } from '../constants';
+import { Colors, FontSizes, FontWeights, FontFamilies, Spacing, Shadows } from '../constants';
 
 // Custom Icons using SVG-like components (since we don't have vector icons installed)
 const HomeIcon = ({ active }) => (
@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
   tabLabel: {
     fontSize: FontSizes.xs,
     fontWeight: FontWeights.medium,
+    fontFamily: FontFamilies.medium,
     color: Colors.textTertiary,
     marginTop: Spacing.xs,
     textAlign: 'center',
@@ -149,6 +150,7 @@ const styles = StyleSheet.create({
   activeTabLabel: {
     color: Colors.primary,
     fontWeight: FontWeights.semiBold,
+    fontFamily: FontFamilies.semiBold,
   },
   activeIndicator: {
     position: 'absolute',

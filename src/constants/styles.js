@@ -28,6 +28,13 @@ export const FontWeights = {
   bold: 'bold',
 };
 
+export const FontFamilies = {
+  regular: 'Montserrat-Regular',
+  medium: 'Montserrat-Medium',
+  semiBold: 'Montserrat-SemiBold',
+  bold: 'Montserrat-Bold',
+};
+
 export const BorderRadius = {
   sm: 4,
   md: 8,
@@ -80,6 +87,7 @@ export default {
   Spacing,
   FontSizes,
   FontWeights,
+  FontFamilies,
   BorderRadius,
   Shadows,
   Layout,
