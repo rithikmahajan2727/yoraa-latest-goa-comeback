@@ -10,6 +10,7 @@ import {
   Alert,
   Switch,
 } from 'react-native';
+import { Colors, FontSizes, FontWeights, Spacing, BorderRadius, Shadows } from '../constants';
 
 // Component definitions moved outside to fix React best practices
 const ProfileHeader = ({ profileData, onEditProfile }) => (

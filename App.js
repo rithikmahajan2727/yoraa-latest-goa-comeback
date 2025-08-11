@@ -14,24 +14,21 @@ import {
   Text,
   SafeAreaView,
 } from 'react-native';
-import Layout, { EnhancedLayout } from './src/components/layout';
+import { EnhancedLayout } from './src/components/layout';
+import { Colors } from './src/constants';
 
 // Main App Component with Routing
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
-  const useEnhancedLayout = true; // Set to false to use standard layout
-
-  // Choose between standard and enhanced layout
-  const LayoutComponent = useEnhancedLayout ? EnhancedLayout : Layout;
 
   return (
     <View style={styles.container}>
       <StatusBar 
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor="#FFFFFF"
+        backgroundColor={Colors.background}
         translucent={false}
       />
-      <LayoutComponent />
+      <EnhancedLayout />
     </View>
   );
 }
@@ -124,33 +121,7 @@ const AppWithRouter = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.background,
   },
-  appHeader: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
-    alignItems: 'center',
-  },
-  appTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#1A1A1A',
-  },
-  appSubtitle: {
-    fontSize: 14,
-    color: '#666666',
-    marginTop: 4,
-  },
-  currentRoute: {
-    fontSize: 12,
-    color: '#FF6B6B',
-    marginTop: 8,
-    fontWeight: '500',
-  },
-});
-
-export default App;
+});export default App;
 export { AppWithManualRouting, AppWithRouter, Router };

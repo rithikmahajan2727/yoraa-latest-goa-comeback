@@ -6,6 +6,7 @@ import {
   StyleSheet,
   SafeAreaView,
 } from 'react-native';
+import { Colors, FontSizes, FontWeights, Spacing, Shadows } from '../constants';
 
 // Custom Icons using SVG-like components (since we don't have vector icons installed)
 const HomeIcon = ({ active }) => (
@@ -119,49 +120,42 @@ const BottomNavigationBar = ({ activeTab = 'Home', onTabChange }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 10,
+    backgroundColor: Colors.background,
+    ...Shadows.medium,
   },
   navigationBar: {
     flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
-    paddingTop: 12,
-    paddingBottom: 8,
-    paddingHorizontal: 16,
+    backgroundColor: Colors.background,
+    paddingTop: Spacing.md,
+    paddingBottom: Spacing.sm,
+    paddingHorizontal: Spacing.lg,
     borderTopWidth: 1,
-    borderTopColor: '#F0F0F0',
+    borderTopColor: Colors.borderLight,
   },
   tabButton: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 8,
+    paddingVertical: Spacing.sm,
     position: 'relative',
   },
   tabLabel: {
-    fontSize: 11,
-    fontWeight: '500',
-    color: '#999999',
-    marginTop: 4,
+    fontSize: FontSizes.xs,
+    fontWeight: FontWeights.medium,
+    color: Colors.textTertiary,
+    marginTop: Spacing.xs,
     textAlign: 'center',
   },
   activeTabLabel: {
-    color: '#FF6B6B',
-    fontWeight: '600',
+    color: Colors.primary,
+    fontWeight: FontWeights.semiBold,
   },
   activeIndicator: {
     position: 'absolute',
     top: -2,
     width: 24,
     height: 3,
-    backgroundColor: '#FF6B6B',
+    backgroundColor: Colors.primary,
     borderRadius: 2,
   },
   iconContainer: {
@@ -342,145 +336,9 @@ const styles = StyleSheet.create({
   
   // Active Icon Styles
   activeIcon: {
-    borderColor: '#FF6B6B',
+    borderColor: Colors.primary,
     backgroundColor: 'transparent',
   },
 });
 
-// Enhanced Bottom Navigation with better styling and animations
-const EnhancedBottomNavigationBar = ({ activeTab = 'Home', onTabChange }) => {
-  const [internalActiveTab, setInternalActiveTab] = useState('Home');
-  
-  // Use external activeTab if provided, otherwise use internal state
-  const currentActiveTab = activeTab || internalActiveTab;
-
-  const tabs = [
-    {
-      name: 'Home',
-      label: 'Home',
-      icon: HomeIcon,
-    },
-    {
-      name: 'Shop',
-      label: 'Shop',
-      icon: ShopIcon,
-    },
-    {
-      name: 'Collection',
-      label: 'Collection',
-      icon: CollectionIcon,
-    },
-    {
-      name: 'Rewards',
-      label: 'Rewards',
-      icon: RewardsIcon,
-    },
-    {
-      name: 'Profile',
-      label: 'Profile',
-      icon: ProfileIcon,
-    },
-  ];
-
-  const handleTabPress = (tabName) => {
-    // Update internal state if no external handler provided
-    if (!onTabChange) {
-      setInternalActiveTab(tabName);
-    } else {
-      // Use external handler
-      onTabChange(tabName);
-    }
-    // Add haptic feedback for iOS
-    // Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    console.log(`Tab selected: ${tabName} - staying on the same page`);
-  };
-
-  return (
-    <View style={enhancedStyles.container}>
-      <View style={enhancedStyles.navigationBar}>
-        {tabs.map((tab) => {
-          const isActive = currentActiveTab === tab.name;
-          const IconComponent = tab.icon;
-          
-          return (
-            <TouchableOpacity
-              key={tab.name}
-              style={[enhancedStyles.tabButton, isActive && enhancedStyles.activeTabButton]}
-              onPress={() => handleTabPress(tab.name)}
-              activeOpacity={0.6}
-            >
-              <View style={[enhancedStyles.iconWrapper, isActive && enhancedStyles.activeIconWrapper]}>
-                <IconComponent active={isActive} />
-              </View>
-              <Text style={[enhancedStyles.tabLabel, isActive && enhancedStyles.activeTabLabel]}>
-                {tab.label}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-    </View>
-  );
-};
-
-const enhancedStyles = StyleSheet.create({
-  container: {
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#000000',
-    shadowOffset: {
-      width: 0,
-      height: -4,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    elevation: 15,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-  },
-  navigationBar: {
-    flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
-    paddingTop: 16,
-    paddingBottom: 12,
-    paddingHorizontal: 20,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    borderTopWidth: 1,
-    borderTopColor: '#F5F5F5',
-  },
-  tabButton: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 8,
-    borderRadius: 12,
-    marginHorizontal: 2,
-  },
-  activeTabButton: {
-    backgroundColor: '#FFF5F5',
-  },
-  iconWrapper: {
-    width: 28,
-    height: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 14,
-  },
-  activeIconWrapper: {
-    backgroundColor: '#FFE5E5',
-  },
-  tabLabel: {
-    fontSize: 10,
-    fontWeight: '500',
-    color: '#8E8E93',
-    marginTop: 6,
-    textAlign: 'center',
-  },
-  activeTabLabel: {
-    color: '#FF6B6B',
-    fontWeight: '600',
-  },
-});
-
 export default BottomNavigationBar;
-export { EnhancedBottomNavigationBar };
