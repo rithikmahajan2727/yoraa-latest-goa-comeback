@@ -1,28 +1,156 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
+ * YORAA Fashion App
+ * React Native App with Bottom Navigation
  *
  * @format
  */
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+import React, { useState } from 'react';
+import {
+  StatusBar,
+  StyleSheet,
+  useColorScheme,
+  View,
+  Text,
+  SafeAreaView,
+} from 'react-native';
+import Layout, { EnhancedLayout } from './ios/YoraaApp.xcodeproj/src/layout';
 
+// Main App Component with Routing
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
+  const useEnhancedLayout = true; // Set to false to use standard layout
+
+  // Choose between standard and enhanced layout
+  const LayoutComponent = useEnhancedLayout ? EnhancedLayout : Layout;
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <NewAppScreen templateFileName="App.js" />
+      <StatusBar 
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        backgroundColor="#FFFFFF"
+        translucent={false}
+      />
+      <LayoutComponent />
     </View>
   );
 }
 
+// Alternative App Component with Manual Routing (if you prefer more control)
+const AppWithManualRouting = () => {
+  const isDarkMode = useColorScheme() === 'dark';
+  const [currentRoute, setCurrentRoute] = useState('Home');
+
+  const handleRouteChange = (route) => {
+    setCurrentRoute(route);
+    console.log(`Navigated to: ${route}`);
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar 
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        backgroundColor="#FFFFFF"
+      />
+      
+      {/* App Header */}
+      <View style={styles.appHeader}>
+        <Text style={styles.appTitle}>YORAA</Text>
+        <Text style={styles.appSubtitle}>Fashion Forward</Text>
+        <Text style={styles.currentRoute}>Current: {currentRoute}</Text>
+      </View>
+
+      {/* Main Layout with Routing */}
+      <EnhancedLayout 
+        initialRoute={currentRoute}
+        onRouteChange={handleRouteChange}
+      />
+    </SafeAreaView>
+  );
+};
+
+// Router Component for managing navigation state
+const Router = ({ children, initialRoute = 'Home' }) => {
+  const [currentRoute, setCurrentRoute] = useState(initialRoute);
+  const [routeHistory, setRouteHistory] = useState([initialRoute]);
+
+  const navigateTo = (route) => {
+    if (route !== currentRoute) {
+      setCurrentRoute(route);
+      setRouteHistory(prev => [...prev, route]);
+      console.log(`Routing: ${currentRoute} → ${route}`);
+    }
+  };
+
+  const goBack = () => {
+    if (routeHistory.length > 1) {
+      const newHistory = routeHistory.slice(0, -1);
+      const previousRoute = newHistory[newHistory.length - 1];
+      setRouteHistory(newHistory);
+      setCurrentRoute(previousRoute);
+      console.log(`Going back to: ${previousRoute}`);
+    }
+  };
+
+  const routerProps = {
+    currentRoute,
+    navigateTo,
+    goBack,
+    routeHistory,
+    canGoBack: routeHistory.length > 1,
+  };
+
+  return React.cloneElement(children, routerProps);
+};
+
+// Enhanced App with Router
+const AppWithRouter = () => {
+  const isDarkMode = useColorScheme() === 'dark';
+
+  return (
+    <View style={styles.container}>
+      <StatusBar 
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        backgroundColor="#FFFFFF"
+      />
+      
+      <Router initialRoute="Home">
+        <EnhancedLayout />
+      </Router>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  appHeader: {
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+    alignItems: 'center',
+  },
+  appTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#1A1A1A',
+  },
+  appSubtitle: {
+    fontSize: 14,
+    color: '#666666',
+    marginTop: 4,
+  },
+  currentRoute: {
+    fontSize: 12,
+    color: '#FF6B6B',
+    marginTop: 8,
+    fontWeight: '500',
   },
 });
 
 export default App;
+export { AppWithManualRouting, AppWithRouter, Router };
