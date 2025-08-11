@@ -8,27 +8,49 @@ import {
   ScrollView,
 } from 'react-native';
 import BottomNavigationBar from './bottomnavigationbar';
+import TopNavigationBar from './topnavigationbar';
+import ProfileScreen from '../profile';
 
 // Placeholder content components for each tab
-const HomeContent = () => (
-  <ScrollView style={styles.contentContainer}>
-    <View style={styles.pageContent}>
-      <Text style={styles.pageTitle}>Home</Text>
-      <Text style={styles.pageDescription}>Welcome to YORAA</Text>
-      <View style={styles.contentCard}>
-        <Text style={styles.cardTitle}>Featured Items</Text>
-        <Text style={styles.cardText}>Discover the latest fashion trends</Text>
+const HomeContent = ({ onSearchPress, onNotificationPress, onProfilePress }) => (
+  <View style={styles.homeContainer}>
+    <TopNavigationBar
+      title="YORAA"
+      showBackButton={false}
+      showSearchIcon={true}
+      showNotificationIcon={true}
+      showProfileIcon={true}
+      onSearchPress={onSearchPress}
+      onNotificationPress={onNotificationPress}
+      onProfilePress={onProfilePress}
+    />
+    <ScrollView style={styles.contentContainer}>
+      <View style={styles.pageContent}>
+        <Text style={styles.welcomeText}>Welcome to YORAA</Text>
+        <Text style={styles.pageDescription}>Discover the latest fashion trends</Text>
+        
+        <View style={styles.contentCard}>
+          <Text style={styles.cardTitle}>Featured Items</Text>
+          <Text style={styles.cardText}>Discover the latest fashion trends curated just for you</Text>
+        </View>
+        
+        <View style={styles.contentCard}>
+          <Text style={styles.cardTitle}>New Arrivals</Text>
+          <Text style={styles.cardText}>Fresh styles just dropped - be the first to shop them</Text>
+        </View>
+        
+        <View style={styles.contentCard}>
+          <Text style={styles.cardTitle}>Trending Now</Text>
+          <Text style={styles.cardText}>What's popular this season among fashion enthusiasts</Text>
+        </View>
+        
+        <View style={styles.contentCard}>
+          <Text style={styles.cardTitle}>Your Style Profile</Text>
+          <Text style={styles.cardText}>Personalized recommendations based on your preferences</Text>
+        </View>
       </View>
-      <View style={styles.contentCard}>
-        <Text style={styles.cardTitle}>New Arrivals</Text>
-        <Text style={styles.cardText}>Fresh styles just for you</Text>
-      </View>
-      <View style={styles.contentCard}>
-        <Text style={styles.cardTitle}>Trending Now</Text>
-        <Text style={styles.cardText}>What's popular this season</Text>
-      </View>
-    </View>
-  </ScrollView>
+    </ScrollView>
+  </View>
 );
 
 const SearchContent = () => (
@@ -81,27 +103,6 @@ const CartContent = () => (
   </ScrollView>
 );
 
-const ProfileContent = () => (
-  <ScrollView style={styles.contentContainer}>
-    <View style={styles.pageContent}>
-      <Text style={styles.pageTitle}>Profile</Text>
-      <Text style={styles.pageDescription}>Your account</Text>
-      <View style={styles.contentCard}>
-        <Text style={styles.cardTitle}>Account Settings</Text>
-        <Text style={styles.cardText}>Manage your profile information</Text>
-      </View>
-      <View style={styles.contentCard}>
-        <Text style={styles.cardTitle}>Order History</Text>
-        <Text style={styles.cardText}>View your past orders</Text>
-      </View>
-      <View style={styles.contentCard}>
-        <Text style={styles.cardTitle}>Preferences</Text>
-        <Text style={styles.cardText}>Customize your experience</Text>
-      </View>
-    </View>
-  </ScrollView>
-);
-
 // Main Layout Component
 const Layout = () => {
   const [activeTab, setActiveTab] = useState('Home');
@@ -118,7 +119,7 @@ const Layout = () => {
       case 'Cart':
         return <CartContent />;
       case 'Profile':
-        return <ProfileContent />;
+        return <ProfileScreen />;
       default:
         return <HomeContent />;
     }
@@ -158,10 +159,34 @@ const EnhancedLayout = () => {
     setHeaderTitle(tabName === 'Home' ? 'YORAA' : tabName);
   };
 
+  // Handle top navigation actions
+  const handleSearchPress = () => {
+    console.log('Search pressed');
+    setActiveTab('Search');
+    setHeaderTitle('Search');
+  };
+
+  const handleNotificationPress = () => {
+    console.log('Notifications pressed');
+    // You can add notification logic here
+  };
+
+  const handleProfilePress = () => {
+    console.log('Profile pressed');
+    setActiveTab('Profile');
+    setHeaderTitle('Profile');
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case 'Home':
-        return <HomeContent />;
+        return (
+          <HomeContent 
+            onSearchPress={handleSearchPress}
+            onNotificationPress={handleNotificationPress}
+            onProfilePress={handleProfilePress}
+          />
+        );
       case 'Search':
         return <SearchContent />;
       case 'Favorites':
@@ -169,9 +194,15 @@ const EnhancedLayout = () => {
       case 'Cart':
         return <CartContent />;
       case 'Profile':
-        return <ProfileContent />;
+        return <ProfileScreen />;
       default:
-        return <HomeContent />;
+        return (
+          <HomeContent 
+            onSearchPress={handleSearchPress}
+            onNotificationPress={handleNotificationPress}
+            onProfilePress={handleProfilePress}
+          />
+        );
     }
   };
 
@@ -180,13 +211,12 @@ const EnhancedLayout = () => {
       <SafeAreaView style={styles.safeContainer}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
         
-        {/* Dynamic Header */}
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>{headerTitle}</Text>
-          {activeTab === 'Home' && (
-            <Text style={styles.headerSubtitle}>Fashion Forward</Text>
-          )}
-        </View>
+        {/* Dynamic Header - Only show for non-Home tabs */}
+        {activeTab !== 'Home' && (
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>{headerTitle}</Text>
+          </View>
+        )}
 
         {/* Main Content Area */}
         <View style={styles.mainContent}>
@@ -209,6 +239,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   safeContainer: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  homeContainer: {
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
@@ -248,15 +282,23 @@ const styles = StyleSheet.create({
     color: '#1A1A1A',
     marginBottom: 8,
   },
+  welcomeText: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: '#1A1A1A',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
   pageDescription: {
     fontSize: 16,
     color: '#666666',
     marginBottom: 24,
+    textAlign: 'center',
   },
   contentCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
-    padding: 16,
+    padding: 20,
     marginBottom: 16,
     shadowColor: '#000',
     shadowOffset: {
@@ -266,6 +308,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+    borderLeftWidth: 4,
+    borderLeftColor: '#FF6B6B',
   },
   cardTitle: {
     fontSize: 18,
