@@ -8,7 +8,7 @@ import {
   TextInput,
   FlatList,
 } from 'react-native';
-import { Colors, FontSizes, FontWeights, Spacing, BorderRadius, Shadows } from '../constants';
+import { FontSizes, FontWeights, Spacing, BorderRadius, Shadows } from '../constants';
 
 // Icon Components
 const SearchIcon = () => (
@@ -185,7 +185,7 @@ const CollectionScreen = () => {
           <TextInput
             style={styles.searchInput}
             placeholder="Search collections & items..."
-            placeholderTextColor={Colors.textTertiary}
+            placeholderTextColor="#999999"
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
@@ -267,7 +267,7 @@ const CollectionScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
   },
   header: {
     flexDirection: 'row',
@@ -280,15 +280,17 @@ const styles = StyleSheet.create({
   title: {
     fontSize: FontSizes.xxxl,
     fontWeight: FontWeights.bold,
-    color: Colors.textPrimary,
+    color: '#000000',
   },
   iconButton: {
     width: 40,
     height: 40,
     borderRadius: BorderRadius.xl,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   searchContainer: {
     flexDirection: 'row',
@@ -300,32 +302,38 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     borderRadius: BorderRadius.xl,
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.md,
     gap: Spacing.md,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   searchInput: {
     flex: 1,
     fontSize: FontSizes.md,
-    color: Colors.textPrimary,
+    color: '#000000',
   },
   filterButton: {
     width: 48,
     height: 48,
     borderRadius: BorderRadius.xl,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   tabContainer: {
     flexDirection: 'row',
     marginHorizontal: Spacing.xl,
     marginBottom: Spacing.lg,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     borderRadius: BorderRadius.lg,
     padding: Spacing.xs,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   tab: {
     flex: 1,
@@ -334,16 +342,16 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.md,
   },
   activeTab: {
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     ...Shadows.small,
   },
   tabText: {
     fontSize: FontSizes.md,
     fontWeight: FontWeights.medium,
-    color: Colors.textSecondary,
+    color: '#666666',
   },
   activeTabText: {
-    color: Colors.textPrimary,
+    color: '#000000',
     fontWeight: FontWeights.semiBold,
   },
   content: {
@@ -356,9 +364,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.primaryLight,
+    backgroundColor: '#F8F8F8',
     borderWidth: 2,
-    borderColor: Colors.primary,
+    borderColor: '#000000',
     borderStyle: 'dashed',
     borderRadius: BorderRadius.lg,
     paddingVertical: Spacing.xl,
@@ -368,7 +376,7 @@ const styles = StyleSheet.create({
   createCollectionText: {
     fontSize: FontSizes.lg,
     fontWeight: FontWeights.semiBold,
-    color: Colors.primary,
+    color: '#000000',
   },
   collectionRow: {
     justifyContent: 'space-between',
@@ -376,10 +384,12 @@ const styles = StyleSheet.create({
   },
   collectionCard: {
     width: '47%',
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     borderRadius: BorderRadius.lg,
     ...Shadows.small,
     overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   collectionThumbnail: {
     height: 120,
@@ -408,12 +418,12 @@ const styles = StyleSheet.create({
   collectionName: {
     fontSize: FontSizes.lg,
     fontWeight: FontWeights.semiBold,
-    color: Colors.textPrimary,
+    color: '#000000',
     marginBottom: Spacing.xs,
   },
   collectionCount: {
     fontSize: FontSizes.sm,
-    color: Colors.textSecondary,
+    color: '#666666',
   },
   itemsContainer: {
     paddingHorizontal: Spacing.xl,
@@ -424,20 +434,22 @@ const styles = StyleSheet.create({
   categoryButton: {
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.md,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     borderRadius: BorderRadius.xl,
     marginRight: Spacing.md,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   activeCategoryButton: {
-    backgroundColor: Colors.primary,
+    backgroundColor: '#000000',
   },
   categoryText: {
     fontSize: FontSizes.md,
     fontWeight: FontWeights.medium,
-    color: Colors.textSecondary,
+    color: '#666666',
   },
   activeCategoryText: {
-    color: Colors.background,
+    color: '#FFFFFF',
     fontWeight: FontWeights.semiBold,
   },
   itemRow: {
@@ -446,24 +458,26 @@ const styles = StyleSheet.create({
   },
   itemCard: {
     width: '47%',
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     borderRadius: BorderRadius.lg,
     ...Shadows.small,
     overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   itemImageContainer: {
     position: 'relative',
   },
   itemImagePlaceholder: {
     height: 180,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     justifyContent: 'center',
     alignItems: 'center',
   },
   itemPlaceholderIcon: {
     width: 48,
     height: 48,
-    backgroundColor: Colors.border,
+    backgroundColor: '#E0E0E0',
     borderRadius: BorderRadius.md,
   },
   heartButton: {
@@ -472,7 +486,7 @@ const styles = StyleSheet.create({
     right: Spacing.md,
     width: 32,
     height: 32,
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     borderRadius: BorderRadius.round,
     justifyContent: 'center',
     alignItems: 'center',
@@ -483,19 +497,19 @@ const styles = StyleSheet.create({
   },
   itemBrand: {
     fontSize: FontSizes.sm,
-    color: Colors.textSecondary,
+    color: '#666666',
     marginBottom: Spacing.xs,
   },
   itemName: {
     fontSize: FontSizes.md,
     fontWeight: FontWeights.semiBold,
-    color: Colors.textPrimary,
+    color: '#000000',
     marginBottom: Spacing.xs,
   },
   itemPrice: {
     fontSize: FontSizes.lg,
     fontWeight: FontWeights.bold,
-    color: Colors.primary,
+    color: '#000000',
   },
   
   // Icon Styles
@@ -509,7 +523,7 @@ const styles = StyleSheet.create({
     height: 12,
     borderRadius: 6,
     borderWidth: 2,
-    borderColor: Colors.textTertiary,
+    borderColor: '#999999',
     position: 'absolute',
     top: 0,
     left: 0,
@@ -517,7 +531,7 @@ const styles = StyleSheet.create({
   searchHandle: {
     width: 6,
     height: 2,
-    backgroundColor: Colors.textTertiary,
+    backgroundColor: '#999999',
     position: 'absolute',
     bottom: 0,
     right: 0,
@@ -530,19 +544,19 @@ const styles = StyleSheet.create({
   },
   filterLine1: {
     height: 2,
-    backgroundColor: Colors.textTertiary,
+    backgroundColor: '#999999',
     borderRadius: 1,
     width: '100%',
   },
   filterLine2: {
     height: 2,
-    backgroundColor: Colors.textTertiary,
+    backgroundColor: '#999999',
     borderRadius: 1,
     width: '70%',
   },
   filterLine3: {
     height: 2,
-    backgroundColor: Colors.textTertiary,
+    backgroundColor: '#999999',
     borderRadius: 1,
     width: '85%',
   },
@@ -555,13 +569,13 @@ const styles = StyleSheet.create({
   plusHorizontal: {
     width: 16,
     height: 2,
-    backgroundColor: Colors.primary,
+    backgroundColor: '#000000',
     position: 'absolute',
   },
   plusVertical: {
     width: 2,
     height: 16,
-    backgroundColor: Colors.primary,
+    backgroundColor: '#000000',
     position: 'absolute',
   },
   heartIconContainer: {
@@ -574,7 +588,7 @@ const styles = StyleSheet.create({
     height: 10,
     backgroundColor: 'transparent',
     borderWidth: 1.5,
-    borderColor: Colors.textTertiary,
+    borderColor: '#999999',
     borderTopLeftRadius: 6,
     borderBottomLeftRadius: 6,
     borderRightWidth: 0,
@@ -588,7 +602,7 @@ const styles = StyleSheet.create({
     height: 10,
     backgroundColor: 'transparent',
     borderWidth: 1.5,
-    borderColor: Colors.textTertiary,
+    borderColor: '#999999',
     borderTopRightRadius: 6,
     borderBottomRightRadius: 6,
     borderLeftWidth: 0,
@@ -605,14 +619,14 @@ const styles = StyleSheet.create({
     borderTopWidth: 8,
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
-    borderTopColor: Colors.textTertiary,
+    borderTopColor: '#999999',
     position: 'absolute',
     bottom: 2,
     left: 2,
   },
   heartFilled: {
-    borderColor: Colors.primary,
-    backgroundColor: Colors.primary,
+    borderColor: '#000000',
+    backgroundColor: '#000000',
   },
 });
 

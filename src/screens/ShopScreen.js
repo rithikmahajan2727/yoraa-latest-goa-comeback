@@ -8,7 +8,7 @@ import {
   TextInput,
   FlatList,
 } from 'react-native';
-import { Colors, FontSizes, FontWeights, Spacing, BorderRadius, Shadows } from '../constants';
+import { FontSizes, FontWeights, Spacing, BorderRadius, Shadows } from '../constants';
 
 // Icon Components
 const SearchIcon = () => (
@@ -231,7 +231,7 @@ const ShopScreen = () => {
           <TextInput
             style={styles.searchInput}
             placeholder="Search products..."
-            placeholderTextColor={Colors.textTertiary}
+            placeholderTextColor={'#999999'}
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
@@ -299,7 +299,7 @@ const ShopScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
   },
   header: {
     flexDirection: 'row',
@@ -315,21 +315,23 @@ const styles = StyleSheet.create({
   title: {
     fontSize: FontSizes.xxxl,
     fontWeight: FontWeights.bold,
-    color: Colors.textPrimary,
+    color: '#000000',
     marginBottom: Spacing.xs,
   },
   subtitle: {
     fontSize: FontSizes.md,
-    color: Colors.textSecondary,
+    color: '#666666',
   },
   cartButton: {
     position: 'relative',
     width: 48,
     height: 48,
     borderRadius: BorderRadius.xl,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   cartBadge: {
     position: 'absolute',
@@ -338,14 +340,14 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 10,
-    backgroundColor: Colors.primary,
+    backgroundColor: '#000000',
     justifyContent: 'center',
     alignItems: 'center',
   },
   cartBadgeText: {
     fontSize: FontSizes.xs,
     fontWeight: FontWeights.bold,
-    color: Colors.background,
+    color: '#FFFFFF',
   },
   searchContainer: {
     flexDirection: 'row',
@@ -357,24 +359,28 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     borderRadius: BorderRadius.xl,
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.md,
     gap: Spacing.md,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   searchInput: {
     flex: 1,
     fontSize: FontSizes.md,
-    color: Colors.textPrimary,
+    color: '#000000',
   },
   filterButton: {
     width: 48,
     height: 48,
     borderRadius: BorderRadius.xl,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   content: {
     flex: 1,
@@ -392,12 +398,12 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: FontSizes.xl,
     fontWeight: FontWeights.bold,
-    color: Colors.textPrimary,
+    color: '#000000',
   },
   seeAllText: {
     fontSize: FontSizes.md,
     fontWeight: FontWeights.medium,
-    color: Colors.primary,
+    color: '#000000',
   },
   categoriesList: {
     paddingHorizontal: Spacing.xl,
@@ -407,12 +413,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: Spacing.md,
     paddingHorizontal: Spacing.lg,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     borderRadius: BorderRadius.xl,
     minWidth: 80,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   activeCategoryItem: {
-    backgroundColor: Colors.primary,
+    backgroundColor: '#000000',
   },
   categoryIcon: {
     fontSize: FontSizes.xl,
@@ -421,10 +429,10 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: FontSizes.sm,
     fontWeight: FontWeights.medium,
-    color: Colors.textSecondary,
+    color: '#666666',
   },
   activeCategoryText: {
-    color: Colors.background,
+    color: '#FFFFFF',
     fontWeight: FontWeights.semiBold,
   },
   brandsList: {
@@ -441,6 +449,8 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.xl,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   brandLogoPlaceholder: {
     width: 48,
@@ -453,24 +463,26 @@ const styles = StyleSheet.create({
   brandLogoText: {
     fontSize: FontSizes.lg,
     fontWeight: FontWeights.bold,
-    color: Colors.textPrimary,
+    color: '#000000',
   },
   brandName: {
     fontSize: FontSizes.md,
     fontWeight: FontWeights.medium,
-    color: Colors.textPrimary,
+    color: '#000000',
   },
   productsList: {
     paddingHorizontal: Spacing.xl,
   },
   productCard: {
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     borderRadius: BorderRadius.lg,
     marginBottom: Spacing.lg,
     overflow: 'hidden',
     ...Shadows.small,
     position: 'relative',
     flex: 1,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   leftProduct: {
     marginRight: Spacing.md / 2,
@@ -482,7 +494,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: Spacing.md,
     left: Spacing.md,
-    backgroundColor: Colors.success,
+    backgroundColor: '#000000',
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.xs,
     borderRadius: BorderRadius.md,
@@ -491,13 +503,13 @@ const styles = StyleSheet.create({
   newBadgeText: {
     fontSize: FontSizes.xs,
     fontWeight: FontWeights.bold,
-    color: Colors.background,
+    color: '#FFFFFF',
   },
   discountBadge: {
     position: 'absolute',
     top: Spacing.md,
     right: Spacing.md,
-    backgroundColor: Colors.error,
+    backgroundColor: '#000000',
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.xs,
     borderRadius: BorderRadius.md,
@@ -506,21 +518,21 @@ const styles = StyleSheet.create({
   discountText: {
     fontSize: FontSizes.xs,
     fontWeight: FontWeights.bold,
-    color: Colors.background,
+    color: '#FFFFFF',
   },
   productImageContainer: {
     position: 'relative',
   },
   productImagePlaceholder: {
     height: 200,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     justifyContent: 'center',
     alignItems: 'center',
   },
   productPlaceholderIcon: {
     width: 60,
     height: 60,
-    backgroundColor: Colors.border,
+    backgroundColor: '#E0E0E0',
     borderRadius: BorderRadius.md,
   },
   favoriteButton: {
@@ -529,7 +541,7 @@ const styles = StyleSheet.create({
     right: Spacing.md,
     width: 36,
     height: 36,
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     borderRadius: BorderRadius.round,
     justifyContent: 'center',
     alignItems: 'center',
@@ -540,13 +552,13 @@ const styles = StyleSheet.create({
   },
   productBrand: {
     fontSize: FontSizes.sm,
-    color: Colors.textSecondary,
+    color: '#666666',
     marginBottom: Spacing.xs,
   },
   productName: {
     fontSize: FontSizes.md,
     fontWeight: FontWeights.semiBold,
-    color: Colors.textPrimary,
+    color: '#000000',
     marginBottom: Spacing.md,
     lineHeight: 20,
   },
@@ -567,11 +579,11 @@ const styles = StyleSheet.create({
   ratingText: {
     fontSize: FontSizes.sm,
     fontWeight: FontWeights.medium,
-    color: Colors.textPrimary,
+    color: '#000000',
   },
   reviewText: {
     fontSize: FontSizes.sm,
-    color: Colors.textSecondary,
+    color: '#666666',
   },
   priceContainer: {
     flexDirection: 'row',
@@ -581,11 +593,11 @@ const styles = StyleSheet.create({
   currentPrice: {
     fontSize: FontSizes.lg,
     fontWeight: FontWeights.bold,
-    color: Colors.primary,
+    color: '#000000',
   },
   originalPrice: {
     fontSize: FontSizes.md,
-    color: Colors.textTertiary,
+    color: '#999999',
     textDecorationLine: 'line-through',
   },
   
@@ -600,7 +612,7 @@ const styles = StyleSheet.create({
     height: 12,
     borderRadius: 6,
     borderWidth: 2,
-    borderColor: Colors.textTertiary,
+    borderColor: '#999999',
     position: 'absolute',
     top: 0,
     left: 0,
@@ -608,7 +620,7 @@ const styles = StyleSheet.create({
   searchHandle: {
     width: 6,
     height: 2,
-    backgroundColor: Colors.textTertiary,
+    backgroundColor: '#999999',
     position: 'absolute',
     bottom: 0,
     right: 0,
@@ -621,19 +633,19 @@ const styles = StyleSheet.create({
   },
   filterLine1: {
     height: 2,
-    backgroundColor: Colors.textTertiary,
+    backgroundColor: '#999999',
     borderRadius: 1,
     width: '100%',
   },
   filterLine2: {
     height: 2,
-    backgroundColor: Colors.textTertiary,
+    backgroundColor: '#999999',
     borderRadius: 1,
     width: '70%',
   },
   filterLine3: {
     height: 2,
-    backgroundColor: Colors.textTertiary,
+    backgroundColor: '#999999',
     borderRadius: 1,
     width: '85%',
   },
@@ -647,7 +659,7 @@ const styles = StyleSheet.create({
     height: 10,
     backgroundColor: 'transparent',
     borderWidth: 1.5,
-    borderColor: Colors.textTertiary,
+    borderColor: '#999999',
     borderTopLeftRadius: 6,
     borderBottomLeftRadius: 6,
     borderRightWidth: 0,
@@ -661,7 +673,7 @@ const styles = StyleSheet.create({
     height: 10,
     backgroundColor: 'transparent',
     borderWidth: 1.5,
-    borderColor: Colors.textTertiary,
+    borderColor: '#999999',
     borderTopRightRadius: 6,
     borderBottomRightRadius: 6,
     borderLeftWidth: 0,
@@ -678,14 +690,14 @@ const styles = StyleSheet.create({
     borderTopWidth: 8,
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
-    borderTopColor: Colors.textTertiary,
+    borderTopColor: '#999999',
     position: 'absolute',
     bottom: 2,
     left: 2,
   },
   heartFilled: {
-    borderColor: Colors.primary,
-    backgroundColor: Colors.primary,
+    borderColor: '#000000',
+    backgroundColor: '#000000',
   },
   cartIconContainer: {
     width: 20,
@@ -697,7 +709,7 @@ const styles = StyleSheet.create({
     height: 12,
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: Colors.textTertiary,
+    borderColor: '#999999',
     borderTopLeftRadius: 4,
     borderTopRightRadius: 4,
     position: 'absolute',
@@ -709,7 +721,7 @@ const styles = StyleSheet.create({
     height: 6,
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: Colors.textTertiary,
+    borderColor: '#999999',
     borderBottomWidth: 0,
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
@@ -721,7 +733,7 @@ const styles = StyleSheet.create({
     width: 3,
     height: 3,
     borderRadius: 1.5,
-    backgroundColor: Colors.textTertiary,
+    backgroundColor: '#999999',
     position: 'absolute',
     bottom: 0,
     left: 4,
@@ -730,7 +742,7 @@ const styles = StyleSheet.create({
     width: 3,
     height: 3,
     borderRadius: 1.5,
-    backgroundColor: Colors.textTertiary,
+    backgroundColor: '#999999',
     position: 'absolute',
     bottom: 0,
     right: 4,

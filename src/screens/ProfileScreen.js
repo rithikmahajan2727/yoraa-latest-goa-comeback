@@ -9,7 +9,7 @@ import {
   Alert,
   Switch,
 } from 'react-native';
-import { Colors, FontSizes, FontWeights, Spacing, BorderRadius, Shadows } from '../constants';
+import { FontSizes, FontWeights, Spacing, BorderRadius, Shadows } from '../constants';
 
 // Icon Components
 const UserIcon = () => (
@@ -266,8 +266,8 @@ const ProfileScreen = ({ navigation }) => {
               <Switch
                 value={notificationsEnabled}
                 onValueChange={setNotificationsEnabled}
-                trackColor={{ false: Colors.switchTrackFalse, true: Colors.switchTrackTrue }}
-                thumbColor={Colors.switchThumb}
+                trackColor={{ false: '#E5E5E5', true: '#000000' }}
+                thumbColor={'#FFFFFF'}
               />
             }
           />
@@ -279,8 +279,8 @@ const ProfileScreen = ({ navigation }) => {
               <Switch
                 value={emailNotifications}
                 onValueChange={setEmailNotifications}
-                trackColor={{ false: Colors.switchTrackFalse, true: Colors.switchTrackTrue }}
-                thumbColor={Colors.switchThumb}
+                trackColor={{ false: '#E5E5E5', true: '#000000' }}
+                thumbColor={'#FFFFFF'}
               />
             }
           />
@@ -337,7 +337,7 @@ const ProfileScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
   },
   scrollContainer: {
     flex: 1,
@@ -345,7 +345,7 @@ const styles = StyleSheet.create({
   
   // Header Styles
   headerContainer: {
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     paddingTop: Spacing.xl,
     paddingBottom: Spacing.xl,
     paddingHorizontal: Spacing.xl,
@@ -360,18 +360,18 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: Colors.primary,
+    backgroundColor: '#000000',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 3,
-    borderColor: Colors.background,
+    borderColor: '#FFFFFF',
     ...Shadows.small,
   },
   editImageButton: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     borderRadius: 15,
     width: 30,
     height: 30,
@@ -389,21 +389,23 @@ const styles = StyleSheet.create({
   profileName: {
     fontSize: FontSizes.xxl,
     fontWeight: FontWeights.bold,
-    color: Colors.textPrimary,
+    color: '#000000',
     marginBottom: Spacing.xs,
   },
   profileEmail: {
     fontSize: FontSizes.md,
-    color: Colors.textSecondary,
+    color: '#666666',
   },
   statsContainer: {
     flexDirection: 'row',
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     borderRadius: BorderRadius.lg,
     paddingVertical: Spacing.lg,
     paddingHorizontal: Spacing.xl,
     marginBottom: Spacing.lg,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   statItem: {
     flex: 1,
@@ -412,45 +414,47 @@ const styles = StyleSheet.create({
   statNumber: {
     fontSize: FontSizes.xl,
     fontWeight: FontWeights.bold,
-    color: Colors.primary,
+    color: '#000000',
     marginBottom: Spacing.xs,
   },
   statLabel: {
     fontSize: FontSizes.sm,
-    color: Colors.textSecondary,
+    color: '#666666',
     textAlign: 'center',
   },
   statDivider: {
     width: 1,
     height: 30,
-    backgroundColor: Colors.border,
+    backgroundColor: '#E0E0E0',
     marginHorizontal: Spacing.lg,
   },
   editProfileButton: {
-    backgroundColor: Colors.primary,
+    backgroundColor: '#000000',
     paddingHorizontal: Spacing.xl,
     paddingVertical: Spacing.md,
     borderRadius: BorderRadius.xl,
   },
   editProfileText: {
-    color: Colors.background,
+    color: '#FFFFFF',
     fontSize: FontSizes.md,
     fontWeight: FontWeights.semiBold,
   },
 
   // Menu Styles
   menuSection: {
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     marginTop: Spacing.lg,
     marginHorizontal: Spacing.lg,
     borderRadius: BorderRadius.lg,
     ...Shadows.small,
     overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   sectionTitle: {
     fontSize: FontSizes.lg,
     fontWeight: FontWeights.bold,
-    color: Colors.textPrimary,
+    color: '#000000',
     paddingHorizontal: Spacing.xl,
     paddingTop: Spacing.xl,
     paddingBottom: Spacing.md,
@@ -462,7 +466,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.xl,
     paddingVertical: Spacing.lg,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.borderLight,
+    borderBottomColor: '#F0F0F0',
   },
   lastMenuItem: {
     borderBottomWidth: 0,
@@ -476,10 +480,12 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: BorderRadius.xl,
-    backgroundColor: Colors.primaryLight,
+    backgroundColor: '#F8F8F8',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: Spacing.lg,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   menuItemContent: {
     flex: 1,
@@ -487,12 +493,12 @@ const styles = StyleSheet.create({
   menuItemTitle: {
     fontSize: FontSizes.md,
     fontWeight: FontWeights.medium,
-    color: Colors.textPrimary,
+    color: '#000000',
     marginBottom: Spacing.xs,
   },
   menuItemSubtitle: {
     fontSize: FontSizes.sm,
-    color: Colors.textSecondary,
+    color: '#666666',
   },
 
   // Logout Styles
@@ -500,7 +506,7 @@ const styles = StyleSheet.create({
     margin: Spacing.lg,
   },
   logoutButton: {
-    backgroundColor: Colors.error,
+    backgroundColor: '#000000',
     paddingVertical: Spacing.lg,
     borderRadius: BorderRadius.lg,
     alignItems: 'center',
@@ -510,7 +516,7 @@ const styles = StyleSheet.create({
     ...Shadows.small,
   },
   logoutText: {
-    color: Colors.background,
+    color: '#FFFFFF',
     fontSize: FontSizes.md,
     fontWeight: FontWeights.semiBold,
   },
@@ -523,12 +529,12 @@ const styles = StyleSheet.create({
   },
   appVersion: {
     fontSize: FontSizes.sm,
-    color: Colors.textTertiary,
+    color: '#999999',
     marginBottom: Spacing.xs,
   },
   appBuild: {
     fontSize: FontSizes.xs,
-    color: Colors.textTertiary,
+    color: '#999999',
   },
 
   // Icon Styles
@@ -543,7 +549,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     position: 'absolute',
     top: 2,
   },
@@ -552,7 +558,7 @@ const styles = StyleSheet.create({
     height: 10,
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: Colors.background,
+    borderColor: '#FFFFFF',
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
     borderBottomWidth: 0,
@@ -569,7 +575,7 @@ const styles = StyleSheet.create({
     height: 12,
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: Colors.primary,
+    borderColor: '#000000',
     borderRadius: 2,
     position: 'absolute',
     bottom: 2,
@@ -577,7 +583,7 @@ const styles = StyleSheet.create({
   orderTape: {
     width: 10,
     height: 2,
-    backgroundColor: Colors.primary,
+    backgroundColor: '#000000',
     position: 'absolute',
     top: 0,
     left: 3,
@@ -592,7 +598,7 @@ const styles = StyleSheet.create({
     height: 16,
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: Colors.primary,
+    borderColor: '#000000',
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
     borderBottomLeftRadius: 6,
@@ -606,7 +612,7 @@ const styles = StyleSheet.create({
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: Colors.primary,
+    backgroundColor: '#000000',
     position: 'absolute',
     top: 3,
     left: 8,
@@ -621,7 +627,7 @@ const styles = StyleSheet.create({
     height: 12,
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: Colors.primary,
+    borderColor: '#000000',
     borderRadius: 2,
     position: 'absolute',
     top: 4,
@@ -630,7 +636,7 @@ const styles = StyleSheet.create({
   cardStripe: {
     width: 18,
     height: 2,
-    backgroundColor: Colors.primary,
+    backgroundColor: '#000000',
     position: 'absolute',
     top: 7,
     left: 1,
@@ -645,7 +651,7 @@ const styles = StyleSheet.create({
     height: 10,
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: Colors.primary,
+    borderColor: '#000000',
     borderTopLeftRadius: 6,
     borderBottomLeftRadius: 6,
     borderRightWidth: 0,
@@ -659,7 +665,7 @@ const styles = StyleSheet.create({
     height: 10,
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: Colors.primary,
+    borderColor: '#000000',
     borderTopRightRadius: 6,
     borderBottomRightRadius: 6,
     borderLeftWidth: 0,
@@ -676,7 +682,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 8,
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
-    borderTopColor: Colors.primary,
+    borderTopColor: '#000000',
     position: 'absolute',
     bottom: 3,
     left: 4,
@@ -691,7 +697,7 @@ const styles = StyleSheet.create({
     height: 12,
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: Colors.primary,
+    borderColor: '#000000',
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
     position: 'absolute',
@@ -701,7 +707,7 @@ const styles = StyleSheet.create({
   bellTop: {
     width: 4,
     height: 2,
-    backgroundColor: Colors.primary,
+    backgroundColor: '#000000',
     borderRadius: 1,
     position: 'absolute',
     top: 2,
@@ -711,7 +717,7 @@ const styles = StyleSheet.create({
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: Colors.error,
+    backgroundColor: '#666666',
     position: 'absolute',
     top: 0,
     right: 2,
@@ -726,7 +732,7 @@ const styles = StyleSheet.create({
     height: 16,
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: Colors.primary,
+    borderColor: '#000000',
     borderRadius: 8,
     position: 'absolute',
     top: 2,
@@ -737,7 +743,7 @@ const styles = StyleSheet.create({
     height: 8,
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: Colors.primary,
+    borderColor: '#000000',
     borderRadius: 4,
     position: 'absolute',
     top: 6,
@@ -753,7 +759,7 @@ const styles = StyleSheet.create({
     height: 16,
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: Colors.primary,
+    borderColor: '#000000',
     borderRadius: 8,
     position: 'absolute',
     top: 2,
@@ -762,7 +768,7 @@ const styles = StyleSheet.create({
   helpQuestion: {
     width: 2,
     height: 6,
-    backgroundColor: Colors.primary,
+    backgroundColor: '#000000',
     borderRadius: 1,
     position: 'absolute',
     top: 5,
@@ -778,7 +784,7 @@ const styles = StyleSheet.create({
     height: 16,
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: Colors.primary,
+    borderColor: '#000000',
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
     borderBottomLeftRadius: 6,
@@ -793,7 +799,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderBottomWidth: 2,
     borderRightWidth: 2,
-    borderColor: Colors.primary,
+    borderColor: '#000000',
     position: 'absolute',
     top: 8,
     left: 7,
@@ -807,7 +813,7 @@ const styles = StyleSheet.create({
   logoutArrow: {
     width: 8,
     height: 2,
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     position: 'absolute',
     top: 9,
     left: 2,
@@ -817,7 +823,7 @@ const styles = StyleSheet.create({
     height: 14,
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: Colors.background,
+    borderColor: '#FFFFFF',
     borderLeftWidth: 0,
     borderRadius: 2,
     position: 'absolute',
@@ -832,7 +838,7 @@ const styles = StyleSheet.create({
   arrowLine: {
     width: 8,
     height: 2,
-    backgroundColor: Colors.textTertiary,
+    backgroundColor: '#999999',
     position: 'absolute',
     top: 9,
     left: 6,
@@ -844,7 +850,7 @@ const styles = StyleSheet.create({
     borderRightWidth: 0,
     borderTopWidth: 3,
     borderBottomWidth: 3,
-    borderLeftColor: Colors.textTertiary,
+    borderLeftColor: '#999999',
     borderTopColor: 'transparent',
     borderBottomColor: 'transparent',
     position: 'absolute',

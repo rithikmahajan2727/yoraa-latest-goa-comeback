@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import { Colors, FontSizes, FontWeights, Spacing, BorderRadius, Shadows } from '../constants';
+import { FontSizes, FontWeights, Spacing, BorderRadius, Shadows } from '../constants';
 
 // Icon Components
 const StarIcon = ({ filled = false, size = 'small' }) => {
@@ -22,7 +22,7 @@ const StarIcon = ({ filled = false, size = 'small' }) => {
           borderLeftWidth: starSize / 2,
           borderRightWidth: starSize / 2,
           borderBottomWidth: starSize / 3,
-          borderBottomColor: filled ? Colors.warning : Colors.textTertiary
+          borderBottomColor: filled ? '#000000' : '#999999'
         }
       ]} />
       <View style={[
@@ -31,7 +31,7 @@ const StarIcon = ({ filled = false, size = 'small' }) => {
           borderLeftWidth: starSize / 2,
           borderRightWidth: starSize / 2,
           borderTopWidth: starSize / 3,
-          borderTopColor: filled ? Colors.warning : Colors.textTertiary
+          borderTopColor: filled ? '#000000' : '#999999'
         }
       ]} />
     </View>
@@ -373,7 +373,7 @@ const RewardsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
   },
   header: {
     paddingHorizontal: Spacing.xl,
@@ -383,15 +383,15 @@ const styles = StyleSheet.create({
   title: {
     fontSize: FontSizes.xxxl,
     fontWeight: FontWeights.bold,
-    color: Colors.textPrimary,
+    color: '#000000',
     marginBottom: Spacing.xs,
   },
   subtitle: {
     fontSize: FontSizes.md,
-    color: Colors.textSecondary,
+    color: '#666666',
   },
   pointsCard: {
-    backgroundColor: Colors.primary,
+    backgroundColor: '#000000',
     marginHorizontal: Spacing.xl,
     borderRadius: BorderRadius.xl,
     padding: Spacing.xl,
@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
   currentPoints: {
     fontSize: FontSizes.xxxl + 4,
     fontWeight: FontWeights.bold,
-    color: Colors.background,
+    color: '#FFFFFF',
     marginBottom: Spacing.xs,
   },
   pointsLabel: {
@@ -429,7 +429,7 @@ const styles = StyleSheet.create({
   levelText: {
     fontSize: FontSizes.md,
     fontWeight: FontWeights.semiBold,
-    color: Colors.background,
+    color: '#FFFFFF',
   },
   progressSection: {
     gap: Spacing.md,
@@ -451,16 +451,18 @@ const styles = StyleSheet.create({
   },
   levelProgressFill: {
     height: '100%',
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     borderRadius: 4,
   },
   tabContainer: {
     flexDirection: 'row',
     marginHorizontal: Spacing.xl,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     borderRadius: BorderRadius.lg,
     padding: Spacing.xs,
     marginBottom: Spacing.xl,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   tab: {
     flex: 1,
@@ -469,16 +471,16 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.md,
   },
   activeTab: {
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     ...Shadows.small,
   },
   tabText: {
     fontSize: FontSizes.md,
     fontWeight: FontWeights.medium,
-    color: Colors.textSecondary,
+    color: '#666666',
   },
   activeTabText: {
-    color: Colors.textPrimary,
+    color: '#000000',
     fontWeight: FontWeights.semiBold,
   },
   content: {
@@ -490,17 +492,17 @@ const styles = StyleSheet.create({
   
   // Rewards
   rewardCard: {
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     borderRadius: BorderRadius.lg,
     padding: Spacing.xl,
     marginBottom: Spacing.lg,
     borderWidth: 1,
-    borderColor: Colors.borderLight,
+    borderColor: '#E0E0E0',
     ...Shadows.small,
   },
   unavailableReward: {
     opacity: 0.6,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
   },
   rewardHeader: {
     flexDirection: 'row',
@@ -511,73 +513,77 @@ const styles = StyleSheet.create({
   rewardTitle: {
     fontSize: FontSizes.lg,
     fontWeight: FontWeights.semiBold,
-    color: Colors.textPrimary,
+    color: '#000000',
     flex: 1,
     marginRight: Spacing.md,
   },
   pointsRequired: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.primaryLight,
+    backgroundColor: '#F8F8F8',
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.xl,
     gap: Spacing.xs,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   pointsRequiredText: {
     fontSize: FontSizes.sm,
     fontWeight: FontWeights.semiBold,
-    color: Colors.primary,
+    color: '#000000',
   },
   rewardDescription: {
     fontSize: FontSizes.md,
-    color: Colors.textSecondary,
+    color: '#666666',
     marginBottom: Spacing.lg,
     lineHeight: 20,
   },
   redeemButton: {
-    backgroundColor: Colors.primary,
+    backgroundColor: '#000000',
     paddingVertical: Spacing.md,
     borderRadius: BorderRadius.md,
     alignItems: 'center',
   },
   disabledButton: {
-    backgroundColor: Colors.textTertiary,
+    backgroundColor: '#999999',
   },
   redeemButtonText: {
     fontSize: FontSizes.md,
     fontWeight: FontWeights.semiBold,
-    color: Colors.background,
+    color: '#FFFFFF',
   },
   disabledButtonText: {
-    color: Colors.background,
+    color: '#FFFFFF',
   },
 
   // Achievements
   achievementCard: {
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     borderRadius: BorderRadius.lg,
     padding: Spacing.xl,
     marginBottom: Spacing.lg,
     borderWidth: 1,
-    borderColor: Colors.borderLight,
+    borderColor: '#E0E0E0',
     flexDirection: 'row',
     alignItems: 'flex-start',
     position: 'relative',
     ...Shadows.small,
   },
   completedAchievement: {
-    borderColor: Colors.success,
-    backgroundColor: '#F0F9FF',
+    borderColor: '#000000',
+    backgroundColor: '#F8F8F8',
   },
   achievementIcon: {
     width: 48,
     height: 48,
     borderRadius: BorderRadius.xl,
-    backgroundColor: Colors.primaryLight,
+    backgroundColor: '#F8F8F8',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: Spacing.lg,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   achievementContent: {
     flex: 1,
@@ -585,12 +591,12 @@ const styles = StyleSheet.create({
   achievementTitle: {
     fontSize: FontSizes.lg,
     fontWeight: FontWeights.semiBold,
-    color: Colors.textPrimary,
+    color: '#000000',
     marginBottom: Spacing.xs,
   },
   achievementDescription: {
     fontSize: FontSizes.md,
-    color: Colors.textSecondary,
+    color: '#666666',
     marginBottom: Spacing.md,
     lineHeight: 20,
   },
@@ -599,19 +605,19 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: 6,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     borderRadius: 3,
     overflow: 'hidden',
     marginBottom: Spacing.xs,
   },
   progressFill: {
     height: '100%',
-    backgroundColor: Colors.primary,
+    backgroundColor: '#000000',
     borderRadius: 3,
   },
   progressText: {
     fontSize: FontSizes.sm,
-    color: Colors.textSecondary,
+    color: '#666666',
     textAlign: 'right',
   },
   pointsBadge: {
@@ -622,7 +628,7 @@ const styles = StyleSheet.create({
   pointsText: {
     fontSize: FontSizes.sm,
     fontWeight: FontWeights.medium,
-    color: Colors.primary,
+    color: '#000000',
   },
   completedBadge: {
     position: 'absolute',
@@ -631,14 +637,14 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: Colors.success,
+    backgroundColor: '#000000',
     justifyContent: 'center',
     alignItems: 'center',
   },
   completedText: {
     fontSize: FontSizes.sm,
     fontWeight: FontWeights.bold,
-    color: Colors.background,
+    color: '#FFFFFF',
   },
 
   // Activity
@@ -647,16 +653,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: Spacing.lg,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.borderLight,
+    borderBottomColor: '#E0E0E0',
   },
   activityIcon: {
     width: 40,
     height: 40,
     borderRadius: BorderRadius.xl,
-    backgroundColor: Colors.primaryLight,
+    backgroundColor: '#F8F8F8',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: Spacing.lg,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   activityContent: {
     flex: 1,
@@ -664,27 +672,27 @@ const styles = StyleSheet.create({
   activityAction: {
     fontSize: FontSizes.md,
     fontWeight: FontWeights.semiBold,
-    color: Colors.textPrimary,
+    color: '#000000',
     marginBottom: Spacing.xs,
   },
   activityDescription: {
     fontSize: FontSizes.sm,
-    color: Colors.textSecondary,
+    color: '#666666',
     marginBottom: Spacing.xs,
   },
   activityDate: {
     fontSize: FontSizes.xs,
-    color: Colors.textTertiary,
+    color: '#999999',
   },
   activityPoints: {
     fontSize: FontSizes.lg,
     fontWeight: FontWeights.bold,
   },
   pointsEarned: {
-    color: Colors.success,
+    color: '#000000',
   },
   pointsRedeemed: {
-    color: Colors.error,
+    color: '#666666',
   },
 
   // Icons
@@ -724,7 +732,7 @@ const styles = StyleSheet.create({
     height: 12,
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: Colors.primary,
+    borderColor: '#000000',
     borderRadius: 2,
     position: 'absolute',
     bottom: 0,
@@ -732,7 +740,7 @@ const styles = StyleSheet.create({
   giftRibbon: {
     width: 2,
     height: 16,
-    backgroundColor: Colors.primary,
+    backgroundColor: '#000000',
     position: 'absolute',
     top: 2,
   },
@@ -741,7 +749,7 @@ const styles = StyleSheet.create({
     height: 4,
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: Colors.primary,
+    borderColor: '#000000',
     borderRadius: 4,
     position: 'absolute',
     top: 0,
@@ -758,7 +766,7 @@ const styles = StyleSheet.create({
     height: 10,
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: Colors.warning,
+    borderColor: '#000000',
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
     position: 'absolute',
@@ -767,7 +775,7 @@ const styles = StyleSheet.create({
   trophyBase: {
     width: 16,
     height: 4,
-    backgroundColor: Colors.warning,
+    backgroundColor: '#000000',
     borderRadius: 2,
     position: 'absolute',
     bottom: 0,
@@ -777,7 +785,7 @@ const styles = StyleSheet.create({
     height: 6,
     backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: Colors.warning,
+    borderColor: '#000000',
     borderTopLeftRadius: 2,
     borderBottomLeftRadius: 2,
     borderRightWidth: 0,
@@ -790,7 +798,7 @@ const styles = StyleSheet.create({
     height: 6,
     backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: Colors.warning,
+    borderColor: '#000000',
     borderTopRightRadius: 2,
     borderBottomRightRadius: 2,
     borderLeftWidth: 0,
@@ -811,14 +819,14 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: Colors.warning,
+    borderColor: '#000000',
     position: 'absolute',
   },
   coinInner: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: Colors.warning,
+    backgroundColor: '#000000',
     position: 'absolute',
   },
 });

@@ -9,7 +9,7 @@ import {
   Image,
   FlatList,
 } from 'react-native';
-import { Colors, FontSizes, FontWeights, Spacing, BorderRadius, Shadows } from '../constants';
+import { FontSizes, FontWeights, Spacing, BorderRadius, Shadows } from '../constants';
 
 // Mock order data - in a real app, this would come from an API
 const mockOrders = [
@@ -145,10 +145,10 @@ const formatDate = (dateString) => {
 
 const OrderStatusIndicator = ({ status }) => {
   const statusConfig = {
-    delivered: { icon: '✓', color: Colors.success, bg: Colors.success + '15' },
-    shipped: { icon: '🚚', color: Colors.info, bg: Colors.info + '15' },
-    processing: { icon: '⏳', color: Colors.warning, bg: Colors.warning + '15' },
-    cancelled: { icon: '✕', color: Colors.error, bg: Colors.error + '15' },
+    delivered: { icon: '✓', color: '#000000', bg: '#F5F5F5' },
+    shipped: { icon: '🚚', color: '#333333', bg: '#E8E8E8' },
+    processing: { icon: '⏳', color: '#666666', bg: '#F0F0F0' },
+    cancelled: { icon: '✕', color: '#999999', bg: '#F8F8F8' },
   };
   
   const config = statusConfig[status] || statusConfig.processing;
@@ -383,7 +383,7 @@ const OrdersScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
   },
   header: {
     flexDirection: 'row',
@@ -391,9 +391,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.md,
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
-    borderBottomColor: Colors.borderLight,
+    borderBottomColor: '#E0E0E0',
   },
   backButton: {
     width: 40,
@@ -401,16 +401,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: BorderRadius.md,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
   },
   backIcon: {
     fontSize: FontSizes.lg,
-    color: Colors.textPrimary,
+    color: '#000000',
   },
   headerTitle: {
     fontSize: FontSizes.xl,
     fontWeight: FontWeights.bold,
-    color: Colors.textPrimary,
+    color: '#000000',
     flex: 1,
     textAlign: 'center',
   },
@@ -420,7 +420,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: BorderRadius.md,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
   },
   searchIcon: {
     fontSize: FontSizes.md,
@@ -429,32 +429,34 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.lg,
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
   },
   summaryCard: {
     flex: 1,
     alignItems: 'center',
     paddingVertical: Spacing.md,
     marginHorizontal: Spacing.xs,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   summaryNumber: {
     fontSize: FontSizes.xl,
     fontWeight: FontWeights.bold,
-    color: Colors.primary,
+    color: '#000000',
     marginBottom: 2,
   },
   summaryLabel: {
     fontSize: FontSizes.sm,
-    color: Colors.textSecondary,
+    color: '#666666',
     textAlign: 'center',
   },
   filterContainer: {
     paddingVertical: Spacing.md,
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
-    borderBottomColor: Colors.borderLight,
+    borderBottomColor: '#E0E0E0',
   },
   filterScrollContent: {
     paddingHorizontal: Spacing.lg,
@@ -466,39 +468,39 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.sm,
     marginRight: Spacing.sm,
     borderRadius: BorderRadius.xl,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: '#E0E0E0',
   },
   filterChipActive: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
+    backgroundColor: '#000000',
+    borderColor: '#000000',
   },
   filterChipText: {
     fontSize: FontSizes.sm,
     fontWeight: FontWeights.medium,
-    color: Colors.textSecondary,
+    color: '#666666',
   },
   filterChipTextActive: {
-    color: Colors.background,
+    color: '#FFFFFF',
   },
   filterCount: {
     marginLeft: Spacing.xs,
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: BorderRadius.sm,
-    backgroundColor: Colors.border,
+    backgroundColor: '#E0E0E0',
   },
   filterCountActive: {
-    backgroundColor: Colors.background + '30',
+    backgroundColor: '#FFFFFF30',
   },
   filterCountText: {
     fontSize: FontSizes.xs,
     fontWeight: FontWeights.medium,
-    color: Colors.textSecondary,
+    color: '#666666',
   },
   filterCountTextActive: {
-    color: Colors.background,
+    color: '#FFFFFF',
   },
   ordersList: {
     paddingHorizontal: Spacing.lg,
@@ -506,11 +508,11 @@ const styles = StyleSheet.create({
     paddingBottom: Spacing.xl,
   },
   orderCard: {
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     borderRadius: BorderRadius.lg,
     padding: Spacing.lg,
     borderWidth: 1,
-    borderColor: Colors.borderLight,
+    borderColor: '#E0E0E0',
     ...Shadows.small,
   },
   orderSeparator: {
@@ -528,12 +530,12 @@ const styles = StyleSheet.create({
   orderNumber: {
     fontSize: FontSizes.lg,
     fontWeight: FontWeights.bold,
-    color: Colors.textPrimary,
+    color: '#000000',
     marginBottom: 2,
   },
   orderDate: {
     fontSize: FontSizes.sm,
-    color: Colors.textSecondary,
+    color: '#666666',
   },
   statusIndicator: {
     flexDirection: 'row',
@@ -558,7 +560,9 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: BorderRadius.md,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   mainItemDetails: {
     flex: 1,
@@ -568,22 +572,22 @@ const styles = StyleSheet.create({
   mainItemName: {
     fontSize: FontSizes.md,
     fontWeight: FontWeights.semibold,
-    color: Colors.textPrimary,
+    color: '#000000',
     marginBottom: 2,
   },
   mainItemBrand: {
     fontSize: FontSizes.sm,
-    color: Colors.primary,
+    color: '#333333',
     marginBottom: 2,
   },
   mainItemSpecs: {
     fontSize: FontSizes.sm,
-    color: Colors.textSecondary,
+    color: '#666666',
     marginBottom: 4,
   },
   additionalItems: {
     fontSize: FontSizes.sm,
-    color: Colors.textTertiary,
+    color: '#999999',
     fontStyle: 'italic',
   },
   priceContainer: {
@@ -593,12 +597,12 @@ const styles = StyleSheet.create({
   orderTotal: {
     fontSize: FontSizes.lg,
     fontWeight: FontWeights.bold,
-    color: Colors.textPrimary,
+    color: '#000000',
     marginBottom: 2,
   },
   trackingText: {
     fontSize: FontSizes.xs,
-    color: Colors.info,
+    color: '#333333',
   },
   orderActions: {
     flexDirection: 'row',
@@ -606,27 +610,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: Spacing.md,
     borderTopWidth: 1,
-    borderTopColor: Colors.borderLight,
+    borderTopColor: '#E0E0E0',
   },
   actionButton: {
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.md,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: '#E0E0E0',
   },
   primaryAction: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
+    backgroundColor: '#000000',
+    borderColor: '#000000',
   },
   actionButtonText: {
     fontSize: FontSizes.sm,
     fontWeight: FontWeights.medium,
-    color: Colors.textSecondary,
+    color: '#666666',
   },
   primaryActionText: {
-    color: Colors.background,
+    color: '#FFFFFF',
   },
   detailsButton: {
     paddingHorizontal: Spacing.lg,
@@ -635,7 +639,7 @@ const styles = StyleSheet.create({
   detailsButtonText: {
     fontSize: FontSizes.sm,
     fontWeight: FontWeights.medium,
-    color: Colors.primary,
+    color: '#000000',
   },
   emptyContainer: {
     flex: 1,
@@ -649,9 +653,11 @@ const styles = StyleSheet.create({
     height: 100,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     borderRadius: BorderRadius.xl,
     marginBottom: Spacing.xl,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   emptyIcon: {
     fontSize: 40,
@@ -659,13 +665,13 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: FontSizes.xl,
     fontWeight: FontWeights.bold,
-    color: Colors.textPrimary,
+    color: '#000000',
     marginBottom: Spacing.sm,
     textAlign: 'center',
   },
   emptySubtitle: {
     fontSize: FontSizes.md,
-    color: Colors.textSecondary,
+    color: '#666666',
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: Spacing.xl,
@@ -673,13 +679,13 @@ const styles = StyleSheet.create({
   shopNowButton: {
     paddingHorizontal: Spacing.xl,
     paddingVertical: Spacing.md,
-    backgroundColor: Colors.primary,
+    backgroundColor: '#000000',
     borderRadius: BorderRadius.md,
   },
   shopNowText: {
     fontSize: FontSizes.md,
     fontWeight: FontWeights.semibold,
-    color: Colors.background,
+    color: '#FFFFFF',
   },
 });
 

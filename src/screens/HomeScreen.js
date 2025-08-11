@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import { Colors, FontSizes, FontWeights, Spacing, BorderRadius, Shadows } from '../constants';
+import { FontSizes, FontWeights, Spacing, BorderRadius, Shadows } from '../constants';
 
 const HomeScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -92,7 +92,7 @@ const HomeScreen = () => {
           <TextInput
             style={styles.searchInput}
             placeholder="Search fashion, brands, styles..."
-            placeholderTextColor={Colors.textTertiary}
+            placeholderTextColor={'#999999'}
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
@@ -188,12 +188,12 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
   },
   
   // Header Styles
   header: {
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     paddingHorizontal: Spacing.lg,
     paddingTop: Spacing.xl,
     paddingBottom: Spacing.md,
@@ -205,21 +205,23 @@ const styles = StyleSheet.create({
   },
   greeting: {
     fontSize: FontSizes.md,
-    color: Colors.textSecondary,
+    color: '#666666',
     marginBottom: Spacing.xs,
   },
   userName: {
     fontSize: FontSizes.xl,
     fontWeight: FontWeights.bold,
-    color: Colors.textPrimary,
+    color: '#000000',
   },
   notificationButton: {
     width: 40,
     height: 40,
     borderRadius: BorderRadius.round,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   notificationIcon: {
     fontSize: FontSizes.lg,
@@ -236,10 +238,12 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     borderRadius: BorderRadius.lg,
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   searchIcon: {
     fontSize: FontSizes.lg,
@@ -248,30 +252,32 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: FontSizes.md,
-    color: Colors.textPrimary,
+    color: '#000000',
   },
   filterButton: {
     width: 48,
     height: 48,
     borderRadius: BorderRadius.lg,
-    backgroundColor: Colors.primary,
+    backgroundColor: '#000000',
     justifyContent: 'center',
     alignItems: 'center',
   },
   filterIcon: {
     fontSize: FontSizes.lg,
-    color: Colors.background,
+    color: '#FFFFFF',
   },
 
   // Hero Banner Styles
   heroBanner: {
-    backgroundColor: Colors.primaryLighter,
+    backgroundColor: '#F8F8F8',
     marginHorizontal: Spacing.lg,
     borderRadius: BorderRadius.xl,
     padding: Spacing.lg,
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: Spacing.xl,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   heroContent: {
     flex: 1,
@@ -279,23 +285,23 @@ const styles = StyleSheet.create({
   heroTitle: {
     fontSize: FontSizes.xl,
     fontWeight: FontWeights.bold,
-    color: Colors.textPrimary,
+    color: '#000000',
     marginBottom: Spacing.xs,
   },
   heroSubtitle: {
     fontSize: FontSizes.md,
-    color: Colors.textSecondary,
+    color: '#666666',
     marginBottom: Spacing.md,
   },
   heroButton: {
-    backgroundColor: Colors.primary,
+    backgroundColor: '#000000',
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.lg,
     alignSelf: 'flex-start',
   },
   heroButtonText: {
-    color: Colors.background,
+    color: '#FFFFFF',
     fontSize: FontSizes.md,
     fontWeight: FontWeights.semiBold,
   },
@@ -303,10 +309,12 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: BorderRadius.round,
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: Spacing.md,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   heroImage: {
     fontSize: 40,
@@ -326,11 +334,11 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: FontSizes.xl,
     fontWeight: FontWeights.bold,
-    color: Colors.textPrimary,
+    color: '#000000',
   },
   seeAllText: {
     fontSize: FontSizes.md,
-    color: Colors.primary,
+    color: '#000000',
     fontWeight: FontWeights.medium,
   },
 
@@ -347,17 +355,19 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: BorderRadius.round,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: Spacing.sm,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   categoryEmoji: {
     fontSize: FontSizes.xxl,
   },
   categoryName: {
     fontSize: FontSizes.sm,
-    color: Colors.textPrimary,
+    color: '#000000',
     textAlign: 'center',
     fontWeight: FontWeights.medium,
   },
@@ -369,19 +379,23 @@ const styles = StyleSheet.create({
   },
   productCard: {
     width: 160,
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     borderRadius: BorderRadius.lg,
     padding: Spacing.md,
     ...Shadows.small,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   productImage: {
     width: '100%',
     height: 120,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     borderRadius: BorderRadius.md,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: Spacing.sm,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   productImagePlaceholder: {
     fontSize: FontSizes.xxxl,
@@ -391,18 +405,18 @@ const styles = StyleSheet.create({
   },
   productBrand: {
     fontSize: FontSizes.xs,
-    color: Colors.textTertiary,
+    color: '#999999',
     fontWeight: FontWeights.medium,
     textTransform: 'uppercase',
   },
   productName: {
     fontSize: FontSizes.md,
-    color: Colors.textPrimary,
+    color: '#000000',
     fontWeight: FontWeights.medium,
   },
   productPrice: {
     fontSize: FontSizes.md,
-    color: Colors.primary,
+    color: '#000000',
     fontWeight: FontWeights.bold,
   },
 
@@ -418,12 +432,14 @@ const styles = StyleSheet.create({
   trendingImage: {
     width: '100%',
     height: 100,
-    backgroundColor: Colors.backgroundSecondary,
+    backgroundColor: '#F8F8F8',
     borderRadius: BorderRadius.md,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: Spacing.sm,
     position: 'relative',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   trendingImagePlaceholder: {
     fontSize: FontSizes.xxl,
@@ -432,31 +448,31 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: Spacing.sm,
     right: Spacing.sm,
-    backgroundColor: Colors.error,
+    backgroundColor: '#000000',
     paddingHorizontal: Spacing.sm,
     paddingVertical: Spacing.xs,
     borderRadius: BorderRadius.sm,
   },
   discountText: {
-    color: Colors.background,
+    color: '#FFFFFF',
     fontSize: FontSizes.xs,
     fontWeight: FontWeights.bold,
   },
   trendingName: {
     fontSize: FontSizes.md,
-    color: Colors.textPrimary,
+    color: '#000000',
     fontWeight: FontWeights.medium,
     marginBottom: Spacing.xs,
   },
   trendingPrice: {
     fontSize: FontSizes.md,
-    color: Colors.primary,
+    color: '#000000',
     fontWeight: FontWeights.bold,
   },
 
   // Collections Banner Styles
   collectionsBanner: {
-    backgroundColor: Colors.textPrimary,
+    backgroundColor: '#000000',
     marginHorizontal: Spacing.lg,
     borderRadius: BorderRadius.xl,
     padding: Spacing.xl,
@@ -466,25 +482,25 @@ const styles = StyleSheet.create({
   collectionsTitle: {
     fontSize: FontSizes.xxl,
     fontWeight: FontWeights.bold,
-    color: Colors.background,
+    color: '#FFFFFF',
     marginBottom: Spacing.sm,
     textAlign: 'center',
   },
   collectionsSubtitle: {
     fontSize: FontSizes.md,
-    color: Colors.backgroundSecondary,
+    color: '#F8F8F8',
     textAlign: 'center',
     marginBottom: Spacing.lg,
     lineHeight: 22,
   },
   collectionsButton: {
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
     paddingHorizontal: Spacing.xl,
     paddingVertical: Spacing.md,
     borderRadius: BorderRadius.lg,
   },
   collectionsButtonText: {
-    color: Colors.textPrimary,
+    color: '#000000',
     fontSize: FontSizes.md,
     fontWeight: FontWeights.semiBold,
   },
