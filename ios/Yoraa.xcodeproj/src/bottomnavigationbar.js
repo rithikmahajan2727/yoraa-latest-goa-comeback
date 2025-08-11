@@ -15,23 +15,27 @@ const HomeIcon = ({ active }) => (
   </View>
 );
 
-const SearchIcon = ({ active }) => (
+const ShopIcon = ({ active }) => (
   <View style={[styles.iconContainer, active && styles.activeIconContainer]}>
-    <View style={[styles.searchCircle, active && styles.activeIcon]} />
-    <View style={[styles.searchHandle, active && styles.activeIcon]} />
+    <View style={[styles.shopBag, active && styles.activeIcon]} />
+    <View style={[styles.shopHandle, active && styles.activeIcon]} />
   </View>
 );
 
-const HeartIcon = ({ active }) => (
+const CollectionIcon = ({ active }) => (
   <View style={[styles.iconContainer, active && styles.activeIconContainer]}>
-    <View style={[styles.heart, active && styles.activeIcon]} />
+    <View style={[styles.collectionRect1, active && styles.activeIcon]} />
+    <View style={[styles.collectionRect2, active && styles.activeIcon]} />
+    <View style={[styles.collectionRect3, active && styles.activeIcon]} />
   </View>
 );
 
-const CartIcon = ({ active }) => (
+const RewardsIcon = ({ active }) => (
   <View style={[styles.iconContainer, active && styles.activeIconContainer]}>
-    <View style={[styles.cartBase, active && styles.activeIcon]} />
-    <View style={[styles.cartHandle, active && styles.activeIcon]} />
+    <View style={[styles.starContainer]}>
+      <View style={[styles.starTop, active && styles.activeIcon]} />
+      <View style={[styles.starBottom, active && styles.activeIcon]} />
+    </View>
   </View>
 );
 
@@ -55,19 +59,19 @@ const BottomNavigationBar = ({ activeTab = 'Home', onTabChange }) => {
       icon: HomeIcon,
     },
     {
-      name: 'Search',
-      label: 'Search',
-      icon: SearchIcon,
+      name: 'Shop',
+      label: 'Shop',
+      icon: ShopIcon,
     },
     {
-      name: 'Favorites',
-      label: 'Favorites',
-      icon: HeartIcon,
+      name: 'Collection',
+      label: 'Collection',
+      icon: CollectionIcon,
     },
     {
-      name: 'Cart',
-      label: 'Cart',
-      icon: CartIcon,
+      name: 'Rewards',
+      label: 'Rewards',
+      icon: RewardsIcon,
     },
     {
       name: 'Profile',
@@ -84,7 +88,8 @@ const BottomNavigationBar = ({ activeTab = 'Home', onTabChange }) => {
       // Use external handler
       onTabChange(tabName);
     }
-    console.log(`Navigating to ${tabName}`);
+    // Log the tab change but stay on the same page as requested
+    console.log(`Tab selected: ${tabName} - staying on the same page`);
   };
 
       return (
@@ -213,19 +218,11 @@ const styles = StyleSheet.create({
     right: 0,
     transform: [{ rotate: '45deg' }],
   },
-  
-  // Heart Icon
-  heart: {
-    width: 20,
-    height: 18,
-    backgroundColor: 'transparent',
-    position: 'relative',
-  },
-  
-  // Cart Icon
-  cartBase: {
-    width: 18,
-    height: 12,
+
+  // Shop Icon
+  shopBag: {
+    width: 16,
+    height: 14,
     backgroundColor: 'transparent',
     borderWidth: 2,
     borderColor: '#999999',
@@ -234,18 +231,89 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
   },
-  cartHandle: {
+  shopHandle: {
+    width: 10,
+    height: 6,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: '#999999',
+    borderBottomWidth: 0,
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 6,
+    position: 'absolute',
+    top: 0,
+    left: 3,
+  },
+
+  // Collection Icon
+  collectionRect1: {
+    width: 14,
+    height: 10,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: '#999999',
+    borderRadius: 2,
+    position: 'absolute',
+    top: 0,
+    left: 5,
+  },
+  collectionRect2: {
     width: 12,
     height: 8,
     backgroundColor: 'transparent',
     borderWidth: 2,
     borderColor: '#999999',
-    borderBottomWidth: 0,
-    borderTopLeftRadius: 4,
-    borderTopRightRadius: 4,
+    borderRadius: 2,
     position: 'absolute',
-    top: 0,
-    left: 3,
+    top: 4,
+    left: 0,
+  },
+  collectionRect3: {
+    width: 10,
+    height: 6,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: '#999999',
+    borderRadius: 2,
+    position: 'absolute',
+    top: 8,
+    left: 7,
+  },
+
+  // Rewards Icon (Star)
+  starContainer: {
+    width: 20,
+    height: 20,
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  starTop: {
+    width: 0,
+    height: 0,
+    backgroundColor: 'transparent',
+    borderLeftWidth: 6,
+    borderRightWidth: 6,
+    borderBottomWidth: 4,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: '#999999',
+    position: 'absolute',
+    top: 2,
+  },
+  starBottom: {
+    width: 0,
+    height: 0,
+    backgroundColor: 'transparent',
+    borderLeftWidth: 6,
+    borderRightWidth: 6,
+    borderTopWidth: 4,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopColor: '#999999',
+    position: 'absolute',
+    bottom: 2,
+    transform: [{ rotate: '180deg' }],
   },
   
   // Profile Icon
@@ -279,63 +347,6 @@ const styles = StyleSheet.create({
   },
 });
 
-// Custom Heart Icon with proper heart shape
-const HeartShape = ({ active }) => (
-  <View style={styles.iconContainer}>
-    <View style={styles.heartWrapper}>
-      <View style={[styles.heartLeftCircle, active && styles.activeIcon]} />
-      <View style={[styles.heartRightCircle, active && styles.activeIcon]} />
-      <View style={[styles.heartBottom, active && styles.activeIcon]} />
-    </View>
-  </View>
-);
-
-// Update the heart icon styles
-const heartStyles = StyleSheet.create({
-  heartWrapper: {
-    width: 20,
-    height: 18,
-    position: 'relative',
-  },
-  heartLeftCircle: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: '#999999',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    transform: [{ rotate: '-45deg' }],
-  },
-  heartRightCircle: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: '#999999',
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    transform: [{ rotate: '45deg' }],
-  },
-  heartBottom: {
-    width: 0,
-    height: 0,
-    borderLeftWidth: 7,
-    borderRightWidth: 7,
-    borderTopWidth: 10,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderTopColor: '#999999',
-    position: 'absolute',
-    bottom: 0,
-    left: 3,
-  },
-});
-
 // Enhanced Bottom Navigation with better styling and animations
 const EnhancedBottomNavigationBar = ({ activeTab = 'Home', onTabChange }) => {
   const [internalActiveTab, setInternalActiveTab] = useState('Home');
@@ -350,19 +361,19 @@ const EnhancedBottomNavigationBar = ({ activeTab = 'Home', onTabChange }) => {
       icon: HomeIcon,
     },
     {
-      name: 'Search',
-      label: 'Search',
-      icon: SearchIcon,
+      name: 'Shop',
+      label: 'Shop',
+      icon: ShopIcon,
     },
     {
-      name: 'Favorites',
-      label: 'Favorites',
-      icon: HeartShape,
+      name: 'Collection',
+      label: 'Collection',
+      icon: CollectionIcon,
     },
     {
-      name: 'Cart',
-      label: 'Cart',
-      icon: CartIcon,
+      name: 'Rewards',
+      label: 'Rewards',
+      icon: RewardsIcon,
     },
     {
       name: 'Profile',
@@ -381,7 +392,7 @@ const EnhancedBottomNavigationBar = ({ activeTab = 'Home', onTabChange }) => {
     }
     // Add haptic feedback for iOS
     // Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    console.log(`Navigating to ${tabName}`);
+    console.log(`Tab selected: ${tabName} - staying on the same page`);
   };
 
   return (
@@ -470,9 +481,6 @@ const enhancedStyles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-
-// Merge heart styles with main styles
-Object.assign(styles, heartStyles);
 
 export default BottomNavigationBar;
 export { EnhancedBottomNavigationBar };

@@ -31,51 +31,64 @@ const HomeContent = () => (
   </ScrollView>
 );
 
-const SearchContent = () => (
+const ShopContent = () => (
   <ScrollView style={styles.contentContainer}>
     <View style={styles.pageContent}>
-      <Text style={styles.pageTitle}>Search</Text>
-      <Text style={styles.pageDescription}>Find your perfect style</Text>
+      <Text style={styles.pageTitle}>Shop</Text>
+      <Text style={styles.pageDescription}>Discover amazing products</Text>
       <View style={styles.searchContainer}>
         <View style={styles.searchBox}>
-          <Text style={styles.searchPlaceholder}>Search for items...</Text>
+          <Text style={styles.searchPlaceholder}>Search for products...</Text>
         </View>
       </View>
       <View style={styles.contentCard}>
-        <Text style={styles.cardTitle}>Popular Searches</Text>
-        <Text style={styles.cardText}>• Dresses</Text>
-        <Text style={styles.cardText}>• Shoes</Text>
+        <Text style={styles.cardTitle}>Featured Categories</Text>
+        <Text style={styles.cardText}>• Clothing</Text>
         <Text style={styles.cardText}>• Accessories</Text>
+        <Text style={styles.cardText}>• Footwear</Text>
+        <Text style={styles.cardText}>• Beauty</Text>
       </View>
     </View>
   </ScrollView>
 );
 
-const FavoritesContent = () => (
+const CollectionContent = () => (
   <ScrollView style={styles.contentContainer}>
     <View style={styles.pageContent}>
-      <Text style={styles.pageTitle}>Favorites</Text>
-      <Text style={styles.pageDescription}>Your saved items</Text>
+      <Text style={styles.pageTitle}>Collection</Text>
+      <Text style={styles.pageDescription}>Your curated items</Text>
+      <View style={styles.contentCard}>
+        <Text style={styles.cardTitle}>My Collections</Text>
+        <Text style={styles.cardText}>Create and organize your collections</Text>
+      </View>
       <View style={styles.emptyState}>
-        <Text style={styles.emptyStateText}>No favorites yet</Text>
+        <Text style={styles.emptyStateText}>No collections yet</Text>
         <Text style={styles.emptyStateSubtext}>
-          Start browsing and add items to your favorites
+          Start creating collections to organize your favorite items
         </Text>
       </View>
     </View>
   </ScrollView>
 );
 
-const CartContent = () => (
+const RewardsContent = () => (
   <ScrollView style={styles.contentContainer}>
     <View style={styles.pageContent}>
-      <Text style={styles.pageTitle}>Cart</Text>
-      <Text style={styles.pageDescription}>Your shopping bag</Text>
-      <View style={styles.emptyState}>
-        <Text style={styles.emptyStateText}>Your cart is empty</Text>
-        <Text style={styles.emptyStateSubtext}>
-          Add some items to get started
-        </Text>
+      <Text style={styles.pageTitle}>Rewards</Text>
+      <Text style={styles.pageDescription}>Your loyalty points and benefits</Text>
+      <View style={styles.contentCard}>
+        <Text style={styles.cardTitle}>Your Points</Text>
+        <Text style={styles.cardText}>0 Points Available</Text>
+      </View>
+      <View style={styles.contentCard}>
+        <Text style={styles.cardTitle}>Ways to Earn</Text>
+        <Text style={styles.cardText}>• Make purchases</Text>
+        <Text style={styles.cardText}>• Refer friends</Text>
+        <Text style={styles.cardText}>• Complete challenges</Text>
+      </View>
+      <View style={styles.contentCard}>
+        <Text style={styles.cardTitle}>Redeem Rewards</Text>
+        <Text style={styles.cardText}>Exchange points for exclusive benefits</Text>
       </View>
     </View>
   </ScrollView>
@@ -111,12 +124,12 @@ const Layout = () => {
     switch (activeTab) {
       case 'Home':
         return <HomeContent />;
-      case 'Search':
-        return <SearchContent />;
-      case 'Favorites':
-        return <FavoritesContent />;
-      case 'Cart':
-        return <CartContent />;
+      case 'Shop':
+        return <ShopContent />;
+      case 'Collection':
+        return <CollectionContent />;
+      case 'Rewards':
+        return <RewardsContent />;
       case 'Profile':
         return <ProfileContent />;
       default:
@@ -162,12 +175,12 @@ const EnhancedLayout = () => {
     switch (activeTab) {
       case 'Home':
         return <HomeContent />;
-      case 'Search':
-        return <SearchContent />;
-      case 'Favorites':
-        return <FavoritesContent />;
-      case 'Cart':
-        return <CartContent />;
+      case 'Shop':
+        return <ShopContent />;
+      case 'Collection':
+        return <CollectionContent />;
+      case 'Rewards':
+        return <RewardsContent />;
       case 'Profile':
         return <ProfileContent />;
       default:
