@@ -8,3 +8,5 @@ export { default as EditProfile } from './editprofile';
 export { default as SettingsScreen } from './settings';
 export { default as DeliveryAddressesSettings } from './deliveryaddressessettings';
 export { default as CommunicationPreferences } from './communicationpreferences';
+export { default as LinkedAccountScreen } from './linkedaccount';
+export { default as DeleteAccount } from './deleteaccount';

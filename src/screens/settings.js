@@ -57,9 +57,7 @@ const SettingsScreen = ({ navigation }) => {
   };
 
   const handleCommunicationPreferences = () => {
-    if (navigation && navigation.navigate) {
-      navigation.navigate('CommunicationPreferences');
-    }
+    console.log('Communication preferences pressed');
   };
 
   const handleProfileVisibility = () => {
@@ -68,10 +66,12 @@ const SettingsScreen = ({ navigation }) => {
 
   const handleLinkedAccounts = () => {
     console.log('Linked accounts pressed');
+    navigation.navigate('LinkedAccount');
   };
 
   const handleDeleteAccount = () => {
     console.log('Delete account pressed');
+    navigation.navigate('DeleteAccount');
   };
 
   return (
