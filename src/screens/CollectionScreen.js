@@ -1,14 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  TextInput,
   FlatList,
+  Modal,
+  Animated,
+  Dimensions,
+  SafeAreaView,
+  StatusBar,
 } from 'react-native';
 import { FontSizes, FontWeights, Spacing, BorderRadius, Shadows } from '../constants';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 // Icon Components
 const SearchIcon = () => (
@@ -26,10 +32,12 @@ const FilterIcon = () => (
   </View>
 );
 
-const PlusIcon = () => (
-  <View style={styles.plusIconContainer}>
-    <View style={styles.plusHorizontal} />
-    <View style={styles.plusVertical} />
+const CartIcon = () => (
+  <View style={styles.cartIconContainer}>
+    <View style={styles.cartBody} />
+    <View style={styles.cartHandle} />
+    <View style={styles.cartWheel1} />
+    <View style={styles.cartWheel2} />
   </View>
 );
 
@@ -41,225 +49,390 @@ const HeartIcon = ({ filled = false }) => (
   </View>
 );
 
-// Sample collection data
-const SAMPLE_COLLECTIONS = [
+// FilterModal component
+const FilterModal = ({ 
+  visible, 
+  onClose, 
+  slideAnim, 
+  selectedSizes, 
+  setSelectedSizes, 
+  selectedColors, 
+  setSelectedColors, 
+  selectedSort, 
+  setSelectedSort, 
+  onClearFilters 
+}) => {
+  const renderColorOption = (colorOption, index) => (
+    <TouchableOpacity
+      key={index}
+      style={[
+        styles.colorOption,
+        selectedColors.includes(colorOption.name) && styles.selectedColorOption
+      ]}
+      onPress={() => {
+        if (selectedColors.includes(colorOption.name)) {
+          setSelectedColors(selectedColors.filter(c => c !== colorOption.name));
+        } else {
+          setSelectedColors([...selectedColors, colorOption.name]);
+        }
+      }}
+    >
+      <View style={[styles.colorCircle, { backgroundColor: colorOption.color }]} />
+      <Text style={styles.colorName}>{colorOption.name}</Text>
+    </TouchableOpacity>
+  );
+
+  const renderSizeOption = (size) => (
+    <TouchableOpacity
+      key={size}
+      style={[
+        styles.sizeOption,
+        selectedSizes.includes(size) && styles.selectedSizeOption
+      ]}
+      onPress={() => {
+        if (selectedSizes.includes(size)) {
+          setSelectedSizes(selectedSizes.filter(s => s !== size));
+        } else {
+          setSelectedSizes([...selectedSizes, size]);
+        }
+      }}
+    >
+      <Text style={[
+        styles.sizeText,
+        selectedSizes.includes(size) && styles.selectedSizeText
+      ]}>{size}</Text>
+    </TouchableOpacity>
+  );
+
+  return (
+    <Modal
+      visible={visible}
+      transparent={true}
+      animationType="none"
+      onRequestClose={onClose}
+    >
+      <TouchableOpacity
+        style={styles.modalOverlay}
+        activeOpacity={1}
+        onPress={onClose}
+      >
+        <Animated.View
+          style={[
+            styles.filterModal,
+            { transform: [{ translateY: slideAnim }] }
+          ]}
+        >
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={(e) => e.stopPropagation()}
+          >
+            {/* Modal Handle */}
+            <View style={styles.modalHandle} />
+            
+            {/* Filter Header */}
+            <View style={styles.filterHeader}>
+              <TouchableOpacity onPress={onClearFilters}>
+                <Text style={styles.clearFiltersText}>CLEAR FILTERS</Text>
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView style={styles.filterContent} showsVerticalScrollIndicator={false}>
+              {/* Sizes */}
+              <View style={styles.filterSection}>
+                <View style={styles.sizeGrid}>
+                  {FILTER_OPTIONS.sizes.map(renderSizeOption)}
+                </View>
+                <TouchableOpacity style={styles.viewMoreButton}>
+                  <Text style={styles.viewMoreText}>VIEW MORE</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Price Range */}
+              <View style={styles.filterSection}>
+                <Text style={styles.filterTitle}>PRICE</Text>
+                <View style={styles.priceSlider}>
+                  <View style={styles.sliderTrack} />
+                  <View style={styles.sliderRange} />
+                  <View style={styles.sliderThumb} />
+                  <View style={[styles.sliderThumb, styles.sliderThumbEnd]} />
+                </View>
+                <Text style={styles.priceRangeText}>₹ 450 - ₹ 23,950,200</Text>
+              </View>
+
+              {/* Colors */}
+              <View style={styles.filterSection}>
+                <Text style={styles.filterTitle}>COLOUR</Text>
+                {FILTER_OPTIONS.colors.map(renderColorOption)}
+              </View>
+
+              {/* Sort By */}
+              <View style={styles.filterSection}>
+                <Text style={styles.filterTitle}>SHORT BY</Text>
+                {FILTER_OPTIONS.sortBy.map((option) => (
+                  <TouchableOpacity
+                    key={option}
+                    style={styles.sortOption}
+                    onPress={() => setSelectedSort(option)}
+                  >
+                    <Text style={[
+                      styles.sortText,
+                      selectedSort === option && styles.selectedSortText
+                    ]}>{option}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              {/* More Sizes */}
+              <View style={styles.filterSection}>
+                <Text style={styles.filterTitle}>SIZE</Text>
+                <View style={styles.sizeGrid}>
+                  {FILTER_OPTIONS.sizes2.map(renderSizeOption)}
+                </View>
+                <TouchableOpacity style={styles.viewMoreButton}>
+                  <Text style={styles.viewMoreText}>VIEW MORE</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Categories */}
+              <View style={styles.filterSection}>
+                <Text style={styles.filterTitle}>SHORT BY</Text>
+                {FILTER_OPTIONS.categories.map((category) => (
+                  <TouchableOpacity key={category} style={styles.categoryOption}>
+                    <Text style={styles.categoryText}>{category}</Text>
+                  </TouchableOpacity>
+                ))}
+                <View style={styles.kidsSection}>
+                  {FILTER_OPTIONS.kidsSizes.map((size) => (
+                    <TouchableOpacity key={size} style={styles.kidsSizeOption}>
+                      <Text style={styles.kidsSizeText}>{size}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+            </ScrollView>
+
+            {/* View Results Button */}
+            <TouchableOpacity style={styles.viewResultsButton} onPress={onClose}>
+              <Text style={styles.viewResultsText}>VIEW RESULTS</Text>
+            </TouchableOpacity>
+          </TouchableOpacity>
+        </Animated.View>
+      </TouchableOpacity>
+    </Modal>
+  );
+};
+const SAMPLE_PRODUCTS = [
   {
     id: '1',
-    name: 'Summer Vibes',
-    itemCount: 12,
-    thumbnail: null,
-    color: '#FFE5E5',
+    name: 'Cosmic Unity 3 N7',
+    brand: 'Basketball Shoes',
+    price: 'US$170',
+    colors: '1 Colours',
+    image: null,
+    category: 'TOP WEAR',
+    isWishlisted: false,
   },
   {
     id: '2',
-    name: 'Vintage Classics',
-    itemCount: 8,
-    thumbnail: null,
-    color: '#E5F2FF',
+    name: 'Nike Benassi N7',
+    brand: 'Slides',
+    price: 'US$35',
+    colors: '1 Colours',
+    image: null,
+    category: 'TOP WEAR',
+    isWishlisted: false,
   },
   {
     id: '3',
-    name: 'Street Style',
-    itemCount: 15,
-    thumbnail: null,
-    color: '#E5FFE5',
+    name: 'Nike Sportswear Club Fleece N7',
+    brand: 'Pullover Hoodie',
+    price: 'US$75',
+    colors: '2 Colours',
+    image: null,
+    category: 'BOTTOM WEAR',
+    isWishlisted: false,
   },
   {
     id: '4',
-    name: 'Evening Wear',
-    itemCount: 6,
-    thumbnail: null,
-    color: '#FFF5E5',
+    name: 'Nike Sportswear Club Fleece N7',
+    brand: 'Joggers',
+    price: 'US$65',
+    colors: '2 Colours',
+    image: null,
+    category: 'BOTTOM WEAR',
+    isWishlisted: false,
   },
 ];
 
-const SAMPLE_ITEMS = [
-  {
-    id: '1',
-    name: 'Floral Summer Dress',
-    brand: 'YORAA',
-    price: '$89',
-    image: null,
-    category: 'dresses',
-  },
-  {
-    id: '2',
-    name: 'Vintage Denim Jacket',
-    brand: 'Classic Co.',
-    price: '$125',
-    image: null,
-    category: 'jackets',
-  },
-  {
-    id: '3',
-    name: 'Silk Blouse',
-    brand: 'Elegant',
-    price: '$68',
-    image: null,
-    category: 'tops',
-  },
-  {
-    id: '4',
-    name: 'High-waisted Jeans',
-    brand: 'Denim Plus',
-    price: '$92',
-    image: null,
-    category: 'bottoms',
-  },
-];
-
-const CATEGORIES = ['All', 'Dresses', 'Tops', 'Bottoms', 'Jackets', 'Accessories'];
+const FILTER_OPTIONS = {
+  sizes: ['42', '43', '44', '45'],
+  colors: [
+    { name: 'BEIGE', color: '#F5F5DC' },
+    { name: 'BLACK', color: '#000000' },
+    { name: 'BEIGE', color: '#87CEEB' },
+    { name: 'BEIGE', color: '#D2B48C' },
+    { name: 'BEIGE', color: '#8B0000' },
+    { name: 'BEIGE', color: '#FFD700' },
+    { name: 'BEIGE', color: '#90EE90' },
+  ],
+  sortBy: ['ASCENDING PRICE', 'DESCENDING PRICE', 'NEW'],
+  sizes2: ['S', 'M', 'L', 'XL', '36', '38', '40'],
+  categories: ['MAN', 'WOMEN', 'KIDS'],
+  kidsSizes: ['BOY', 'GIRL'],
+};
 
 const CollectionScreen = () => {
-  const [activeTab, setActiveTab] = useState('Collections');
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('TOP WEAR');
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [products, setProducts] = useState(SAMPLE_PRODUCTS);
+  const [selectedSizes, setSelectedSizes] = useState([]);
+  const [selectedColors, setSelectedColors] = useState([]);
+  const [selectedSort, setSelectedSort] = useState('ASCENDING PRICE');
 
-  const renderCollectionItem = ({ item }) => (
-    <TouchableOpacity style={styles.collectionCard}>
-      <View style={[styles.collectionThumbnail, { backgroundColor: item.color }]}>
-        <View style={styles.collectionPlaceholder}>
-          <View style={styles.imagePlaceholder} />
-          <View style={styles.imagePlaceholderSmall} />
-        </View>
-      </View>
-      <View style={styles.collectionInfo}>
-        <Text style={styles.collectionName}>{item.name}</Text>
-        <Text style={styles.collectionCount}>{item.itemCount} items</Text>
-      </View>
-    </TouchableOpacity>
+  const slideAnim = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
+
+  const filteredProducts = products.filter(product => 
+    activeTab === 'TOP WEAR' ? product.category === 'TOP WEAR' : product.category === 'BOTTOM WEAR'
   );
 
-  const renderItemCard = ({ item }) => (
-    <TouchableOpacity style={styles.itemCard}>
-      <View style={styles.itemImageContainer}>
-        <View style={styles.itemImagePlaceholder}>
-          <View style={styles.itemPlaceholderIcon} />
+  const toggleWishlist = (productId) => {
+    setProducts(products.map(product => 
+      product.id === productId 
+        ? { ...product, isWishlisted: !product.isWishlisted }
+        : product
+    ));
+  };
+
+  const openFilterModal = () => {
+    setShowFilterModal(true);
+    Animated.timing(slideAnim, {
+      toValue: 0,
+      duration: 250,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const closeFilterModal = () => {
+    Animated.timing(slideAnim, {
+      toValue: SCREEN_HEIGHT,
+      duration: 250,
+      useNativeDriver: true,
+    }).start(() => {
+      setShowFilterModal(false);
+    });
+  };
+
+  const clearFilters = () => {
+    setSelectedSizes([]);
+    setSelectedColors([]);
+    setSelectedSort('ASCENDING PRICE');
+  };
+
+  const renderProductItem = ({ item }) => (
+    <TouchableOpacity style={styles.productCard}>
+      <View style={styles.productImageContainer}>
+        <View style={styles.productImagePlaceholder}>
+          <View style={styles.productPlaceholderIcon} />
         </View>
-        <TouchableOpacity style={styles.heartButton}>
-          <HeartIcon />
+        <TouchableOpacity 
+          style={styles.heartButton}
+          onPress={() => toggleWishlist(item.id)}
+        >
+          <HeartIcon filled={item.isWishlisted} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.cartButton}>
+          <CartIcon />
         </TouchableOpacity>
       </View>
-      <View style={styles.itemInfo}>
-        <Text style={styles.itemBrand}>{item.brand}</Text>
-        <Text style={styles.itemName}>{item.name}</Text>
-        <Text style={styles.itemPrice}>{item.price}</Text>
+      <View style={styles.productInfo}>
+        <Text style={styles.productName}>{item.name}</Text>
+        <Text style={styles.productBrand}>{item.brand}</Text>
+        <Text style={styles.productColors}>{item.colors}</Text>
+        <Text style={styles.productPrice}>{item.price}</Text>
       </View>
-    </TouchableOpacity>
-  );
-
-  const renderCategoryButton = (category) => (
-    <TouchableOpacity
-      key={category}
-      style={[
-        styles.categoryButton,
-        selectedCategory === category && styles.activeCategoryButton,
-      ]}
-      onPress={() => setSelectedCategory(category)}
-    >
-      <Text
-        style={[
-          styles.categoryText,
-          selectedCategory === category && styles.activeCategoryText,
-        ]}
-      >
-        {category}
-      </Text>
     </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.title}>Collection</Text>
-        <TouchableOpacity style={styles.iconButton}>
-          <SearchIcon />
-        </TouchableOpacity>
-      </View>
-
-      {/* Search Bar */}
-      <View style={styles.searchContainer}>
-        <View style={styles.searchBar}>
-          <SearchIcon />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search collections & items..."
-            placeholderTextColor="#999999"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+        
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.backButton}>
+            <Text style={styles.backButtonText}>‹</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.searchButton}>
+            <SearchIcon />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.filterButton}>
-          <FilterIcon />
-        </TouchableOpacity>
-      </View>
 
-      {/* Tab Selector */}
-      <View style={styles.tabContainer}>
-        <TouchableOpacity
-          style={[styles.tab, activeTab === 'Collections' && styles.activeTab]}
-          onPress={() => setActiveTab('Collections')}
-        >
-          <Text style={[styles.tabText, activeTab === 'Collections' && styles.activeTabText]}>
-            Collections
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.tab, activeTab === 'Items' && styles.activeTab]}
-          onPress={() => setActiveTab('Items')}
-        >
-          <Text style={[styles.tabText, activeTab === 'Items' && styles.activeTabText]}>
-            All Items
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Content */}
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {activeTab === 'Collections' ? (
-          <View style={styles.collectionsContainer}>
-            {/* Create New Collection Button */}
-            <TouchableOpacity style={styles.createCollectionButton}>
-              <PlusIcon />
-              <Text style={styles.createCollectionText}>Create New Collection</Text>
-            </TouchableOpacity>
-
-            {/* Collections Grid */}
-            <FlatList
-              data={SAMPLE_COLLECTIONS}
-              renderItem={renderCollectionItem}
-              keyExtractor={(item) => item.id}
-              numColumns={2}
-              columnWrapperStyle={styles.collectionRow}
-              scrollEnabled={false}
-              showsVerticalScrollIndicator={false}
-            />
-          </View>
-        ) : (
-          <View style={styles.itemsContainer}>
-            {/* Category Filter */}
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              style={styles.categoryContainer}
+        {/* Filter Bar */}
+        <View style={styles.filterBar}>
+          <TouchableOpacity style={styles.filterButton} onPress={openFilterModal}>
+            <FilterIcon />
+          </TouchableOpacity>
+          
+          {/* Swipeable Tabs */}
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            style={styles.tabScrollView}
+            contentContainerStyle={styles.tabContainer}
+          >
+            <TouchableOpacity
+              style={[
+                styles.tab,
+                activeTab === 'TOP WEAR' && styles.activeTab
+              ]}
+              onPress={() => setActiveTab('TOP WEAR')}
             >
-              {CATEGORIES.map(renderCategoryButton)}
-            </ScrollView>
+              <Text style={[
+                styles.tabText,
+                activeTab === 'TOP WEAR' && styles.activeTabText
+              ]}>TOP WEAR</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={[
+                styles.tab,
+                activeTab === 'BOTTOM WEAR' && styles.activeTab
+              ]}
+              onPress={() => setActiveTab('BOTTOM WEAR')}
+            >
+              <Text style={[
+                styles.tabText,
+                activeTab === 'BOTTOM WEAR' && styles.activeTabText
+              ]}>BOTTOM WEAR</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </View>
 
-            {/* Items Grid */}
-            <FlatList
-              data={SAMPLE_ITEMS}
-              renderItem={renderItemCard}
-              keyExtractor={(item) => item.id}
-              numColumns={2}
-              columnWrapperStyle={styles.itemRow}
-              scrollEnabled={false}
-              showsVerticalScrollIndicator={false}
-            />
-          </View>
-        )}
-      </ScrollView>
+        {/* Products Grid */}
+        <FlatList
+          data={filteredProducts}
+          renderItem={renderProductItem}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          columnWrapperStyle={styles.productRow}
+          contentContainerStyle={styles.productsContainer}
+          showsVerticalScrollIndicator={false}
+        />
+
+        <FilterModal 
+          visible={showFilterModal}
+          onClose={closeFilterModal}
+          slideAnim={slideAnim}
+          selectedSizes={selectedSizes}
+          setSelectedSizes={setSelectedSizes}
+          selectedColors={selectedColors}
+          setSelectedColors={setSelectedColors}
+          selectedSort={selectedSort}
+          setSelectedSort={setSelectedSort}
+          onClearFilters={clearFilters}
+        />
+      </SafeAreaView>
     </View>
   );
 };
@@ -274,209 +447,102 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: Spacing.xl,
-    paddingTop: Spacing.xl,
+    paddingTop: Spacing.md,
     paddingBottom: Spacing.lg,
   },
-  title: {
-    fontSize: FontSizes.xxxl,
-    fontWeight: FontWeights.bold,
-    color: '#000000',
-  },
-  iconButton: {
+  backButton: {
     width: 40,
     height: 40,
-    borderRadius: BorderRadius.xl,
+    borderRadius: 20,
     backgroundColor: '#F8F8F8',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
   },
-  searchContainer: {
+  backButtonText: {
+    fontSize: 24,
+    color: '#000000',
+    fontWeight: '300',
+  },
+  searchButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#F8F8F8',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  filterBar: {
     flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: Spacing.xl,
     marginBottom: Spacing.lg,
-    gap: Spacing.md,
-  },
-  searchBar: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F8F8F8',
-    borderRadius: BorderRadius.xl,
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.md,
-    gap: Spacing.md,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: FontSizes.md,
-    color: '#000000',
   },
   filterButton: {
-    width: 48,
-    height: 48,
-    borderRadius: BorderRadius.xl,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: '#F8F8F8',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
+    marginRight: Spacing.lg,
+  },
+  tabScrollView: {
+    flex: 1,
   },
   tabContainer: {
     flexDirection: 'row',
-    marginHorizontal: Spacing.xl,
-    marginBottom: Spacing.lg,
-    backgroundColor: '#F8F8F8',
-    borderRadius: BorderRadius.lg,
-    padding: Spacing.xs,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
+    paddingVertical: Spacing.sm,
   },
   tab: {
-    flex: 1,
-    paddingVertical: Spacing.md,
-    alignItems: 'center',
-    borderRadius: BorderRadius.md,
-  },
-  activeTab: {
-    backgroundColor: '#FFFFFF',
-    ...Shadows.small,
-  },
-  tabText: {
-    fontSize: FontSizes.md,
-    fontWeight: FontWeights.medium,
-    color: '#666666',
-  },
-  activeTabText: {
-    color: '#000000',
-    fontWeight: FontWeights.semiBold,
-  },
-  content: {
-    flex: 1,
-  },
-  collectionsContainer: {
     paddingHorizontal: Spacing.xl,
-  },
-  createCollectionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#F8F8F8',
-    borderWidth: 2,
-    borderColor: '#000000',
-    borderStyle: 'dashed',
-    borderRadius: BorderRadius.lg,
-    paddingVertical: Spacing.xl,
-    marginBottom: Spacing.xl,
-    gap: Spacing.md,
-  },
-  createCollectionText: {
-    fontSize: FontSizes.lg,
-    fontWeight: FontWeights.semiBold,
-    color: '#000000',
-  },
-  collectionRow: {
-    justifyContent: 'space-between',
-    marginBottom: Spacing.lg,
-  },
-  collectionCard: {
-    width: '47%',
-    backgroundColor: '#FFFFFF',
-    borderRadius: BorderRadius.lg,
-    ...Shadows.small,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-  },
-  collectionThumbnail: {
-    height: 120,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  collectionPlaceholder: {
-    alignItems: 'center',
-    gap: Spacing.sm,
-  },
-  imagePlaceholder: {
-    width: 40,
-    height: 32,
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    borderRadius: BorderRadius.sm,
-  },
-  imagePlaceholderSmall: {
-    width: 24,
-    height: 20,
-    backgroundColor: 'rgba(255,255,255,0.5)',
-    borderRadius: BorderRadius.sm,
-  },
-  collectionInfo: {
-    padding: Spacing.lg,
-  },
-  collectionName: {
-    fontSize: FontSizes.lg,
-    fontWeight: FontWeights.semiBold,
-    color: '#000000',
-    marginBottom: Spacing.xs,
-  },
-  collectionCount: {
-    fontSize: FontSizes.sm,
-    color: '#666666',
-  },
-  itemsContainer: {
-    paddingHorizontal: Spacing.xl,
-  },
-  categoryContainer: {
-    marginBottom: Spacing.xl,
-  },
-  categoryButton: {
-    paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.md,
+    marginRight: Spacing.lg,
     backgroundColor: '#F8F8F8',
     borderRadius: BorderRadius.xl,
-    marginRight: Spacing.md,
     borderWidth: 1,
     borderColor: '#E0E0E0',
   },
-  activeCategoryButton: {
+  activeTab: {
     backgroundColor: '#000000',
+    borderColor: '#000000',
   },
-  categoryText: {
-    fontSize: FontSizes.md,
+  tabText: {
+    fontSize: FontSizes.sm,
     fontWeight: FontWeights.medium,
     color: '#666666',
+    letterSpacing: 0.5,
   },
-  activeCategoryText: {
+  activeTabText: {
     color: '#FFFFFF',
     fontWeight: FontWeights.semiBold,
   },
-  itemRow: {
+  productsContainer: {
+    paddingHorizontal: Spacing.xl,
+    paddingBottom: Spacing.xl,
+  },
+  productRow: {
     justifyContent: 'space-between',
     marginBottom: Spacing.lg,
   },
-  itemCard: {
+  productCard: {
     width: '47%',
     backgroundColor: '#FFFFFF',
     borderRadius: BorderRadius.lg,
-    ...Shadows.small,
     overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
   },
-  itemImageContainer: {
+  productImageContainer: {
     position: 'relative',
+    height: 200,
   },
-  itemImagePlaceholder: {
-    height: 180,
+  productImagePlaceholder: {
+    height: '100%',
     backgroundColor: '#F8F8F8',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  itemPlaceholderIcon: {
-    width: 48,
-    height: 48,
+  productPlaceholderIcon: {
+    width: 60,
+    height: 60,
     backgroundColor: '#E0E0E0',
     borderRadius: BorderRadius.md,
   },
@@ -487,31 +553,237 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     backgroundColor: '#FFFFFF',
-    borderRadius: BorderRadius.round,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
     ...Shadows.small,
   },
-  itemInfo: {
+  cartButton: {
+    position: 'absolute',
+    bottom: Spacing.md,
+    right: Spacing.md,
+    width: 32,
+    height: 32,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...Shadows.small,
+  },
+  productInfo: {
     padding: Spacing.lg,
   },
-  itemBrand: {
-    fontSize: FontSizes.sm,
-    color: '#666666',
-    marginBottom: Spacing.xs,
-  },
-  itemName: {
+  productName: {
     fontSize: FontSizes.md,
     fontWeight: FontWeights.semiBold,
     color: '#000000',
     marginBottom: Spacing.xs,
   },
-  itemPrice: {
+  productBrand: {
+    fontSize: FontSizes.sm,
+    color: '#666666',
+    marginBottom: Spacing.xs,
+  },
+  productColors: {
+    fontSize: FontSizes.sm,
+    color: '#666666',
+    marginBottom: Spacing.sm,
+  },
+  productPrice: {
     fontSize: FontSizes.lg,
     fontWeight: FontWeights.bold,
     color: '#000000',
   },
-  
+
+  // Filter Modal Styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  filterModal: {
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: BorderRadius.xl,
+    borderTopRightRadius: BorderRadius.xl,
+    maxHeight: SCREEN_HEIGHT * 0.8,
+    paddingBottom: 20,
+  },
+  modalHandle: {
+    width: 40,
+    height: 4,
+    backgroundColor: '#E0E0E0',
+    borderRadius: 2,
+    alignSelf: 'center',
+    marginTop: Spacing.md,
+    marginBottom: Spacing.lg,
+  },
+  filterHeader: {
+    paddingHorizontal: Spacing.xl,
+    paddingBottom: Spacing.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
+  clearFiltersText: {
+    fontSize: FontSizes.sm,
+    fontWeight: FontWeights.semiBold,
+    color: '#000000',
+    letterSpacing: 0.5,
+  },
+  filterContent: {
+    paddingHorizontal: Spacing.xl,
+    maxHeight: SCREEN_HEIGHT * 0.6,
+  },
+  filterSection: {
+    paddingVertical: Spacing.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
+  filterTitle: {
+    fontSize: FontSizes.sm,
+    fontWeight: FontWeights.semiBold,
+    color: '#000000',
+    marginBottom: Spacing.md,
+    letterSpacing: 0.5,
+  },
+  sizeGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: Spacing.md,
+    marginBottom: Spacing.md,
+  },
+  sizeOption: {
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.md,
+    backgroundColor: '#F8F8F8',
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+  },
+  selectedSizeOption: {
+    backgroundColor: '#000000',
+    borderColor: '#000000',
+  },
+  sizeText: {
+    fontSize: FontSizes.sm,
+    fontWeight: FontWeights.medium,
+    color: '#666666',
+  },
+  selectedSizeText: {
+    color: '#FFFFFF',
+  },
+  viewMoreButton: {
+    alignSelf: 'flex-start',
+  },
+  viewMoreText: {
+    fontSize: FontSizes.sm,
+    fontWeight: FontWeights.semiBold,
+    color: '#666666',
+    textDecorationLine: 'underline',
+  },
+  priceSlider: {
+    height: 40,
+    justifyContent: 'center',
+    marginBottom: Spacing.md,
+    position: 'relative',
+  },
+  sliderTrack: {
+    height: 4,
+    backgroundColor: '#E0E0E0',
+    borderRadius: 2,
+  },
+  sliderRange: {
+    position: 'absolute',
+    height: 4,
+    backgroundColor: '#000000',
+    borderRadius: 2,
+    left: '20%',
+    right: '10%',
+  },
+  sliderThumb: {
+    position: 'absolute',
+    width: 16,
+    height: 16,
+    backgroundColor: '#000000',
+    borderRadius: 8,
+    left: '20%',
+    top: 12,
+  },
+  sliderThumbEnd: {
+    left: '80%',
+  },
+  priceRangeText: {
+    fontSize: FontSizes.sm,
+    color: '#666666',
+    textAlign: 'center',
+  },
+  colorOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: Spacing.md,
+    gap: Spacing.md,
+  },
+  selectedColorOption: {
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+  },
+  colorCircle: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+  },
+  colorName: {
+    fontSize: FontSizes.sm,
+    color: '#666666',
+  },
+  sortOption: {
+    paddingVertical: Spacing.md,
+  },
+  sortText: {
+    fontSize: FontSizes.sm,
+    color: '#666666',
+  },
+  selectedSortText: {
+    color: '#000000',
+    fontWeight: FontWeights.semiBold,
+  },
+  categoryOption: {
+    paddingVertical: Spacing.md,
+  },
+  categoryText: {
+    fontSize: FontSizes.sm,
+    color: '#666666',
+  },
+  kidsSection: {
+    flexDirection: 'row',
+    gap: Spacing.md,
+    marginTop: Spacing.md,
+    marginLeft: Spacing.lg,
+  },
+  kidsSizeOption: {
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.sm,
+    backgroundColor: '#F8F8F8',
+    borderRadius: BorderRadius.md,
+  },
+  kidsSizeText: {
+    fontSize: FontSizes.sm,
+    color: '#666666',
+  },
+  viewResultsButton: {
+    margin: Spacing.xl,
+    paddingVertical: Spacing.lg,
+    backgroundColor: '#000000',
+    borderRadius: BorderRadius.md,
+    alignItems: 'center',
+  },
+  viewResultsText: {
+    fontSize: FontSizes.md,
+    fontWeight: FontWeights.semiBold,
+    color: '#FFFFFF',
+    letterSpacing: 0.5,
+  },
+
   // Icon Styles
   searchIconContainer: {
     width: 16,
@@ -523,7 +795,7 @@ const styles = StyleSheet.create({
     height: 12,
     borderRadius: 6,
     borderWidth: 2,
-    borderColor: '#999999',
+    borderColor: '#666666',
     position: 'absolute',
     top: 0,
     left: 0,
@@ -531,7 +803,7 @@ const styles = StyleSheet.create({
   searchHandle: {
     width: 6,
     height: 2,
-    backgroundColor: '#999999',
+    backgroundColor: '#666666',
     position: 'absolute',
     bottom: 0,
     right: 0,
@@ -539,44 +811,70 @@ const styles = StyleSheet.create({
   },
   filterIconContainer: {
     width: 16,
-    height: 16,
+    height: 12,
     justifyContent: 'space-between',
   },
   filterLine1: {
     height: 2,
-    backgroundColor: '#999999',
+    backgroundColor: '#666666',
     borderRadius: 1,
     width: '100%',
   },
   filterLine2: {
     height: 2,
-    backgroundColor: '#999999',
+    backgroundColor: '#666666',
     borderRadius: 1,
     width: '70%',
   },
   filterLine3: {
     height: 2,
-    backgroundColor: '#999999',
+    backgroundColor: '#666666',
     borderRadius: 1,
     width: '85%',
   },
-  plusIconContainer: {
-    width: 20,
-    height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  plusHorizontal: {
+  cartIconContainer: {
     width: 16,
-    height: 2,
-    backgroundColor: '#000000',
-    position: 'absolute',
-  },
-  plusVertical: {
-    width: 2,
     height: 16,
-    backgroundColor: '#000000',
+    position: 'relative',
+  },
+  cartBody: {
+    width: 12,
+    height: 8,
+    borderWidth: 1.5,
+    borderColor: '#666666',
+    borderRadius: 2,
     position: 'absolute',
+    top: 2,
+    left: 2,
+  },
+  cartHandle: {
+    width: 6,
+    height: 4,
+    borderTopWidth: 1.5,
+    borderLeftWidth: 1.5,
+    borderRightWidth: 1.5,
+    borderColor: '#666666',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
+  cartWheel1: {
+    width: 3,
+    height: 3,
+    backgroundColor: '#666666',
+    borderRadius: 1.5,
+    position: 'absolute',
+    bottom: 0,
+    left: 4,
+  },
+  cartWheel2: {
+    width: 3,
+    height: 3,
+    backgroundColor: '#666666',
+    borderRadius: 1.5,
+    position: 'absolute',
+    bottom: 0,
+    right: 4,
   },
   heartIconContainer: {
     width: 16,
@@ -588,7 +886,7 @@ const styles = StyleSheet.create({
     height: 10,
     backgroundColor: 'transparent',
     borderWidth: 1.5,
-    borderColor: '#999999',
+    borderColor: '#666666',
     borderTopLeftRadius: 6,
     borderBottomLeftRadius: 6,
     borderRightWidth: 0,
@@ -602,7 +900,7 @@ const styles = StyleSheet.create({
     height: 10,
     backgroundColor: 'transparent',
     borderWidth: 1.5,
-    borderColor: '#999999',
+    borderColor: '#666666',
     borderTopRightRadius: 6,
     borderBottomRightRadius: 6,
     borderLeftWidth: 0,
@@ -619,14 +917,14 @@ const styles = StyleSheet.create({
     borderTopWidth: 8,
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
-    borderTopColor: '#999999',
+    borderTopColor: '#666666',
     position: 'absolute',
     bottom: 2,
     left: 2,
   },
   heartFilled: {
-    borderColor: '#000000',
-    backgroundColor: '#000000',
+    borderColor: '#FF6B6B',
+    backgroundColor: '#FF6B6B',
   },
 });
 
