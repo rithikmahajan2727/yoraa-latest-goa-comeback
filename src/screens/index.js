@@ -14,3 +14,4 @@ export { default as ProfileVisibilityScreen } from './profilevisibility';
 export { default as ContactUsScreen } from './contactus';
 export { default as InvoiceScreen } from './invoice';
 export { default as LoveUsRateUs } from './loveusrateus';
+export { default as FAQScreen } from './faq';

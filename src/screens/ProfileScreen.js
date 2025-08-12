@@ -76,7 +76,9 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   const handleFAQ = () => {
-    console.log('FAQ pressed');
+    if (navigation && navigation.navigate) {
+      navigation.navigate('FAQ');
+    }
   };
 
   const handleInvoices = () => {
