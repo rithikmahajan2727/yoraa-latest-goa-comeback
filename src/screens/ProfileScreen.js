@@ -72,7 +72,9 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   const handleInvoices = () => {
-    console.log('Invoices pressed');
+    if (navigation && navigation.navigate) {
+      navigation.navigate('Invoice');
+    }
   };
 
   const handleLoveUs = () => {

@@ -71,18 +71,32 @@ const LocationIcon = () => (
   </View>
 );
 
+// Star Rating Component
+const StarIcon = ({ filled, onPress }) => (
+  <TouchableOpacity onPress={onPress} style={styles.starContainer}>
+    <Text style={[styles.starText, filled && styles.filledStarText]}>
+      ★
+    </Text>
+  </TouchableOpacity>
+);
+
 const ContactUsScreen = ({ navigation, visible = true }) => {
   const slideAnim = useRef(new Animated.Value(300)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
   const chatSlideAnim = useRef(new Animated.Value(300)).current;
+  const ratingModalAnim = useRef(new Animated.Value(0)).current;
+  const thankYouModalAnim = useRef(new Animated.Value(0)).current;
   
-  const [currentView, setCurrentView] = useState('modal'); // 'modal' or 'chat'
+  const [currentView, setCurrentView] = useState('modal'); // 'modal', 'chat', or 'rating'
   const [messages, setMessages] = useState([
     { id: 1, text: 'Hello, good morning.', sender: 'support', time: 'Today' },
     { id: 2, text: 'I am a Customer Service, is there anything I can help you with?', sender: 'support', time: '10:41 pm' },
   ]);
   const [messageText, setMessageText] = useState('');
   const [isRecording, setIsRecording] = useState(false);
+  const [selectedRating, setSelectedRating] = useState(0);
+  const [showRatingModal, setShowRatingModal] = useState(false);
+  const [showThankYouModal, setShowThankYouModal] = useState(false);
 
   useEffect(() => {
     if (visible && currentView === 'modal') {
@@ -210,6 +224,60 @@ const ContactUsScreen = ({ navigation, visible = true }) => {
     }
   };
 
+  // Function to simulate admin ending the chat
+  const handleChatEnded = () => {
+    setShowRatingModal(true);
+    // Animate rating modal in with dissolve ease in 250ms
+    Animated.timing(ratingModalAnim, {
+      toValue: 1,
+      duration: 250,
+      easing: Easing.in(Easing.ease),
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleRatingSelect = (rating) => {
+    setSelectedRating(rating);
+  };
+
+  const handleRatingSubmit = () => {
+    // Animate rating modal out
+    Animated.timing(ratingModalAnim, {
+      toValue: 0,
+      duration: 250,
+      easing: Easing.out(Easing.ease),
+      useNativeDriver: true,
+    }).start(() => {
+      setShowRatingModal(false);
+      setSelectedRating(0);
+      
+      // Show thank you modal with dissolve ease in 250ms
+      setShowThankYouModal(true);
+      Animated.timing(thankYouModalAnim, {
+        toValue: 1,
+        duration: 250,
+        easing: Easing.in(Easing.ease),
+        useNativeDriver: true,
+      }).start();
+    });
+  };
+
+  const handleContinueShopping = () => {
+    // Animate thank you modal out
+    Animated.timing(thankYouModalAnim, {
+      toValue: 0,
+      duration: 250,
+      easing: Easing.out(Easing.ease),
+      useNativeDriver: true,
+    }).start(() => {
+      setShowThankYouModal(false);
+      // Close the ContactUs modal and return to Profile
+      if (navigation && navigation.goBack) {
+        navigation.goBack();
+      }
+    });
+  };
+
   const handlePhoneCall = () => {
     const phoneNumber = 'tel:+911234567890';
     Linking.canOpenURL(phoneNumber).then((supported) => {
@@ -267,6 +335,14 @@ const ContactUsScreen = ({ navigation, visible = true }) => {
         ))}
       </ScrollView>
 
+      {/* Test Button to Simulate Admin Ending Chat */}
+      <TouchableOpacity 
+        style={styles.testEndChatButton}
+        onPress={handleChatEnded}
+      >
+        <Text style={styles.testEndChatText}>End Chat (Admin)</Text>
+      </TouchableOpacity>
+
       {/* Input Area */}
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -312,6 +388,60 @@ const ContactUsScreen = ({ navigation, visible = true }) => {
         onRequestClose={handleClose}
       >
         {renderChatScreen()}
+        {/* Rating Modal Overlay */}
+        {showRatingModal && (
+          <Animated.View 
+            style={[
+              styles.ratingModalOverlay,
+              {
+                opacity: ratingModalAnim,
+              }
+            ]}
+          >
+            <View style={styles.ratingModal}>
+              <Text style={styles.ratingTitle}>How would you rate the support?</Text>
+              <View style={styles.starsContainer}>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <StarIcon
+                    key={star}
+                    filled={star <= selectedRating}
+                    onPress={() => handleRatingSelect(star)}
+                  />
+                ))}
+              </View>
+              <TouchableOpacity 
+                style={styles.ratingSubmitButton}
+                onPress={handleRatingSubmit}
+              >
+                <Text style={styles.ratingSubmitText}>Of course...</Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        )}
+        {/* Thank You Modal Overlay */}
+        {showThankYouModal && (
+          <Animated.View 
+            style={[
+              styles.thankYouModalOverlay,
+              {
+                opacity: thankYouModalAnim,
+              }
+            ]}
+          >
+            <View style={styles.thankYouModal}>
+              <Text style={styles.thankYouTitle}>Thanks for contacting support !</Text>
+              <Text style={styles.thankYouSubtitle}>
+                It should take 1-2 days to review your submission.
+              </Text>
+              <TouchableOpacity 
+                style={styles.continueShoppingButton}
+                onPress={handleContinueShopping}
+              >
+                <Text style={styles.continueShoppingText}>Continue Shopping</Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        )}
       </Modal>
     );
   }
@@ -651,18 +781,18 @@ const styles = StyleSheet.create({
     width: 8,
     height: 1,
     backgroundColor: '#000000',
-    transform: [{ rotate: '45deg' }],
+    transform: [{ rotate: '-45deg' }],
     top: -2,
-    left: 2,
+    right: 2,
   },
   arrowLine2: {
     position: 'absolute',
     width: 8,
     height: 1,
     backgroundColor: '#000000',
-    transform: [{ rotate: '-45deg' }],
+    transform: [{ rotate: '45deg' }],
     top: 2,
-    left: 2,
+    right: 2,
   },
   phoneIcon: {
     width: 20,
@@ -767,6 +897,137 @@ const styles = StyleSheet.create({
     height: 4,
     backgroundColor: '#FFFFFF',
     top: 16,
+  },
+  // Test button styles
+  testEndChatButton: {
+    backgroundColor: '#FF6B6B',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+    marginHorizontal: 20,
+    marginVertical: 10,
+  },
+  testEndChatText: {
+    color: '#FFFFFF',
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  // Rating Modal Styles
+  ratingModalOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  ratingModal: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    paddingHorizontal: 24,
+    paddingVertical: 32,
+    marginHorizontal: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  ratingTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#000000',
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  starsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 32,
+  },
+  starContainer: {
+    marginHorizontal: 4,
+    padding: 4,
+  },
+  starText: {
+    fontSize: 32,
+    color: '#E0E0E0',
+  },
+  filledStarText: {
+    color: '#FFD700', // Gold color for filled stars
+  },
+  ratingSubmitButton: {
+    backgroundColor: '#E8E8E8',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  ratingSubmitText: {
+    fontSize: 16,
+    color: '#666666',
+    fontWeight: '500',
+  },
+  // Thank You Modal Styles
+  thankYouModalOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  thankYouModal: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    paddingHorizontal: 24,
+    paddingVertical: 40,
+    marginHorizontal: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    elevation: 8,
+    minWidth: 300,
+  },
+  thankYouTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#000000',
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  thankYouSubtitle: {
+    fontSize: 14,
+    color: '#666666',
+    textAlign: 'center',
+    lineHeight: 20,
+    marginBottom: 32,
+  },
+  continueShoppingButton: {
+    backgroundColor: '#000000',
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    borderRadius: 25,
+    minWidth: 200,
+  },
+  continueShoppingText: {
+    fontSize: 16,
+    color: '#FFFFFF',
+    fontWeight: '600',
+    textAlign: 'center',
   },
 });
 
