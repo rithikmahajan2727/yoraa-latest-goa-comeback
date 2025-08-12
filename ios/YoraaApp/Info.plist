@@ -33,6 +33,10 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs access to camera to allow you to take photos for feedback</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to photo library to allow you to select photos for feedback</string>
 	<key>RCTNewArchEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

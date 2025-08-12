@@ -9,16 +9,16 @@ import {
   Easing,
   ScrollView,
   TextInput,
+  Image,
 } from 'react-native';
 
-// Back Arrow Icon Component - Exact Figma Design
+// Back Arrow Icon Component - Using PNG Image
 const BackArrowIcon = () => (
-  <View style={styles.backArrowIcon}>
-    <View style={styles.arrowPath}>
-      <View style={styles.arrowLine1} />
-      <View style={styles.arrowLine2} />
-    </View>
-  </View>
+  <Image 
+    source={require('../assets/icons/CaretLeft.png')} 
+    style={styles.backArrowIcon}
+    resizeMode="contain"
+  />
 );
 
 // Dropdown Arrow Icon Component
@@ -372,37 +372,10 @@ const styles = StyleSheet.create({
     width: 40,
   },
 
-  // Back Arrow Icon - Exact Figma Design
+  // Back Arrow Icon - PNG Image
   backArrowIcon: {
     width: 24,
     height: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  arrowPath: {
-    width: 12,
-    height: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative',
-  },
-  arrowLine1: {
-    position: 'absolute',
-    width: 8,
-    height: 1.5,
-    backgroundColor: '#000000',
-    transform: [{ rotate: '135deg' }],
-    top: 4,
-    left: 2,
-  },
-  arrowLine2: {
-    position: 'absolute',
-    width: 8,
-    height: 1.5,
-    backgroundColor: '#000000',
-    transform: [{ rotate: '-135deg' }],
-    top: 6.5,
-    left: 2,
   },
 
   // Address Card Styles

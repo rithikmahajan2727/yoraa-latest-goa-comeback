@@ -78,7 +78,9 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   const handleLoveUs = () => {
-    console.log('Love Us rate Us pressed');
+    if (navigation && navigation.navigate) {
+      navigation.navigate('LoveUsRateUs');
+    }
   };
 
   const handleInviteFriend = () => {
