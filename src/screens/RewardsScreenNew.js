@@ -6,8 +6,12 @@ import {
   ScrollView,
   TouchableOpacity,
   Animated,
+  Dimensions,
   SafeAreaView,
 } from 'react-native';
+import { FontSizes, FontWeights, Spacing, BorderRadius, Shadows } from '../constants';
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 // Sample user data
 const USER_POINTS = {
@@ -24,11 +28,25 @@ const LEVELS = [
   { name: 'black', points: 500, color: '#000000' },
 ];
 
+const LANGUAGES = [
+  { code: 'en', name: 'English (United Kingdom)', flag: '🇬🇧' },
+  { code: 'hi', name: 'हिंदी (India)', flag: '🇮🇳' },
+  { code: 'es', name: 'Español (España)', flag: '🇪🇸' },
+];
+
+const REGIONS = [
+  { code: 'UK', name: 'United Kingdom (GBP £)', flag: '🇬🇧' },
+  { code: 'IN', name: 'India (USD $)', flag: '🇮🇳' },
+  { code: 'US', name: 'United States (USD $)', flag: '🇺🇸' },
+];
+
 const SHOPPING_PREFERENCES = ['Women', 'Men'];
 const ADDITIONAL_PREFERENCES = ['Boy', 'Women', 'Mens', 'Girls'];
 
 const RewardsScreen = () => {
   const [activeTab, setActiveTab] = useState('giveaways'); // Default to giveaways as per requirement
+  const [selectedLanguage, setSelectedLanguage] = useState('en');
+  const [selectedRegion, setSelectedRegion] = useState('IN');
   const [selectedShoppingPreference, setSelectedShoppingPreference] = useState('Women');
   const [selectedAdditionalPreferences, setSelectedAdditionalPreferences] = useState(['Boy']);
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -89,7 +107,7 @@ const RewardsScreen = () => {
         </Text>
         
         <View style={styles.pointsSection}>
-          <TouchableOpacity onPress={() => console.log('Current points pressed')}>
+          <TouchableOpacity>
             <Text style={styles.currentPointsLabel}>Current Points</Text>
           </TouchableOpacity>
           <View style={styles.pointsRow}>
@@ -124,120 +142,116 @@ const RewardsScreen = () => {
       )}
       scrollEventThrottle={16}
     >
-      {/* Dynamic yellow section that moves on scroll */}
+      {/* Dynamic yellow section */}
       <Animated.View style={[styles.yellowSection, {
         transform: [{
           translateY: scrollY.interpolate({
             inputRange: [0, 200],
-            outputRange: [0, -100],
+            outputRange: [0, -50],
             extrapolate: 'clamp',
           })
         }]
       }]}>
         <Text style={styles.expiresText}>Expires in 8 days</Text>
         <Text style={styles.giveawayTitle}>YORAA Concert Giveaways</Text>
-      </Animated.View>
-
-      {/* Static content below - this stays in place */}
-      <View style={styles.staticContent}>
-        {/* Membership Exclusive Button - Always visible */}
+        
         <TouchableOpacity style={styles.membersExclusiveButton}>
           <Text style={styles.membersExclusiveText}>MEMBERS EXCLUSIVE</Text>
         </TouchableOpacity>
+      </Animated.View>
 
-        {/* Static content that doesn't move */}
-        <View style={styles.staticInnerContent}>
-          <Text style={styles.expiresTextStatic}>Expires in 8 days</Text>
-          <Text style={styles.giveawayTitleStatic}>YORAA Concert Giveaways</Text>
+      {/* Static content below */}
+      <View style={styles.staticContent}>
+        <Text style={styles.expiresTextStatic}>Expires in 8 days</Text>
+        <Text style={styles.giveawayTitleStatic}>YORAA Concert Giveaways</Text>
 
-          {/* Sign in and Create Account buttons */}
-          <View style={styles.authButtons}>
-            <TouchableOpacity style={styles.signInButton}>
-              <Text style={styles.signInButtonText}>Sign In</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.createAccountButton}>
-              <Text style={styles.createAccountButtonText}>Create Account</Text>
-            </TouchableOpacity>
-          </View>
+        {/* Sign in and Create Account buttons */}
+        <View style={styles.authButtons}>
+          <TouchableOpacity style={styles.signInButton}>
+            <Text style={styles.signInButtonText}>Sign In</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.createAccountButton}>
+            <Text style={styles.createAccountButtonText}>Create Account</Text>
+          </TouchableOpacity>
+        </View>
 
-          {/* Language and Region */}
-          <View style={styles.preferencesSection}>
-            <Text style={styles.sectionTitle}>Language and region</Text>
-            
-            <TouchableOpacity style={styles.preferenceItem}>
-              <View style={styles.preferenceLeft}>
-                <Text style={styles.flagIcon}>🌐</Text>
-                <View>
-                  <Text style={styles.preferenceMain}>English (United kingdom)</Text>
-                  <Text style={styles.preferenceLabel}>Language</Text>
-                </View>
+        {/* Language and Region */}
+        <View style={styles.preferencesSection}>
+          <Text style={styles.sectionTitle}>Language and region</Text>
+          
+          <TouchableOpacity style={styles.preferenceItem}>
+            <View style={styles.preferenceLeft}>
+              <Text style={styles.flagIcon}>🌐</Text>
+              <View>
+                <Text style={styles.preferenceMain}>English (United kingdom)</Text>
+                <Text style={styles.preferenceLabel}>Language</Text>
               </View>
-              <Text style={styles.chevron}>›</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.preferenceItem}>
-              <View style={styles.preferenceLeft}>
-                <Text style={styles.flagIcon}>🇮🇳</Text>
-                <View>
-                  <Text style={styles.preferenceMain}>India (USD $)</Text>
-                  <Text style={styles.preferenceLabel}>Region</Text>
-                </View>
+            </View>
+            <Text style={styles.chevron}>›</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.preferenceItem}>
+            <View style={styles.preferenceLeft}>
+              <Text style={styles.flagIcon}>🇮🇳</Text>
+              <View>
+                <Text style={styles.preferenceMain}>India (USD $)</Text>
+                <Text style={styles.preferenceLabel}>Region</Text>
               </View>
-              <Text style={styles.chevron}>›</Text>
+            </View>
+            <Text style={styles.chevron}>›</Text>
+          </TouchableOpacity>
+          
+          <Text style={styles.shippingNote}>
+            You are currently shipping to India and your order will be billed in USD $
+          </Text>
+        </View>
+
+        {/* Shopping Preferences */}
+        <View style={styles.preferencesSection}>
+          <Text style={styles.sectionTitle}>My shopping preferences</Text>
+          
+          {SHOPPING_PREFERENCES.map((pref) => (
+            <TouchableOpacity
+              key={pref}
+              style={styles.radioItem}
+              onPress={() => setSelectedShoppingPreference(pref)}
+            >
+              <Text style={styles.radioLabel}>{pref}</Text>
+              <View style={styles.radioButton}>
+                {selectedShoppingPreference === pref && <View style={styles.radioButtonSelected} />}
+              </View>
             </TouchableOpacity>
-            
-            <Text style={styles.shippingNote}>
-              You are currently shipping to India and your order will be billed in USD $
-            </Text>
-          </View>
+          ))}
+          
+          <Text style={styles.preferenceNote}>
+            Tailor your app experience with the items most suited to you
+          </Text>
+        </View>
 
-          {/* Shopping Preferences */}
-          <View style={styles.preferencesSection}>
-            <Text style={styles.sectionTitle}>My shopping preferences</Text>
-            
-            {SHOPPING_PREFERENCES.map((pref) => (
-              <TouchableOpacity
-                key={pref}
-                style={styles.radioItem}
-                onPress={() => setSelectedShoppingPreference(pref)}
-              >
-                <Text style={styles.radioLabel}>{pref}</Text>
-                <View style={styles.radioButton}>
-                  {selectedShoppingPreference === pref && <View style={styles.radioButtonSelected} />}
-                </View>
-              </TouchableOpacity>
-            ))}
-            
-            <Text style={styles.preferenceNote}>
-              Tailor your app experience with the items most suited to you
-            </Text>
-          </View>
-
-          {/* Additional Preferences */}
-          <View style={styles.preferencesSection}>
-            <Text style={styles.sectionTitle}>Additional preferences</Text>
-            
-            {ADDITIONAL_PREFERENCES.map((pref) => (
-              <TouchableOpacity
-                key={pref}
-                style={styles.checkboxItem}
-                onPress={() => {
-                  if (selectedAdditionalPreferences.includes(pref)) {
-                    setSelectedAdditionalPreferences(prev => prev.filter(p => p !== pref));
-                  } else {
-                    setSelectedAdditionalPreferences(prev => [...prev, pref]);
-                  }
-                }}
-              >
-                <Text style={styles.checkboxLabel}>{pref}</Text>
-                <View style={styles.checkbox}>
-                  {selectedAdditionalPreferences.includes(pref) && (
-                    <Text style={styles.checkmark}>✓</Text>
-                  )}
-                </View>
-              </TouchableOpacity>
-            ))}
-          </View>
+        {/* Additional Preferences */}
+        <View style={styles.preferencesSection}>
+          <Text style={styles.sectionTitle}>Additional preferences</Text>
+          
+          {ADDITIONAL_PREFERENCES.map((pref) => (
+            <TouchableOpacity
+              key={pref}
+              style={styles.checkboxItem}
+              onPress={() => {
+                if (selectedAdditionalPreferences.includes(pref)) {
+                  setSelectedAdditionalPreferences(prev => prev.filter(p => p !== pref));
+                } else {
+                  setSelectedAdditionalPreferences(prev => [...prev, pref]);
+                }
+              }}
+            >
+              <Text style={styles.checkboxLabel}>{pref}</Text>
+              <View style={styles.checkbox}>
+                {selectedAdditionalPreferences.includes(pref) && (
+                  <Text style={styles.checkmark}>✓</Text>
+                )}
+              </View>
+            </TouchableOpacity>
+          ))}
         </View>
       </View>
     </ScrollView>
@@ -267,22 +281,20 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: 20,
   },
   tabButton: {
     flex: 1,
     paddingVertical: 16,
     alignItems: 'center',
-    borderBottomWidth: 2,
-    borderBottomColor: 'transparent',
   },
   activeTab: {
+    borderBottomWidth: 2,
     borderBottomColor: '#000000',
   },
   tabText: {
     fontSize: 16,
     fontWeight: '400',
-    color: '#999999',
+    color: '#666666',
   },
   activeTabText: {
     color: '#000000',
@@ -414,21 +426,19 @@ const styles = StyleSheet.create({
   yellowSection: {
     backgroundColor: '#FFEB3B',
     padding: 20,
-    minHeight: 400,
-    justifyContent: 'flex-start',
-    paddingTop: 40,
+    minHeight: 300,
+    justifyContent: 'center',
   },
   expiresText: {
     fontSize: 14,
     color: '#000000',
     marginBottom: 10,
-    fontWeight: '400',
   },
   giveawayTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#000000',
-    marginBottom: 20,
+    marginBottom: 40,
   },
   membersExclusiveButton: {
     backgroundColor: 'transparent',
@@ -437,9 +447,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 24,
     alignSelf: 'flex-start',
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
   },
   membersExclusiveText: {
     fontSize: 14,
@@ -448,32 +455,27 @@ const styles = StyleSheet.create({
   },
 
   staticContent: {
-    backgroundColor: '#F5F5F5',
-    paddingTop: 60, // Space for the members exclusive button
-    flex: 1,
-    minHeight: 800,
-  },
-  staticInnerContent: {
+    backgroundColor: '#E0E0E0',
     padding: 20,
+    flex: 1,
   },
   expiresTextStatic: {
     fontSize: 14,
     color: '#000000',
     marginBottom: 10,
-    fontWeight: '400',
   },
   giveawayTitleStatic: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#000000',
-    marginBottom: 30,
+    marginBottom: 20,
   },
 
   // Auth Buttons
   authButtons: {
     flexDirection: 'row',
     gap: 15,
-    marginBottom: 40,
+    marginBottom: 30,
   },
   signInButton: {
     flex: 1,
@@ -504,13 +506,13 @@ const styles = StyleSheet.create({
 
   // Preferences Sections
   preferencesSection: {
-    marginBottom: 40,
+    marginBottom: 30,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
     color: '#000000',
-    marginBottom: 20,
+    marginBottom: 15,
   },
   preferenceItem: {
     flexDirection: 'row',
@@ -526,7 +528,7 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   flagIcon: {
-    fontSize: 24,
+    fontSize: 20,
   },
   preferenceMain: {
     fontSize: 16,
@@ -545,7 +547,7 @@ const styles = StyleSheet.create({
   shippingNote: {
     fontSize: 12,
     color: '#666666',
-    marginTop: 15,
+    marginTop: 10,
     lineHeight: 16,
   },
 
@@ -555,33 +557,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
   },
   radioLabel: {
     fontSize: 16,
     color: '#000000',
-    fontWeight: '400',
   },
   radioButton: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
     borderWidth: 2,
     borderColor: '#000000',
     justifyContent: 'center',
     alignItems: 'center',
   },
   radioButtonSelected: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
     backgroundColor: '#000000',
   },
   preferenceNote: {
     fontSize: 12,
     color: '#666666',
-    marginTop: 15,
+    marginTop: 10,
     lineHeight: 16,
   },
 
@@ -591,25 +590,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
   },
   checkboxLabel: {
     fontSize: 16,
     color: '#000000',
-    fontWeight: '400',
   },
   checkbox: {
-    width: 24,
-    height: 24,
+    width: 20,
+    height: 20,
     borderWidth: 2,
     borderColor: '#000000',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'transparent',
   },
   checkmark: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: 'bold',
     color: '#000000',
   },
