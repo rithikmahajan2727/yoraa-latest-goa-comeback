@@ -53,6 +53,7 @@ const EditProfile = ({ navigation }) => {
   const [showStateDropdown, setShowStateDropdown] = useState(false);
   const [showCountryCodeDropdown, setShowCountryCodeDropdown] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [addressAdded, setAddressAdded] = useState(false);
 
   const genderOptions = ['Male', 'Female'];
   const stateOptions = ['Delhi', 'Mumbai', 'Bangalore', 'Chennai', 'Kolkata', 'Hyderabad', 'Pune', 'Ahmedabad'];
@@ -135,6 +136,7 @@ const EditProfile = ({ navigation }) => {
 
   const handleSuccessModalDone = () => {
     setShowSuccessModal(false);
+    setAddressAdded(true);
   };
 
   const handleStateSelect = (state) => {
@@ -151,6 +153,20 @@ const EditProfile = ({ navigation }) => {
       countryCode: countryCode.code
     }));
     setShowCountryCodeDropdown(false);
+  };
+
+  const getFormattedAddress = () => {
+    const { address, apartment, city, state, pin, country } = formData;
+    let addressParts = [];
+    
+    if (address) addressParts.push(address);
+    if (apartment) addressParts.push(apartment);
+    if (city) addressParts.push(city);
+    if (state) addressParts.push(state);
+    if (pin) addressParts.push(pin);
+    if (country) addressParts.push(country);
+    
+    return addressParts.length > 0 ? addressParts.join(', ') : 'XYZ Street';
   };
 
   const handleGoBack = () => {
@@ -321,10 +337,21 @@ const EditProfile = ({ navigation }) => {
           </View>
 
           {/* Address */}
-          <TouchableOpacity style={styles.additionalItem} onPress={handleAddAddress}>
-            <Text style={styles.additionalTitle}>Address</Text>
-            <Text style={styles.addButton}>+ Add</Text>
-          </TouchableOpacity>
+          <View style={styles.additionalSection}>
+            <TouchableOpacity style={styles.additionalItem} onPress={handleAddAddress}>
+              <Text style={styles.additionalTitle}>Address</Text>
+              <Text style={styles.addButton}>+ Add</Text>
+            </TouchableOpacity>
+            
+            {addressAdded && (
+              <View style={styles.addressDisplayContainer}>
+                <Text style={styles.addressLabel}>Address</Text>
+                <View style={styles.addressContentContainer}>
+                  <Text style={styles.addressContent}>{getFormattedAddress()}</Text>
+                </View>
+              </View>
+            )}
+          </View>
         </View>
 
         {/* Spacer for Save Button */}
@@ -669,6 +696,28 @@ const styles = StyleSheet.create({
   addButton: {
     fontSize: 16,
     fontWeight: '500',
+    color: '#000000',
+  },
+  addressDisplayContainer: {
+    paddingTop: 15,
+  },
+  addressLabel: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#000000',
+    marginBottom: 8,
+    marginLeft: 5,
+  },
+  addressContentContainer: {
+    borderWidth: 2,
+    borderColor: '#000000',
+    borderRadius: 25,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    backgroundColor: '#FFFFFF',
+  },
+  addressContent: {
+    fontSize: 16,
     color: '#000000',
   },
   expandedContent: {
