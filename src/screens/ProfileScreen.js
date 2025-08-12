@@ -20,7 +20,15 @@ const ArrowIcon = () => (
 // Icon Components
 const OrdersIcon = () => (
   <View style={styles.iconContainer}>
-    <View style={styles.ordersBox} />
+    {/* Main container representing the document/order */}
+    <View style={styles.ordersMainContainer}>
+      {/* Top section (header area) */}
+      <View style={styles.ordersHeader} />
+      {/* Content area with line */}
+      <View style={styles.ordersContent}>
+        <View style={styles.ordersContentLine} />
+      </View>
+    </View>
   </View>
 );
 
@@ -287,13 +295,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'relative',
   },
-  ordersBox: {
+  ordersMainContainer: {
     width: 20,
-    height: 16,
-    backgroundColor: 'transparent',
-    borderWidth: 2,
+    height: 18,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
     borderColor: '#000000',
     borderRadius: 2,
+    overflow: 'hidden',
+  },
+  ordersHeader: {
+    width: '100%',
+    height: 5,
+    backgroundColor: '#000000',
+  },
+  ordersContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 3,
+  },
+  ordersContentLine: {
+    width: '80%',
+    height: 1.5,
+    backgroundColor: '#000000',
+    borderRadius: 0.5,
   },
   contactCircle: {
     width: 16,
