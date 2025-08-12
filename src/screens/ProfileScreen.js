@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
+import LogoutModal from './logoutmodal';
 
 // Arrow Icon Component
 const ArrowIcon = () => (
@@ -39,6 +40,14 @@ const SettingsIcon = () => (
 );
 
 const ProfileScreen = ({ navigation }) => {
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  const handleEditProfile = () => {
+    if (navigation && navigation.navigate) {
+      navigation.navigate('EditProfile');
+    }
+  };
+
   const handleOrders = () => {
     console.log('Orders pressed');
   };
@@ -80,7 +89,18 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   const handleLogout = () => {
-    console.log('Logout pressed');
+    setShowLogoutModal(true);
+  };
+
+  const handleCloseLogoutModal = () => {
+    setShowLogoutModal(false);
+  };
+
+  const handleSignOut = () => {
+    setShowLogoutModal(false);
+    // Add your sign out logic here
+    console.log('User signed out');
+    // For example: navigation.navigate('Login') or clear user session
   };
 
   return (
@@ -89,7 +109,7 @@ const ProfileScreen = ({ navigation }) => {
         {/* Step 1: Client Name */}
         <View style={styles.headerContainer}>
           <Text style={styles.clientName}>John Smith</Text>
-          <TouchableOpacity style={styles.editProfileButton}>
+          <TouchableOpacity style={styles.editProfileButton} onPress={handleEditProfile}>
             <Text style={styles.editProfileText}>Edit Profile</Text>
           </TouchableOpacity>
         </View>
@@ -176,6 +196,12 @@ const ProfileScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      
+      <LogoutModal
+        visible={showLogoutModal}
+        onClose={handleCloseLogoutModal}
+        onSignOut={handleSignOut}
+      />
     </SafeAreaView>
   );
 };
