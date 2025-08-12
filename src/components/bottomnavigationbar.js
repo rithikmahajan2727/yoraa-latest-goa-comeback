@@ -7,45 +7,13 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { Colors, FontSizes, FontWeights, FontFamilies, Spacing, Shadows } from '../constants';
-
-// Custom Icons using SVG-like components (since we don't have vector icons installed)
-const HomeIcon = ({ active }) => (
-  <View style={[styles.iconContainer, active && styles.activeIconContainer]}>
-    <View style={[styles.homeIcon, active && styles.activeIcon]} />
-    <View style={[styles.homeIconRoof, active && styles.activeIcon]} />
-  </View>
-);
-
-const ShopIcon = ({ active }) => (
-  <View style={[styles.iconContainer, active && styles.activeIconContainer]}>
-    <View style={[styles.shopBag, active && styles.activeIcon]} />
-    <View style={[styles.shopHandle, active && styles.activeIcon]} />
-  </View>
-);
-
-const CollectionIcon = ({ active }) => (
-  <View style={[styles.iconContainer, active && styles.activeIconContainer]}>
-    <View style={[styles.collectionRect1, active && styles.activeIcon]} />
-    <View style={[styles.collectionRect2, active && styles.activeIcon]} />
-    <View style={[styles.collectionRect3, active && styles.activeIcon]} />
-  </View>
-);
-
-const RewardsIcon = ({ active }) => (
-  <View style={[styles.iconContainer, active && styles.activeIconContainer]}>
-    <View style={[styles.starContainer]}>
-      <View style={[styles.starTop, active && styles.activeIcon]} />
-      <View style={[styles.starBottom, active && styles.activeIcon]} />
-    </View>
-  </View>
-);
-
-const ProfileIcon = ({ active }) => (
-  <View style={[styles.iconContainer, active && styles.activeIconContainer]}>
-    <View style={[styles.profileHead, active && styles.activeIcon]} />
-    <View style={[styles.profileBody, active && styles.activeIcon]} />
-  </View>
-);
+import {
+  HomeIcon,
+  ShopIcon,
+  CollectionIcon,
+  RewardsIcon,
+  ProfileIcon,
+} from '../assets/icons';
 
 const BottomNavigationBar = ({ activeTab = 'Home', onTabChange }) => {
   const [internalActiveTab, setInternalActiveTab] = useState('Home');
@@ -98,14 +66,19 @@ const BottomNavigationBar = ({ activeTab = 'Home', onTabChange }) => {
           <View style={styles.navigationBar}>
             {tabs.map((tab) => {
               const isActive = currentActiveTab === tab.name;
-              const IconComponent = tab.icon;          return (
+              
+              return (
             <TouchableOpacity
               key={tab.name}
               style={styles.tabButton}
               onPress={() => handleTabPress(tab.name)}
               activeOpacity={0.7}
             >
-              <IconComponent active={isActive} />
+              <tab.icon 
+                active={isActive} 
+                color={isActive ? Colors.primary : Colors.textTertiary}
+                size={24}
+              />
               <Text style={[styles.tabLabel, isActive && styles.activeTabLabel]}>
                 {tab.label}
               </Text>
@@ -159,187 +132,6 @@ const styles = StyleSheet.create({
     height: 3,
     backgroundColor: Colors.primary,
     borderRadius: 2,
-  },
-  iconContainer: {
-    width: 24,
-    height: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  activeIconContainer: {
-    // Additional styling for active icon container if needed
-  },
-  
-  // Home Icon
-  homeIcon: {
-    width: 18,
-    height: 14,
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: '#999999',
-    borderTopWidth: 0,
-    position: 'absolute',
-    bottom: 0,
-  },
-  homeIconRoof: {
-    width: 0,
-    height: 0,
-    borderLeftWidth: 11,
-    borderRightWidth: 11,
-    borderBottomWidth: 8,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: '#999999',
-    position: 'absolute',
-    top: 0,
-  },
-  
-  // Search Icon
-  searchCircle: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: '#999999',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-  },
-  searchHandle: {
-    width: 8,
-    height: 2,
-    backgroundColor: '#999999',
-    position: 'absolute',
-    bottom: 2,
-    right: 0,
-    transform: [{ rotate: '45deg' }],
-  },
-
-  // Shop Icon
-  shopBag: {
-    width: 16,
-    height: 14,
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: '#999999',
-    borderTopLeftRadius: 4,
-    borderTopRightRadius: 4,
-    position: 'absolute',
-    bottom: 0,
-  },
-  shopHandle: {
-    width: 10,
-    height: 6,
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: '#999999',
-    borderBottomWidth: 0,
-    borderTopLeftRadius: 6,
-    borderTopRightRadius: 6,
-    position: 'absolute',
-    top: 0,
-    left: 3,
-  },
-
-  // Collection Icon
-  collectionRect1: {
-    width: 14,
-    height: 10,
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: '#999999',
-    borderRadius: 2,
-    position: 'absolute',
-    top: 0,
-    left: 5,
-  },
-  collectionRect2: {
-    width: 12,
-    height: 8,
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: '#999999',
-    borderRadius: 2,
-    position: 'absolute',
-    top: 4,
-    left: 0,
-  },
-  collectionRect3: {
-    width: 10,
-    height: 6,
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: '#999999',
-    borderRadius: 2,
-    position: 'absolute',
-    top: 8,
-    left: 7,
-  },
-
-  // Rewards Icon (Star)
-  starContainer: {
-    width: 20,
-    height: 20,
-    position: 'relative',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  starTop: {
-    width: 0,
-    height: 0,
-    backgroundColor: 'transparent',
-    borderLeftWidth: 6,
-    borderRightWidth: 6,
-    borderBottomWidth: 4,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: '#999999',
-    position: 'absolute',
-    top: 2,
-  },
-  starBottom: {
-    width: 0,
-    height: 0,
-    backgroundColor: 'transparent',
-    borderLeftWidth: 6,
-    borderRightWidth: 6,
-    borderTopWidth: 4,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderTopColor: '#999999',
-    position: 'absolute',
-    bottom: 2,
-    transform: [{ rotate: '180deg' }],
-  },
-  
-  // Profile Icon
-  profileHead: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: '#999999',
-    position: 'absolute',
-    top: 0,
-  },
-  profileBody: {
-    width: 16,
-    height: 10,
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: '#999999',
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    borderBottomWidth: 0,
-    position: 'absolute',
-    bottom: 0,
-  },
-  
-  // Active Icon Styles
-  activeIcon: {
-    borderColor: Colors.primary,
-    backgroundColor: 'transparent',
   },
 });
 
