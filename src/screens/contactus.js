@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -10,9 +10,57 @@ import {
   Alert,
   Modal,
   Dimensions,
+  ScrollView,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 
 const { height: screenHeight } = Dimensions.get('window');
+
+// Back Arrow Icon Component
+const BackArrowIcon = () => (
+  <View style={styles.backArrowIcon}>
+    <View style={styles.arrowPath}>
+      <View style={styles.arrowLine1} />
+      <View style={styles.arrowLine2} />
+    </View>
+  </View>
+);
+
+// Phone Icon Component
+const PhoneIcon = () => (
+  <View style={styles.phoneIcon}>
+    <View style={styles.phoneBody} />
+    <View style={styles.phoneEarpiece} />
+  </View>
+);
+
+// Send Icon Component
+const SendIcon = () => (
+  <View style={styles.sendIcon}>
+    <View style={styles.sendArrow} />
+    <View style={styles.sendArrowHead1} />
+    <View style={styles.sendArrowHead2} />
+  </View>
+);
+
+// Photo Icon Component
+const PhotoIcon = () => (
+  <View style={styles.photoIcon}>
+    <View style={styles.photoFrame} />
+    <View style={styles.photoLens} />
+  </View>
+);
+
+// Microphone Icon Component
+const MicrophoneIcon = () => (
+  <View style={styles.microphoneIcon}>
+    <View style={styles.micBody} />
+    <View style={styles.micBase} />
+    <View style={styles.micStand} />
+  </View>
+);
 
 // Location Pin Icon Component
 const LocationIcon = () => (
@@ -26,10 +74,19 @@ const LocationIcon = () => (
 const ContactUsScreen = ({ navigation, visible = true }) => {
   const slideAnim = useRef(new Animated.Value(300)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
+  const chatSlideAnim = useRef(new Animated.Value(300)).current;
+  
+  const [currentView, setCurrentView] = useState('modal'); // 'modal' or 'chat'
+  const [messages, setMessages] = useState([
+    { id: 1, text: 'Hello, good morning.', sender: 'support', time: 'Today' },
+    { id: 2, text: 'I am a Customer Service, is there anything I can help you with?', sender: 'support', time: '10:41 pm' },
+  ]);
+  const [messageText, setMessageText] = useState('');
+  const [isRecording, setIsRecording] = useState(false);
 
   useEffect(() => {
-    if (visible) {
-      // Animate in with 250ms ease in from bottom
+    if (visible && currentView === 'modal') {
+      // Animate in modal with 250ms ease in from bottom
       Animated.parallel([
         Animated.timing(slideAnim, {
           toValue: 0,
@@ -45,26 +102,39 @@ const ContactUsScreen = ({ navigation, visible = true }) => {
         })
       ]).start();
     }
-  }, [slideAnim, opacityAnim, visible]);
+  }, [slideAnim, opacityAnim, visible, currentView]);
 
   const handleClose = () => {
-    // Animate out with 250ms ease out to bottom
-    Animated.parallel([
-      Animated.timing(slideAnim, {
+    if (currentView === 'chat') {
+      // Animate chat out to the right with 300ms ease in
+      Animated.timing(chatSlideAnim, {
         toValue: 300,
-        duration: 250,
-        easing: Easing.out(Easing.ease),
+        duration: 300,
+        easing: Easing.in(Easing.ease),
         useNativeDriver: true,
-      }),
-      Animated.timing(opacityAnim, {
-        toValue: 0,
-        duration: 250,
-        easing: Easing.out(Easing.ease),
-        useNativeDriver: true,
-      })
-    ]).start(() => {
-      navigation.goBack();
-    });
+      }).start(() => {
+        setCurrentView('modal');
+        chatSlideAnim.setValue(300);
+      });
+    } else {
+      // Animate modal out with 250ms ease out to bottom
+      Animated.parallel([
+        Animated.timing(slideAnim, {
+          toValue: 300,
+          duration: 250,
+          easing: Easing.out(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacityAnim, {
+          toValue: 0,
+          duration: 250,
+          easing: Easing.out(Easing.ease),
+          useNativeDriver: true,
+        })
+      ]).start(() => {
+        navigation.goBack();
+      });
+    }
   };
 
   const handleBackdropPress = () => {
@@ -92,17 +162,159 @@ const ContactUsScreen = ({ navigation, visible = true }) => {
   };
 
   const handleCustomerSupport = () => {
-    // You can implement this to open a chat, call, or other support method
+    // Navigate to chat screen with slide in from right animation
+    setCurrentView('chat');
+    chatSlideAnim.setValue(300);
+    Animated.timing(chatSlideAnim, {
+      toValue: 0,
+      duration: 300,
+      easing: Easing.in(Easing.ease),
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleSendMessage = () => {
+    if (messageText.trim()) {
+      const newMessage = {
+        id: messages.length + 1,
+        text: messageText.trim(),
+        sender: 'user',
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      setMessages([...messages, newMessage]);
+      setMessageText('');
+    }
+  };
+
+  const handlePhotoUpload = () => {
     Alert.alert(
-      'Customer Support',
-      'We\'re here to help! Our support team is available Monday to Friday 10 AM - 4 PM IST.',
+      'Upload Photo',
+      'Choose an option',
       [
-        { text: 'Call Us', onPress: () => Linking.openURL('tel:+911234567890') },
-        { text: 'Email Us', onPress: handleEmailPress },
+        { text: 'Camera', onPress: () => console.log('Open Camera') },
+        { text: 'Gallery', onPress: () => console.log('Open Gallery') },
         { text: 'Cancel', style: 'cancel' }
       ]
     );
   };
+
+  const handleVoiceInput = () => {
+    if (isRecording) {
+      setIsRecording(false);
+      // Stop recording and convert to text
+      console.log('Stop recording');
+    } else {
+      setIsRecording(true);
+      // Start recording
+      console.log('Start recording');
+    }
+  };
+
+  const handlePhoneCall = () => {
+    const phoneNumber = 'tel:+911234567890';
+    Linking.canOpenURL(phoneNumber).then((supported) => {
+      if (supported) {
+        Linking.openURL(phoneNumber);
+      } else {
+        Alert.alert(
+          'Phone App Not Available',
+          'Please call +91 123 456 7890',
+          [{ text: 'OK' }]
+        );
+      }
+    });
+  };
+
+  const renderChatScreen = () => (
+    <Animated.View 
+      style={[
+        styles.chatContainer,
+        {
+          transform: [{ translateX: chatSlideAnim }]
+        }
+      ]}
+    >
+      {/* Chat Header */}
+      <View style={styles.chatHeader}>
+        <TouchableOpacity style={styles.backButton} onPress={handleClose}>
+          <BackArrowIcon />
+        </TouchableOpacity>
+        <Text style={styles.chatHeaderTitle}>Customer Support</Text>
+        <TouchableOpacity style={styles.phoneButton} onPress={handlePhoneCall}>
+          <PhoneIcon />
+        </TouchableOpacity>
+      </View>
+
+      {/* Messages */}
+      <ScrollView style={styles.messagesContainer} showsVerticalScrollIndicator={false}>
+        {messages.map((message) => (
+          <View key={message.id} style={styles.messageGroup}>
+            {message.time && (
+              <Text style={styles.messageTime}>{message.time}</Text>
+            )}
+            <View style={[
+              styles.messageBubble,
+              message.sender === 'user' ? styles.userMessage : styles.supportMessage
+            ]}>
+              <Text style={[
+                styles.messageText,
+                message.sender === 'user' ? styles.userMessageText : styles.supportMessageText
+              ]}>
+                {message.text}
+              </Text>
+            </View>
+          </View>
+        ))}
+      </ScrollView>
+
+      {/* Input Area */}
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.inputContainer}
+      >
+        <View style={styles.inputRow}>
+          <View style={styles.textInputContainer}>
+            <TextInput
+              style={styles.textInput}
+              value={messageText}
+              onChangeText={setMessageText}
+              placeholder="Write your message..."
+              placeholderTextColor="#999999"
+              multiline
+              onSubmitEditing={handleSendMessage}
+            />
+            <TouchableOpacity style={styles.photoButton} onPress={handlePhotoUpload}>
+              <PhotoIcon />
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity 
+            style={[
+              styles.micButton, 
+              isRecording && styles.micButtonActive,
+              messageText.trim() && styles.sendButton
+            ]} 
+            onPress={messageText.trim() ? handleSendMessage : handleVoiceInput}
+          >
+            {messageText.trim() ? <SendIcon /> : <MicrophoneIcon />}
+          </TouchableOpacity>
+        </View>
+        <View style={styles.bottomIndicator} />
+      </KeyboardAvoidingView>
+    </Animated.View>
+  );
+
+  if (currentView === 'chat') {
+    return (
+      <Modal
+        visible={visible}
+        transparent={false}
+        animationType="none"
+        onRequestClose={handleClose}
+      >
+        {renderChatScreen()}
+      </Modal>
+    );
+  }
 
   return (
     <Modal
@@ -289,6 +501,272 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '600',
+  },
+  
+  // Chat Screen Styles
+  chatContainer: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  chatHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    paddingTop: 50,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+    backgroundColor: '#FFFFFF',
+  },
+  backButton: {
+    width: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  chatHeaderTitle: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#000000',
+    textAlign: 'center',
+    marginHorizontal: 24,
+  },
+  phoneButton: {
+    width: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  messagesContainer: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    backgroundColor: '#F8F8F8',
+  },
+  messageGroup: {
+    marginBottom: 20,
+  },
+  messageTime: {
+    fontSize: 12,
+    color: '#999999',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  messageBubble: {
+    maxWidth: '80%',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 20,
+    marginBottom: 5,
+  },
+  supportMessage: {
+    backgroundColor: '#E8E8E8',
+    alignSelf: 'flex-start',
+  },
+  userMessage: {
+    backgroundColor: '#000000',
+    alignSelf: 'flex-end',
+  },
+  messageText: {
+    fontSize: 16,
+    lineHeight: 20,
+  },
+  supportMessageText: {
+    color: '#000000',
+  },
+  userMessageText: {
+    color: '#FFFFFF',
+  },
+  inputContainer: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 20,
+    paddingTop: 15,
+    paddingBottom: 30,
+  },
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    gap: 12,
+  },
+  textInputContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    backgroundColor: '#F8F8F8',
+    borderRadius: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    minHeight: 40,
+  },
+  textInput: {
+    flex: 1,
+    fontSize: 16,
+    color: '#000000',
+    maxHeight: 100,
+    paddingVertical: 8,
+  },
+  photoButton: {
+    width: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 8,
+  },
+  micButton: {
+    width: 44,
+    height: 44,
+    backgroundColor: '#000000',
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  micButtonActive: {
+    backgroundColor: '#FF3333',
+  },
+  sendButton: {
+    backgroundColor: '#007AFF',
+  },
+  bottomIndicator: {
+    width: 134,
+    height: 5,
+    backgroundColor: '#000000',
+    borderRadius: 2.5,
+    alignSelf: 'center',
+    marginTop: 15,
+  },
+  
+  // Icon Styles
+  backArrowIcon: {
+    width: 16,
+    height: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  arrowPath: {
+    position: 'relative',
+  },
+  arrowLine1: {
+    position: 'absolute',
+    width: 8,
+    height: 1,
+    backgroundColor: '#000000',
+    transform: [{ rotate: '45deg' }],
+    top: -2,
+    left: 2,
+  },
+  arrowLine2: {
+    position: 'absolute',
+    width: 8,
+    height: 1,
+    backgroundColor: '#000000',
+    transform: [{ rotate: '-45deg' }],
+    top: 2,
+    left: 2,
+  },
+  phoneIcon: {
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  phoneBody: {
+    width: 16,
+    height: 16,
+    borderWidth: 2,
+    borderColor: '#000000',
+    borderRadius: 3,
+    transform: [{ rotate: '15deg' }],
+  },
+  phoneEarpiece: {
+    position: 'absolute',
+    width: 8,
+    height: 2,
+    backgroundColor: '#000000',
+    borderRadius: 1,
+    top: 2,
+    left: 6,
+    transform: [{ rotate: '15deg' }],
+  },
+  sendIcon: {
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  sendArrow: {
+    width: 14,
+    height: 1,
+    backgroundColor: '#FFFFFF',
+    transform: [{ rotate: '45deg' }],
+  },
+  sendArrowHead1: {
+    position: 'absolute',
+    width: 6,
+    height: 1,
+    backgroundColor: '#FFFFFF',
+    transform: [{ rotate: '20deg' }],
+    top: 7,
+    right: 2,
+  },
+  sendArrowHead2: {
+    position: 'absolute',
+    width: 6,
+    height: 1,
+    backgroundColor: '#FFFFFF',
+    transform: [{ rotate: '70deg' }],
+    top: 11,
+    right: 2,
+  },
+  photoIcon: {
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  photoFrame: {
+    width: 18,
+    height: 14,
+    borderWidth: 1.5,
+    borderColor: '#666666',
+    borderRadius: 2,
+  },
+  photoLens: {
+    position: 'absolute',
+    width: 6,
+    height: 6,
+    backgroundColor: '#666666',
+    borderRadius: 3,
+    top: 4,
+    left: 7,
+  },
+  microphoneIcon: {
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  micBody: {
+    width: 8,
+    height: 12,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 4,
+  },
+  micBase: {
+    position: 'absolute',
+    width: 12,
+    height: 8,
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+    borderRadius: 6,
+    top: 10,
+  },
+  micStand: {
+    position: 'absolute',
+    width: 1,
+    height: 4,
+    backgroundColor: '#FFFFFF',
+    top: 16,
   },
 });
 
