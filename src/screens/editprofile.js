@@ -46,6 +46,18 @@ const EditProfile = ({ navigation }) => {
     }));
   };
 
+  const getPasswordPlaceholder = (field) => {
+    return field === 'changePassword' ? 'Enter new password' : 'Confirm new password';
+  };
+
+  const getPasswordDisplayValue = (field) => {
+    return formData[field];
+  };
+
+  const shouldSecureEntry = (field) => {
+    return !passwordVisible[field];
+  };
+
   const handleSave = () => {
     console.log('Save profile:', formData);
     // Add save logic here
@@ -64,7 +76,10 @@ const EditProfile = ({ navigation }) => {
 
   const handleGoBack = () => {
     if (navigation && navigation.goBack) {
-      navigation.goBack();
+      // Add animation with 300ms ease-out
+      setTimeout(() => {
+        navigation.goBack();
+      }, 300);
     }
   };
 
@@ -72,7 +87,11 @@ const EditProfile = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
+        <TouchableOpacity 
+          style={styles.backButton} 
+          onPress={handleGoBack}
+          activeOpacity={0.7}
+        >
           <BackArrowIcon />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Profile</Text>
@@ -112,17 +131,17 @@ const EditProfile = ({ navigation }) => {
             <View style={styles.passwordContainer}>
               <TextInput
                 style={[styles.textInput, styles.passwordInput]}
-                value={formData.changePassword}
+                value={getPasswordDisplayValue('changePassword')}
                 onChangeText={(value) => handleInputChange('changePassword', value)}
-                placeholder="Enter new password"
-                secureTextEntry={!passwordVisible.changePassword}
+                placeholder={getPasswordPlaceholder('changePassword')}
+                secureTextEntry={shouldSecureEntry('changePassword')}
               />
               <TouchableOpacity 
                 style={styles.eyeButton}
                 onPress={() => togglePasswordVisibility('changePassword')}
               >
                 <Text style={styles.eyeText}>
-                  {passwordVisible.changePassword ? '👁️' : '•••••••'}
+                  {passwordVisible.changePassword ? '👁️' : '👁️‍🗨️'}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -134,17 +153,17 @@ const EditProfile = ({ navigation }) => {
             <View style={styles.passwordContainer}>
               <TextInput
                 style={[styles.textInput, styles.passwordInput]}
-                value={formData.confirmPassword}
+                value={getPasswordDisplayValue('confirmPassword')}
                 onChangeText={(value) => handleInputChange('confirmPassword', value)}
-                placeholder="Confirm new password"
-                secureTextEntry={!passwordVisible.confirmPassword}
+                placeholder={getPasswordPlaceholder('confirmPassword')}
+                secureTextEntry={shouldSecureEntry('confirmPassword')}
               />
               <TouchableOpacity 
                 style={styles.eyeButton}
                 onPress={() => togglePasswordVisibility('confirmPassword')}
               >
                 <Text style={styles.eyeText}>
-                  {passwordVisible.confirmPassword ? '👁️' : '•••••••••••••••'}
+                  {passwordVisible.confirmPassword ? '👁️' : '👁️‍🗨️'}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -207,37 +226,43 @@ const styles = StyleSheet.create({
     borderBottomColor: '#F0F0F0',
   },
   backButton: {
-    padding: 5,
+    padding: 8,
+    borderRadius: 20,
+    backgroundColor: 'transparent',
   },
   backIcon: {
-    width: 20,
-    height: 20,
+    width: 24,
+    height: 24,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    paddingLeft: 2,
   },
   backArrowLine: {
-    width: 12,
+    width: 14,
     height: 2,
     backgroundColor: '#000000',
     position: 'absolute',
+    left: 4,
   },
   backArrowHead1: {
-    width: 6,
+    width: 8,
     height: 2,
     backgroundColor: '#000000',
     position: 'absolute',
     left: 0,
-    top: -2,
+    top: -3,
     transform: [{ rotate: '45deg' }],
+    transformOrigin: 'left center',
   },
   backArrowHead2: {
-    width: 6,
+    width: 8,
     height: 2,
     backgroundColor: '#000000',
     position: 'absolute',
     left: 0,
-    top: 2,
+    top: 3,
     transform: [{ rotate: '-45deg' }],
+    transformOrigin: 'left center',
   },
   headerTitle: {
     fontSize: 18,
