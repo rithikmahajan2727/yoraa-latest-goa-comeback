@@ -7,3 +7,4 @@ export { default as OrdersScreen } from './orders';
 export { default as EditProfile } from './editprofile';
 export { default as SettingsScreen } from './settings';
 export { default as DeliveryAddressesSettings } from './deliveryaddressessettings';
+export { default as CommunicationPreferences } from './communicationpreferences';

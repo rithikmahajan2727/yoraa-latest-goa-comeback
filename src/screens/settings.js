@@ -57,7 +57,9 @@ const SettingsScreen = ({ navigation }) => {
   };
 
   const handleCommunicationPreferences = () => {
-    console.log('Communication preferences pressed');
+    if (navigation && navigation.navigate) {
+      navigation.navigate('CommunicationPreferences');
+    }
   };
 
   const handleProfileVisibility = () => {
