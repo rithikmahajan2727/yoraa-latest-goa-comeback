@@ -57,7 +57,9 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   const handleSettings = () => {
-    console.log('Settings pressed');
+    if (navigation && navigation.navigate) {
+      navigation.navigate('Settings');
+    }
   };
 
   const handleInbox = () => {
