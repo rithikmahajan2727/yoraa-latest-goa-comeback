@@ -12,42 +12,54 @@ import {
   SafeAreaView,
   StatusBar,
 } from 'react-native';
-import { FontSizes, FontWeights, Spacing, BorderRadius, Shadows } from '../constants';
+import { FontSizes, FontWeights, Spacing, BorderRadius } from '../constants';
+import { SearchIcon, FilterIcon, ShoppingBagIcon, HeartIcon } from '../assets/icons';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-// Icon Components
-const SearchIcon = () => (
-  <View style={styles.searchIconContainer}>
-    <View style={styles.searchCircle} />
-    <View style={styles.searchHandle} />
-  </View>
-);
-
-const FilterIcon = () => (
-  <View style={styles.filterIconContainer}>
-    <View style={styles.filterLine1} />
-    <View style={styles.filterLine2} />
-    <View style={styles.filterLine3} />
-  </View>
-);
-
-const CartIcon = () => (
-  <View style={styles.cartIconContainer}>
-    <View style={styles.cartBody} />
-    <View style={styles.cartHandle} />
-    <View style={styles.cartWheel1} />
-    <View style={styles.cartWheel2} />
-  </View>
-);
-
-const HeartIcon = ({ filled = false }) => (
-  <View style={styles.heartIconContainer}>
-    <View style={[styles.heartLeft, filled && styles.heartFilled]} />
-    <View style={[styles.heartRight, filled && styles.heartFilled]} />
-    <View style={[styles.heartBottom, filled && styles.heartFilled]} />
-  </View>
-);
+// Sample product data matching the Figma design
+const SAMPLE_PRODUCTS = [
+  {
+    id: '1',
+    name: 'Cosmic Unity 3 N7',
+    brand: 'Basketball Shoes', 
+    price: 'US$170',
+    colors: '1 Colours',
+    image: null, // Placeholder for now
+    category: 'TOP WEAR',
+    isWishlisted: false,
+  },
+  {
+    id: '2',
+    name: 'Nike Benassi N7',
+    brand: 'Slides',
+    price: 'US$35',
+    colors: '1 Colours', 
+    image: null, // Placeholder for now
+    category: 'TOP WEAR',
+    isWishlisted: false,
+  },
+  {
+    id: '3',
+    name: 'Nike Sportswear Club Fleece N7',
+    brand: 'Pullover Hoodie',
+    price: 'US$75',
+    colors: '5 Colours',
+    image: null, // Placeholder for now
+    category: 'BOTTOM WEAR',
+    isWishlisted: false,
+  },
+  {
+    id: '4',
+    name: 'Nike Sportswear Club Fleece N7',
+    brand: 'Joggers',
+    price: 'US$65',
+    colors: '5 Colours',
+    image: null, // Placeholder for now
+    category: 'BOTTOM WEAR',
+    isWishlisted: false,
+  },
+];
 
 // FilterModal component
 const FilterModal = ({ 
@@ -221,49 +233,6 @@ const FilterModal = ({
     </Modal>
   );
 };
-const SAMPLE_PRODUCTS = [
-  {
-    id: '1',
-    name: 'Cosmic Unity 3 N7',
-    brand: 'Basketball Shoes',
-    price: 'US$170',
-    colors: '1 Colours',
-    image: null,
-    category: 'TOP WEAR',
-    isWishlisted: false,
-  },
-  {
-    id: '2',
-    name: 'Nike Benassi N7',
-    brand: 'Slides',
-    price: 'US$35',
-    colors: '1 Colours',
-    image: null,
-    category: 'TOP WEAR',
-    isWishlisted: false,
-  },
-  {
-    id: '3',
-    name: 'Nike Sportswear Club Fleece N7',
-    brand: 'Pullover Hoodie',
-    price: 'US$75',
-    colors: '2 Colours',
-    image: null,
-    category: 'BOTTOM WEAR',
-    isWishlisted: false,
-  },
-  {
-    id: '4',
-    name: 'Nike Sportswear Club Fleece N7',
-    brand: 'Joggers',
-    price: 'US$65',
-    colors: '2 Colours',
-    image: null,
-    category: 'BOTTOM WEAR',
-    isWishlisted: false,
-  },
-];
-
 const FILTER_OPTIONS = {
   sizes: ['42', '43', '44', '45'],
   colors: [
@@ -328,6 +297,8 @@ const CollectionScreen = () => {
     setSelectedSort('ASCENDING PRICE');
   };
 
+  const renderSeparator = () => <View style={styles.itemSeparator} />;
+
   const renderProductItem = ({ item }) => (
     <TouchableOpacity style={styles.productCard}>
       <View style={styles.productImageContainer}>
@@ -338,10 +309,10 @@ const CollectionScreen = () => {
           style={styles.heartButton}
           onPress={() => toggleWishlist(item.id)}
         >
-          <HeartIcon filled={item.isWishlisted} />
+          <HeartIcon size={16} filled={item.isWishlisted} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.cartButton}>
-          <CartIcon />
+          <ShoppingBagIcon size={16} />
         </TouchableOpacity>
       </View>
       <View style={styles.productInfo}>
@@ -364,14 +335,14 @@ const CollectionScreen = () => {
             <Text style={styles.backButtonText}>‹</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.searchButton}>
-            <SearchIcon />
+            <SearchIcon size={20} />
           </TouchableOpacity>
         </View>
 
         {/* Filter Bar */}
         <View style={styles.filterBar}>
           <TouchableOpacity style={styles.filterButton} onPress={openFilterModal}>
-            <FilterIcon />
+            <FilterIcon size={20} />
           </TouchableOpacity>
           
           {/* Swipeable Tabs */}
@@ -415,9 +386,10 @@ const CollectionScreen = () => {
           renderItem={renderProductItem}
           keyExtractor={(item) => item.id}
           numColumns={2}
-          columnWrapperStyle={styles.productRow}
           contentContainerStyle={styles.productsContainer}
           showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={renderSeparator}
+          columnWrapperStyle={styles.productRow}
         />
 
         <FilterModal 
@@ -446,15 +418,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: Spacing.xl,
-    paddingTop: Spacing.md,
-    paddingBottom: Spacing.lg,
+    paddingHorizontal: 16,
+    paddingTop: 15,
+    paddingBottom: 20,
   },
   backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#F8F8F8',
+    width: 24,
+    height: 24,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -464,138 +434,166 @@ const styles = StyleSheet.create({
     fontWeight: '300',
   },
   searchButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#F8F8F8',
+    width: 24,
+    height: 24,
     justifyContent: 'center',
     alignItems: 'center',
   },
   filterBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: Spacing.xl,
-    marginBottom: Spacing.lg,
+    paddingHorizontal: 16,
+    marginBottom: 20,
   },
   filterButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#F8F8F8',
+    width: 26,
+    height: 26,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: Spacing.lg,
+    marginRight: 12,
   },
   tabScrollView: {
     flex: 1,
   },
   tabContainer: {
     flexDirection: 'row',
-    paddingVertical: Spacing.sm,
+    paddingVertical: 0,
   },
   tab: {
-    paddingHorizontal: Spacing.xl,
-    paddingVertical: Spacing.md,
-    marginRight: Spacing.lg,
-    backgroundColor: '#F8F8F8',
-    borderRadius: BorderRadius.xl,
+    paddingHorizontal: 30,
+    paddingVertical: 8,
+    marginRight: 16,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: '#CACACA',
+    borderRadius: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 31,
   },
   activeTab: {
-    backgroundColor: '#000000',
+    backgroundColor: 'transparent',
     borderColor: '#000000',
   },
   tabText: {
-    fontSize: FontSizes.sm,
-    fontWeight: FontWeights.medium,
-    color: '#666666',
-    letterSpacing: 0.5,
+    fontSize: 12,
+    fontFamily: 'Montserrat-Regular',
+    color: '#CACACA',
+    letterSpacing: -0.3,
   },
   activeTabText: {
-    color: '#FFFFFF',
-    fontWeight: FontWeights.semiBold,
+    color: '#000000',
+    fontFamily: 'Montserrat-Regular',
   },
   productsContainer: {
-    paddingHorizontal: Spacing.xl,
-    paddingBottom: Spacing.xl,
+    paddingHorizontal: 0,
+    paddingTop: 40,
   },
   productRow: {
     justifyContent: 'space-between',
-    marginBottom: Spacing.lg,
+    paddingHorizontal: 6,
+    marginBottom: 40,
   },
   productCard: {
-    width: '47%',
+    width: 184,
     backgroundColor: '#FFFFFF',
-    borderRadius: BorderRadius.lg,
-    overflow: 'hidden',
   },
   productImageContainer: {
     position: 'relative',
-    height: 200,
+    height: 184,
+    width: 184,
   },
   productImagePlaceholder: {
     height: '100%',
-    backgroundColor: '#F8F8F8',
+    width: '100%',
+    backgroundColor: '#EEEEEE',
     justifyContent: 'center',
     alignItems: 'center',
   },
   productPlaceholderIcon: {
     width: 60,
     height: 60,
-    backgroundColor: '#E0E0E0',
-    borderRadius: BorderRadius.md,
+    backgroundColor: '#CCCCCC',
+    borderRadius: 8,
   },
   heartButton: {
     position: 'absolute',
-    top: Spacing.md,
-    right: Spacing.md,
-    width: 32,
-    height: 32,
+    top: 12,
+    right: 12,
+    width: 34,
+    height: 34,
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
+    borderRadius: 17,
     justifyContent: 'center',
     alignItems: 'center',
-    ...Shadows.small,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   cartButton: {
     position: 'absolute',
-    bottom: Spacing.md,
-    right: Spacing.md,
-    width: 32,
-    height: 32,
+    bottom: 12,
+    right: 12,
+    width: 34,
+    height: 34,
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
+    borderRadius: 17,
     justifyContent: 'center',
     alignItems: 'center',
-    ...Shadows.small,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   productInfo: {
-    padding: Spacing.lg,
+    paddingHorizontal: 14,
+    paddingTop: 14,
+    paddingBottom: 0,
   },
   productName: {
-    fontSize: FontSizes.md,
-    fontWeight: FontWeights.semiBold,
+    fontSize: 14,
+    fontFamily: 'Montserrat-Medium',
     color: '#000000',
-    marginBottom: Spacing.xs,
+    marginBottom: 5,
+    lineHeight: 16.8,
+    letterSpacing: -0.14,
   },
   productBrand: {
-    fontSize: FontSizes.sm,
-    color: '#666666',
-    marginBottom: Spacing.xs,
+    fontSize: 14,
+    fontFamily: 'Montserrat-Regular',
+    color: '#767676',
+    marginBottom: 5,
+    lineHeight: 16.8,
+    letterSpacing: -0.14,
   },
   productColors: {
-    fontSize: FontSizes.sm,
-    color: '#666666',
-    marginBottom: Spacing.sm,
+    fontSize: 14,
+    fontFamily: 'Montserrat-Regular',
+    color: '#767676',
+    marginBottom: 5,
+    lineHeight: 16.8,
+    letterSpacing: -0.14,
   },
   productPrice: {
-    fontSize: FontSizes.lg,
-    fontWeight: FontWeights.bold,
+    fontSize: 14,
+    fontFamily: 'Montserrat-Medium',
     color: '#000000',
+    lineHeight: 16.8,
+    letterSpacing: -0.14,
+  },
+  itemSeparator: {
+    height: 40,
   },
 
-  // Filter Modal Styles
+  // Filter Modal Styles  
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -782,149 +780,6 @@ const styles = StyleSheet.create({
     fontWeight: FontWeights.semiBold,
     color: '#FFFFFF',
     letterSpacing: 0.5,
-  },
-
-  // Icon Styles
-  searchIconContainer: {
-    width: 16,
-    height: 16,
-    position: 'relative',
-  },
-  searchCircle: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    borderWidth: 2,
-    borderColor: '#666666',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-  },
-  searchHandle: {
-    width: 6,
-    height: 2,
-    backgroundColor: '#666666',
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    transform: [{ rotate: '45deg' }],
-  },
-  filterIconContainer: {
-    width: 16,
-    height: 12,
-    justifyContent: 'space-between',
-  },
-  filterLine1: {
-    height: 2,
-    backgroundColor: '#666666',
-    borderRadius: 1,
-    width: '100%',
-  },
-  filterLine2: {
-    height: 2,
-    backgroundColor: '#666666',
-    borderRadius: 1,
-    width: '70%',
-  },
-  filterLine3: {
-    height: 2,
-    backgroundColor: '#666666',
-    borderRadius: 1,
-    width: '85%',
-  },
-  cartIconContainer: {
-    width: 16,
-    height: 16,
-    position: 'relative',
-  },
-  cartBody: {
-    width: 12,
-    height: 8,
-    borderWidth: 1.5,
-    borderColor: '#666666',
-    borderRadius: 2,
-    position: 'absolute',
-    top: 2,
-    left: 2,
-  },
-  cartHandle: {
-    width: 6,
-    height: 4,
-    borderTopWidth: 1.5,
-    borderLeftWidth: 1.5,
-    borderRightWidth: 1.5,
-    borderColor: '#666666',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-  },
-  cartWheel1: {
-    width: 3,
-    height: 3,
-    backgroundColor: '#666666',
-    borderRadius: 1.5,
-    position: 'absolute',
-    bottom: 0,
-    left: 4,
-  },
-  cartWheel2: {
-    width: 3,
-    height: 3,
-    backgroundColor: '#666666',
-    borderRadius: 1.5,
-    position: 'absolute',
-    bottom: 0,
-    right: 4,
-  },
-  heartIconContainer: {
-    width: 16,
-    height: 16,
-    position: 'relative',
-  },
-  heartLeft: {
-    width: 6,
-    height: 10,
-    backgroundColor: 'transparent',
-    borderWidth: 1.5,
-    borderColor: '#666666',
-    borderTopLeftRadius: 6,
-    borderBottomLeftRadius: 6,
-    borderRightWidth: 0,
-    position: 'absolute',
-    left: 2,
-    top: 2,
-    transform: [{ rotate: '-45deg' }],
-  },
-  heartRight: {
-    width: 6,
-    height: 10,
-    backgroundColor: 'transparent',
-    borderWidth: 1.5,
-    borderColor: '#666666',
-    borderTopRightRadius: 6,
-    borderBottomRightRadius: 6,
-    borderLeftWidth: 0,
-    position: 'absolute',
-    right: 2,
-    top: 2,
-    transform: [{ rotate: '45deg' }],
-  },
-  heartBottom: {
-    width: 0,
-    height: 0,
-    borderLeftWidth: 6,
-    borderRightWidth: 6,
-    borderTopWidth: 8,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderTopColor: '#666666',
-    position: 'absolute',
-    bottom: 2,
-    left: 2,
-  },
-  heartFilled: {
-    borderColor: '#FF6B6B',
-    backgroundColor: '#FF6B6B',
   },
 });
 
