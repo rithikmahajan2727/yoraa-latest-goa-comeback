@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   TextInput,
+  Modal,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -28,6 +29,17 @@ const EditProfile = ({ navigation }) => {
     phone: '843783489937',
     dateOfBirth: new Date(1999, 4, 6), // May 6, 1999
     gender: 'Female',
+    // Address fields
+    firstName: '',
+    lastName: '',
+    address: '',
+    apartment: '',
+    city: '',
+    state: 'Delhi',
+    pin: '',
+    country: '',
+    phoneNumber: '',
+    countryCode: '+91',
   });
 
   const [passwordVisible, setPasswordVisible] = useState({
@@ -37,8 +49,20 @@ const EditProfile = ({ navigation }) => {
 
   const [otherDetailsExpanded, setOtherDetailsExpanded] = useState(false);
   const [showGenderDropdown, setShowGenderDropdown] = useState(false);
+  const [showAddressModal, setShowAddressModal] = useState(false);
+  const [showStateDropdown, setShowStateDropdown] = useState(false);
+  const [showCountryCodeDropdown, setShowCountryCodeDropdown] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const genderOptions = ['Male', 'Female'];
+  const stateOptions = ['Delhi', 'Mumbai', 'Bangalore', 'Chennai', 'Kolkata', 'Hyderabad', 'Pune', 'Ahmedabad'];
+  const countryCodeOptions = [
+    { code: '+1', country: 'US', flag: '🇺🇸' },
+    { code: '+44', country: 'UK', flag: '🇬🇧' },
+    { code: '+91', country: 'IN', flag: '🇮🇳' },
+    { code: '+86', country: 'CN', flag: '🇨🇳' },
+    { code: '+81', country: 'JP', flag: '🇯🇵' },
+  ];
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -94,8 +118,39 @@ const EditProfile = ({ navigation }) => {
   };
 
   const handleAddAddress = () => {
-    console.log('Add address');
-    // Add navigation or modal for address
+    setShowAddressModal(true);
+  };
+
+  const handleCloseAddressModal = () => {
+    // 300ms ease-out animation
+    setTimeout(() => {
+      setShowAddressModal(false);
+    }, 300);
+  };
+
+  const handleAddressDone = () => {
+    setShowAddressModal(false);
+    setShowSuccessModal(true);
+  };
+
+  const handleSuccessModalDone = () => {
+    setShowSuccessModal(false);
+  };
+
+  const handleStateSelect = (state) => {
+    setFormData(prev => ({
+      ...prev,
+      state: state
+    }));
+    setShowStateDropdown(false);
+  };
+
+  const handleCountryCodeSelect = (countryCode) => {
+    setFormData(prev => ({
+      ...prev,
+      countryCode: countryCode.code
+    }));
+    setShowCountryCodeDropdown(false);
   };
 
   const handleGoBack = () => {
@@ -275,6 +330,206 @@ const EditProfile = ({ navigation }) => {
         {/* Spacer for Save Button */}
         <View style={styles.spacer} />
       </ScrollView>
+
+      {/* Address Modal */}
+      <Modal
+        visible={showAddressModal}
+        animationType="slide"
+        presentationStyle="pageSheet"
+      >
+        <SafeAreaView style={styles.modalContainer}>
+          {/* Address Modal Header */}
+          <View style={styles.modalHeader}>
+            <TouchableOpacity 
+              style={styles.backButton} 
+              onPress={handleCloseAddressModal}
+              activeOpacity={0.7}
+            >
+              <BackArrowIcon />
+            </TouchableOpacity>
+            <Text style={styles.modalTitle}>Address</Text>
+            <View style={styles.placeholder} />
+          </View>
+
+          <ScrollView style={styles.modalScrollContainer} showsVerticalScrollIndicator={false}>
+            <View style={styles.modalFormContainer}>
+              {/* First Name */}
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.textInput}
+                  value={formData.firstName}
+                  onChangeText={(value) => handleInputChange('firstName', value)}
+                  placeholder="First Name"
+                />
+              </View>
+
+              {/* Last Name */}
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.textInput}
+                  value={formData.lastName}
+                  onChangeText={(value) => handleInputChange('lastName', value)}
+                  placeholder="Last Name"
+                />
+              </View>
+
+              {/* Address */}
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.textInput}
+                  value={formData.address}
+                  onChangeText={(value) => handleInputChange('address', value)}
+                  placeholder="Address"
+                />
+              </View>
+
+              {/* Apartment/Suite */}
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.textInput}
+                  value={formData.apartment}
+                  onChangeText={(value) => handleInputChange('apartment', value)}
+                  placeholder="Apartment,suit"
+                />
+              </View>
+
+              {/* City */}
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.textInput}
+                  value={formData.city}
+                  onChangeText={(value) => handleInputChange('city', value)}
+                  placeholder="City"
+                />
+              </View>
+
+              {/* State Dropdown */}
+              <View style={styles.inputContainer}>
+                <TouchableOpacity 
+                  style={styles.dropdownContainer}
+                  onPress={() => setShowStateDropdown(!showStateDropdown)}
+                >
+                  <Text style={styles.dropdownText}>{formData.state}</Text>
+                  <Text style={styles.dropdownArrow}>▼</Text>
+                </TouchableOpacity>
+                
+                {showStateDropdown && (
+                  <View style={styles.dropdownOptions}>
+                    {stateOptions.map((option) => (
+                      <TouchableOpacity
+                        key={option}
+                        style={styles.dropdownOption}
+                        onPress={() => handleStateSelect(option)}
+                      >
+                        <Text style={[
+                          styles.dropdownOptionText,
+                          formData.state === option && styles.selectedOption
+                        ]}>
+                          {option}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                )}
+              </View>
+
+              {/* PIN */}
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.textInput}
+                  value={formData.pin}
+                  onChangeText={(value) => handleInputChange('pin', value)}
+                  placeholder="PIN"
+                  keyboardType="numeric"
+                />
+              </View>
+
+              {/* Country */}
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.textInput}
+                  value={formData.country}
+                  onChangeText={(value) => handleInputChange('country', value)}
+                  placeholder="Country"
+                />
+              </View>
+
+              {/* Phone with Country Code */}
+              <View style={styles.inputContainer}>
+                <View style={styles.phoneContainer}>
+                  <TouchableOpacity 
+                    style={styles.countryCodeContainer}
+                    onPress={() => setShowCountryCodeDropdown(!showCountryCodeDropdown)}
+                  >
+                    <Text style={styles.countryCodeText}>
+                      {countryCodeOptions.find(c => c.code === formData.countryCode)?.flag} {formData.countryCode}
+                    </Text>
+                    <Text style={styles.dropdownArrow}>▼</Text>
+                  </TouchableOpacity>
+                  
+                  <TextInput
+                    style={styles.phoneInput}
+                    value={formData.phoneNumber}
+                    onChangeText={(value) => handleInputChange('phoneNumber', value)}
+                    placeholder="Phone"
+                    keyboardType="phone-pad"
+                  />
+                </View>
+                
+                {showCountryCodeDropdown && (
+                  <View style={styles.countryCodeDropdown}>
+                    {countryCodeOptions.map((option) => (
+                      <TouchableOpacity
+                        key={option.code}
+                        style={styles.dropdownOption}
+                        onPress={() => handleCountryCodeSelect(option)}
+                      >
+                        <Text style={[
+                          styles.dropdownOptionText,
+                          formData.countryCode === option.code && styles.selectedOption
+                        ]}>
+                          {option.flag} {option.code} {option.country}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                )}
+              </View>
+            </View>
+
+            {/* Modal Spacer */}
+            <View style={styles.modalSpacer} />
+          </ScrollView>
+
+          {/* Done Button */}
+          <View style={styles.modalButtonContainer}>
+            <TouchableOpacity style={styles.saveButton} onPress={handleAddressDone}>
+              <Text style={styles.saveButtonText}>Done</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </Modal>
+
+      {/* Success Modal */}
+      <Modal
+        visible={showSuccessModal}
+        transparent={true}
+        animationType="fade"
+      >
+        <View style={styles.successModalOverlay}>
+          <View style={styles.successModalContent}>
+            <View style={styles.successIcon}>
+              <Text style={styles.successIconText}>✓</Text>
+            </View>
+            <Text style={styles.successMessage}>
+              Your profile details has been updated!
+            </Text>
+            <TouchableOpacity style={styles.successButton} onPress={handleSuccessModalDone}>
+              <Text style={styles.successButtonText}>Done</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       {/* Save Button */}
       <View style={styles.saveButtonContainer}>
@@ -488,6 +743,143 @@ const styles = StyleSheet.create({
   selectedOption: {
     fontWeight: '600',
     color: '#007AFF',
+  },
+  // Modal Styles
+  modalContainer: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#000000',
+  },
+  modalScrollContainer: {
+    flex: 1,
+  },
+  modalFormContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 30,
+  },
+  phoneContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  countryCodeContainer: {
+    borderWidth: 2,
+    borderColor: '#000000',
+    borderRadius: 25,
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    marginRight: 10,
+    minWidth: 100,
+  },
+  countryCodeText: {
+    fontSize: 16,
+    color: '#000000',
+    marginRight: 5,
+  },
+  phoneInput: {
+    flex: 1,
+    borderWidth: 2,
+    borderColor: '#000000',
+    borderRadius: 25,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    fontSize: 16,
+    color: '#000000',
+    backgroundColor: '#FFFFFF',
+  },
+  countryCodeDropdown: {
+    position: 'absolute',
+    top: 70,
+    left: 0,
+    right: 0,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 2,
+    borderColor: '#000000',
+    borderRadius: 15,
+    zIndex: 1000,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    maxHeight: 200,
+  },
+  modalSpacer: {
+    height: 100,
+  },
+  modalButtonContainer: {
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F0',
+  },
+  // Success Modal Styles
+  successModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  successModalContent: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 30,
+    alignItems: 'center',
+    marginHorizontal: 40,
+    maxWidth: 300,
+  },
+  successIcon: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#4CAF50',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  successIconText: {
+    color: '#FFFFFF',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  successMessage: {
+    fontSize: 16,
+    textAlign: 'center',
+    color: '#000000',
+    marginBottom: 30,
+    lineHeight: 22,
+  },
+  successButton: {
+    backgroundColor: '#000000',
+    borderRadius: 25,
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    minWidth: 120,
+    alignItems: 'center',
+  },
+  successButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
   },
   spacer: {
     height: 100,
