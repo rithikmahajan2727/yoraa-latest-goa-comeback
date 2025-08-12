@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import BottomNavigationBar from './bottomnavigationbar';
 import { Colors, FontSizes, FontWeights, Spacing } from '../constants';
-import { HomeScreen, ShopScreen, CollectionScreen, RewardsScreen, ProfileScreen, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount } from '../screens';
+import { HomeScreen, ShopScreen, CollectionScreen, RewardsScreen, ProfileScreen, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, ProfileVisibilityScreen } from '../screens';
 
 // Navigation context for handling screen navigation
 const createNavigation = (setCurrentScreen, setActiveTab) => ({
@@ -69,6 +69,8 @@ const EnhancedLayout = () => {
         return <DeliveryAddressesSettings navigation={navigation} />;
       case 'CommunicationPreferences':
         return <CommunicationPreferences navigation={navigation} />;
+      case 'ProfileVisibilityScreen':
+        return <ProfileVisibilityScreen navigation={navigation} />;
       case 'LinkedAccount':
         return <LinkedAccountScreen navigation={navigation} />;
       case 'DeleteAccount':
