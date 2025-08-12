@@ -8,6 +8,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import LogoutModal from './logoutmodal';
+import ContactUsScreen from './contactus';
 
 // Arrow Icon Component - Simple Chevron style to match Figma
 const ArrowIcon = () => (
@@ -40,6 +41,7 @@ const SettingsIcon = () => (
 
 const ProfileScreen = ({ navigation }) => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showContactUsModal, setShowContactUsModal] = useState(false);
 
   const handleEditProfile = () => {
     if (navigation && navigation.navigate) {
@@ -52,7 +54,7 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   const handleContactUs = () => {
-    console.log('Contact Us pressed');
+    setShowContactUsModal(true);
   };
 
   const handleSettings = () => {
@@ -202,6 +204,11 @@ const ProfileScreen = ({ navigation }) => {
         visible={showLogoutModal}
         onClose={handleCloseLogoutModal}
         onSignOut={handleSignOut}
+      />
+      
+      <ContactUsScreen
+        visible={showContactUsModal}
+        navigation={{ goBack: () => setShowContactUsModal(false) }}
       />
     </SafeAreaView>
   );
