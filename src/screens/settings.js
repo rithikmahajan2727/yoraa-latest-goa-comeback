@@ -9,19 +9,17 @@ import {
   Easing,
 } from 'react-native';
 
-// Back Arrow Icon Component
+// Back Arrow Icon Component - Simple Chevron style to match Figma
 const BackArrowIcon = () => (
   <View style={styles.backArrowIcon}>
-    <View style={styles.backArrowLine} />
-    <View style={styles.backArrowHead} />
+    <Text style={styles.backChevronText}>〈</Text>
   </View>
 );
 
-// Right Arrow Icon Component
+// Right Arrow Icon Component - Simple Chevron style to match Figma
 const RightArrowIcon = () => (
   <View style={styles.rightArrowIcon}>
-    <View style={styles.rightArrowLine} />
-    <View style={styles.rightArrowHead} />
+    <Text style={styles.chevronText}>〉</Text>
   </View>
 );
 
@@ -162,60 +160,30 @@ const styles = StyleSheet.create({
     width: 40, // Same width as back button to center the title
   },
 
-  // Back Arrow Icon
+  // Back Arrow Icon - Simple Chevron
   backArrowIcon: {
     width: 24,
     height: 24,
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'relative',
   },
-  backArrowLine: {
-    width: 12,
-    height: 2,
-    backgroundColor: '#000000',
-    position: 'absolute',
-  },
-  backArrowHead: {
-    width: 0,
-    height: 0,
-    borderRightWidth: 6,
-    borderLeftWidth: 0,
-    borderTopWidth: 4,
-    borderBottomWidth: 4,
-    borderRightColor: '#000000',
-    borderTopColor: 'transparent',
-    borderBottomColor: 'transparent',
-    position: 'absolute',
-    left: 6,
+  backChevronText: {
+    fontSize: 18,
+    color: '#000000',
+    fontWeight: '400',
   },
 
-  // Right Arrow Icon
+  // Right Arrow Icon - Simple Chevron
   rightArrowIcon: {
     width: 20,
     height: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'relative',
   },
-  rightArrowLine: {
-    width: 8,
-    height: 1.5,
-    backgroundColor: '#666666',
-    position: 'absolute',
-  },
-  rightArrowHead: {
-    width: 0,
-    height: 0,
-    borderLeftWidth: 5,
-    borderRightWidth: 0,
-    borderTopWidth: 3,
-    borderBottomWidth: 3,
-    borderLeftColor: '#666666',
-    borderTopColor: 'transparent',
-    borderBottomColor: 'transparent',
-    position: 'absolute',
-    right: 2,
+  chevronText: {
+    fontSize: 16,
+    color: '#999999',
+    fontWeight: '400',
   },
 
   // Menu Styles

@@ -11,11 +11,13 @@ import {
   TextInput,
 } from 'react-native';
 
-// Back Arrow Icon Component
+// Back Arrow Icon Component - Exact Figma Design
 const BackArrowIcon = () => (
   <View style={styles.backArrowIcon}>
-    <View style={styles.backArrowLine} />
-    <View style={styles.backArrowHead} />
+    <View style={styles.arrowPath}>
+      <View style={styles.arrowLine1} />
+      <View style={styles.arrowLine2} />
+    </View>
   </View>
 );
 
@@ -370,32 +372,37 @@ const styles = StyleSheet.create({
     width: 40,
   },
 
-  // Back Arrow Icon
+  // Back Arrow Icon - Exact Figma Design
   backArrowIcon: {
     width: 24,
     height: 24,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  arrowPath: {
+    width: 12,
+    height: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
     position: 'relative',
   },
-  backArrowLine: {
-    width: 12,
-    height: 2,
+  arrowLine1: {
+    position: 'absolute',
+    width: 8,
+    height: 1.5,
     backgroundColor: '#000000',
-    position: 'absolute',
+    transform: [{ rotate: '135deg' }],
+    top: 4,
+    left: 2,
   },
-  backArrowHead: {
-    width: 0,
-    height: 0,
-    borderRightWidth: 6,
-    borderLeftWidth: 0,
-    borderTopWidth: 4,
-    borderBottomWidth: 4,
-    borderRightColor: '#000000',
-    borderTopColor: 'transparent',
-    borderBottomColor: 'transparent',
+  arrowLine2: {
     position: 'absolute',
-    left: 6,
+    width: 8,
+    height: 1.5,
+    backgroundColor: '#000000',
+    transform: [{ rotate: '-135deg' }],
+    top: 6.5,
+    left: 2,
   },
 
   // Address Card Styles

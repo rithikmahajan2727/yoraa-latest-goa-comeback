@@ -9,11 +9,10 @@ import {
 } from 'react-native';
 import LogoutModal from './logoutmodal';
 
-// Arrow Icon Component
+// Arrow Icon Component - Simple Chevron style to match Figma
 const ArrowIcon = () => (
   <View style={styles.arrowIcon}>
-    <View style={styles.arrowLine} />
-    <View style={styles.arrowHead} />
+    <Text style={styles.chevronText}>〉</Text>
   </View>
 );
 
@@ -357,31 +356,17 @@ const styles = StyleSheet.create({
   },
 
   // Arrow Icon
+  // Arrow Icon - Simple Chevron
   arrowIcon: {
     width: 16,
     height: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'relative',
   },
-  arrowLine: {
-    width: 8,
-    height: 1,
-    backgroundColor: '#333333',
-    position: 'absolute',
-  },
-  arrowHead: {
-    width: 0,
-    height: 0,
-    borderLeftWidth: 4,
-    borderRightWidth: 0,
-    borderTopWidth: 3,
-    borderBottomWidth: 3,
-    borderLeftColor: '#333333',
-    borderTopColor: 'transparent',
-    borderBottomColor: 'transparent',
-    position: 'absolute',
-    right: 0,
+  chevronText: {
+    fontSize: 14,
+    color: '#999999',
+    fontWeight: '400',
   },
 });
 
