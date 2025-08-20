@@ -109,21 +109,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: Spacing.sm,
+    paddingVertical: Spacing.md,
     position: 'relative',
-  },
-  tabLabel: {
-    fontSize: FontSizes.xs,
-    fontWeight: FontWeights.medium,
-    fontFamily: FontFamilies.medium,
-    color: Colors.textTertiary,
-    marginTop: Spacing.xs,
-    textAlign: 'center',
-  },
-  activeTabLabel: {
-    color: Colors.primary,
-    fontWeight: FontWeights.semiBold,
-    fontFamily: FontFamilies.semiBold,
   },
   activeIndicator: {
     position: 'absolute',

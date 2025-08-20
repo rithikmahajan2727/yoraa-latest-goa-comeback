@@ -4,184 +4,97 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  TextInput,
   TouchableOpacity,
-  FlatList,
 } from 'react-native';
-import { FontSizes, FontWeights, Spacing, BorderRadius, Shadows } from '../constants';
+import { FontSizes, FontWeights, Spacing, BorderRadius } from '../constants';
+import SearchIcon from '../assets/icons/SearchIcon';
+import HeartIcon from '../assets/icons/HeartIcon';
+import ShoppingBagIcon from '../assets/icons/ShoppingBagIcon';
 
 const HomeScreen = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('My');
 
   const categories = [
-    { id: '1', name: 'Tops', icon: '👕' },
-    { id: '2', name: 'Bottoms', icon: '👖' },
-    { id: '3', name: 'Dresses', icon: '👗' },
-    { id: '4', name: 'Shoes', icon: '👠' },
-    { id: '5', name: 'Accessories', icon: '👜' },
+    { id: '1', name: 'Sale', isSale: true },
+    { id: '2', name: 'Lifestyle', isSale: false },
+    { id: '3', name: 'Running', isSale: false },
+    { id: '4', name: 'Soccer', isSale: false },
+    { id: '5', name: 'Tennis', isSale: false },
+    { id: '6', name: 'Golf', isSale: false },
   ];
 
-  const featuredProducts = [
-    { id: '1', name: 'Summer Dress', price: '$89', image: null, brand: 'YORAA' },
-    { id: '2', name: 'Casual Jeans', price: '$65', image: null, brand: 'Denim Co' },
-    { id: '3', name: 'Silk Blouse', price: '$120', image: null, brand: 'Elegance' },
-  ];
+  const tabs = ['My', 'Men', 'Women', 'Kids', 'E⚡X'];
 
-  const trendingItems = [
-    { id: '1', name: 'Vintage Tee', price: '$45', discount: '20%', image: null },
-    { id: '2', name: 'Leather Jacket', price: '$199', discount: '15%', image: null },
-    { id: '3', name: 'Floral Skirt', price: '$75', discount: '30%', image: null },
-  ];
-
-  const renderCategoryItem = ({ item }) => (
-    <TouchableOpacity style={styles.categoryItem}>
-      <View style={styles.categoryIcon}>
-        <Text style={styles.categoryEmoji}>{item.icon}</Text>
-      </View>
-      <Text style={styles.categoryName}>{item.name}</Text>
-    </TouchableOpacity>
+  const ArrowIcon = () => (
+    <View style={styles.arrowIcon}>
+      <View style={styles.arrowShape} />
+    </View>
   );
 
-  const renderFeaturedProduct = ({ item }) => (
-    <TouchableOpacity style={styles.productCard}>
-      <View style={styles.productImage}>
-        <Text style={styles.productImagePlaceholder}>👕</Text>
+  const renderCategoryItem = (item) => (
+    <TouchableOpacity key={item.id} style={styles.categoryItem}>
+      <View style={styles.categoryImageContainer}>
+        <View style={styles.categoryImagePlaceholder} />
       </View>
-      <View style={styles.productInfo}>
-        <Text style={styles.productBrand}>{item.brand}</Text>
-        <Text style={styles.productName}>{item.name}</Text>
-        <Text style={styles.productPrice}>{item.price}</Text>
+      <View style={styles.categoryInfo}>
+        <Text style={[styles.categoryName, item.isSale && styles.saleText]}>
+          {item.name}
+        </Text>
       </View>
-    </TouchableOpacity>
-  );
-
-  const renderTrendingItem = ({ item }) => (
-    <TouchableOpacity style={styles.trendingCard}>
-      <View style={styles.trendingImage}>
-        <Text style={styles.trendingImagePlaceholder}>🔥</Text>
-        {item.discount && (
-          <View style={styles.discountBadge}>
-            <Text style={styles.discountText}>{item.discount}</Text>
-          </View>
-        )}
-      </View>
-      <Text style={styles.trendingName}>{item.name}</Text>
-      <Text style={styles.trendingPrice}>{item.price}</Text>
+      <ArrowIcon />
     </TouchableOpacity>
   );
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {/* Header Section */}
+    <View style={styles.container}>
+      {/* Header */}
       <View style={styles.header}>
-        <View style={styles.headerContent}>
-          <View>
-            <Text style={styles.greeting}>Good Morning! 👋</Text>
-            <Text style={styles.userName}>Welcome to YORAA</Text>
-          </View>
-          <TouchableOpacity style={styles.notificationButton}>
-            <Text style={styles.notificationIcon}>🔔</Text>
+        <Text style={styles.shopTitle}>Shop</Text>
+        <View style={styles.headerIcons}>
+          <TouchableOpacity style={styles.iconButton}>
+            <SearchIcon size={24} color="#000000" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconButton}>
+            <HeartIcon size={24} color="#000000" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconButton}>
+            <ShoppingBagIcon size={24} color="#000000" />
           </TouchableOpacity>
         </View>
       </View>
 
-      {/* Search Bar */}
-      <View style={styles.searchContainer}>
-        <View style={styles.searchBar}>
-          <Text style={styles.searchIcon}>🔍</Text>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search fashion, brands, styles..."
-            placeholderTextColor={'#999999'}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
-        </View>
-        <TouchableOpacity style={styles.filterButton}>
-          <Text style={styles.filterIcon}>⚙️</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Hero Banner */}
-      <View style={styles.heroBanner}>
-        <View style={styles.heroContent}>
-          <Text style={styles.heroTitle}>Try Before You Buy</Text>
-          <Text style={styles.heroSubtitle}>Virtual fitting room now available</Text>
-          <TouchableOpacity style={styles.heroButton}>
-            <Text style={styles.heroButtonText}>Explore AR Try-On</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.heroImageContainer}>
-          <Text style={styles.heroImage}>👗</Text>
+      {/* Tab Navigation */}
+      <View style={styles.tabContainer}>
+        <View style={styles.tabWrapper}>
+          {tabs.map((tab, index) => (
+            <TouchableOpacity
+              key={tab}
+              style={[
+                styles.tab,
+                activeTab === tab && styles.activeTab,
+                index === 0 && styles.firstTab
+              ]}
+              onPress={() => setActiveTab(tab)}
+            >
+              <Text style={[
+                styles.tabText,
+                activeTab === tab && styles.activeTabText
+              ]}>
+                {tab}
+              </Text>
+              {activeTab === tab && <View style={styles.tabIndicator} />}
+            </TouchableOpacity>
+          ))}
         </View>
       </View>
 
-      {/* Categories */}
-      <View style={styles.section}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Shop by Category</Text>
-          <TouchableOpacity>
-            <Text style={styles.seeAllText}>See All</Text>
-          </TouchableOpacity>
+      {/* Content */}
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        <View style={styles.categoriesContainer}>
+          {categories.map(renderCategoryItem)}
         </View>
-        <FlatList
-          data={categories}
-          renderItem={renderCategoryItem}
-          keyExtractor={(item) => item.id}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.categoriesList}
-        />
-      </View>
-
-      {/* Featured Products */}
-      <View style={styles.section}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Featured Products</Text>
-          <TouchableOpacity>
-            <Text style={styles.seeAllText}>See All</Text>
-          </TouchableOpacity>
-        </View>
-        <FlatList
-          data={featuredProducts}
-          renderItem={renderFeaturedProduct}
-          keyExtractor={(item) => item.id}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.productsList}
-        />
-      </View>
-
-      {/* Trending Now */}
-      <View style={styles.section}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Trending Now 🔥</Text>
-          <TouchableOpacity>
-            <Text style={styles.seeAllText}>See All</Text>
-          </TouchableOpacity>
-        </View>
-        <FlatList
-          data={trendingItems}
-          renderItem={renderTrendingItem}
-          keyExtractor={(item) => item.id}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.trendingList}
-        />
-      </View>
-
-      {/* Collections Banner */}
-      <View style={styles.collectionsBanner}>
-        <Text style={styles.collectionsTitle}>New Collections</Text>
-        <Text style={styles.collectionsSubtitle}>Discover our latest curated fashion collections</Text>
-        <TouchableOpacity style={styles.collectionsButton}>
-          <Text style={styles.collectionsButtonText}>Browse Collections</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Bottom Spacing */}
-      <View style={styles.bottomSpacing} />
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -193,321 +106,125 @@ const styles = StyleSheet.create({
   
   // Header Styles
   header: {
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: Spacing.lg,
-    paddingTop: Spacing.xl,
-    paddingBottom: Spacing.md,
-  },
-  headerContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  greeting: {
-    fontSize: FontSizes.md,
-    color: '#666666',
-    marginBottom: Spacing.xs,
-  },
-  userName: {
-    fontSize: FontSizes.xl,
-    fontWeight: FontWeights.bold,
-    color: '#000000',
-  },
-  notificationButton: {
-    width: 40,
-    height: 40,
-    borderRadius: BorderRadius.round,
-    backgroundColor: '#F8F8F8',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-  },
-  notificationIcon: {
-    fontSize: FontSizes.lg,
-  },
-
-  // Search Styles
-  searchContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: Spacing.lg,
-    marginBottom: Spacing.lg,
-    gap: Spacing.md,
-  },
-  searchBar: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F8F8F8',
-    borderRadius: BorderRadius.lg,
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.sm,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-  },
-  searchIcon: {
-    fontSize: FontSizes.lg,
-    marginRight: Spacing.sm,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: FontSizes.md,
-    color: '#000000',
-  },
-  filterButton: {
-    width: 48,
-    height: 48,
-    borderRadius: BorderRadius.lg,
-    backgroundColor: '#000000',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  filterIcon: {
-    fontSize: FontSizes.lg,
-    color: '#FFFFFF',
-  },
-
-  // Hero Banner Styles
-  heroBanner: {
-    backgroundColor: '#F8F8F8',
-    marginHorizontal: Spacing.lg,
-    borderRadius: BorderRadius.xl,
-    padding: Spacing.lg,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: Spacing.xl,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-  },
-  heroContent: {
-    flex: 1,
-  },
-  heroTitle: {
-    fontSize: FontSizes.xl,
-    fontWeight: FontWeights.bold,
-    color: '#000000',
-    marginBottom: Spacing.xs,
-  },
-  heroSubtitle: {
-    fontSize: FontSizes.md,
-    color: '#666666',
-    marginBottom: Spacing.md,
-  },
-  heroButton: {
-    backgroundColor: '#000000',
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.sm,
-    borderRadius: BorderRadius.lg,
-    alignSelf: 'flex-start',
-  },
-  heroButtonText: {
-    color: '#FFFFFF',
-    fontSize: FontSizes.md,
-    fontWeight: FontWeights.semiBold,
-  },
-  heroImageContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: BorderRadius.round,
+    paddingHorizontal: 16,
+    paddingTop: 54,
+    paddingBottom: 16,
     backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: Spacing.md,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
   },
-  heroImage: {
-    fontSize: 40,
+  shopTitle: {
+    fontSize: 28,
+    fontWeight: '500',
+    color: '#000000',
+    letterSpacing: -0.168,
+    fontFamily: 'Montserrat-Medium',
   },
-
-  // Section Styles
-  section: {
-    marginBottom: Spacing.xl,
-  },
-  sectionHeader: {
+  headerIcons: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: Spacing.lg,
-    marginBottom: Spacing.md,
+    gap: 12,
   },
-  sectionTitle: {
-    fontSize: FontSizes.xl,
-    fontWeight: FontWeights.bold,
-    color: '#000000',
-  },
-  seeAllText: {
-    fontSize: FontSizes.md,
-    color: '#000000',
-    fontWeight: FontWeights.medium,
+  iconButton: {
+    padding: 8,
   },
 
-  // Categories Styles
-  categoriesList: {
-    paddingHorizontal: Spacing.lg,
-    gap: Spacing.md,
+  // Tab Navigation Styles
+  tabContainer: {
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#CDCDCD',
   },
+  tabWrapper: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+  },
+  tab: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 16,
+    position: 'relative',
+  },
+  firstTab: {
+    paddingLeft: 0,
+  },
+  activeTab: {
+    // Active tab styling handled by indicator
+  },
+  tabText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#767676',
+    letterSpacing: -0.4,
+    fontFamily: 'Montserrat-Medium',
+  },
+  activeTabText: {
+    color: '#000000',
+  },
+  tabIndicator: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 2,
+    backgroundColor: '#000000',
+  },
+
+  // Content Styles
+  content: {
+    flex: 1,
+  },
+  categoriesContainer: {
+    paddingTop: 6,
+  },
+
+  // Category Item Styles
   categoryItem: {
+    flexDirection: 'row',
     alignItems: 'center',
-    width: 80,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E4E4E4',
   },
-  categoryIcon: {
-    width: 60,
-    height: 60,
-    borderRadius: BorderRadius.round,
-    backgroundColor: '#F8F8F8',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: Spacing.sm,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
+  categoryImageContainer: {
+    marginRight: 16,
   },
-  categoryEmoji: {
-    fontSize: FontSizes.xxl,
+  categoryImagePlaceholder: {
+    width: 70,
+    height: 70,
+    backgroundColor: '#EEEEEE',
+    borderRadius: 8,
+  },
+  categoryInfo: {
+    flex: 1,
   },
   categoryName: {
-    fontSize: FontSizes.sm,
+    fontSize: 14,
+    fontWeight: '400',
     color: '#000000',
-    textAlign: 'center',
-    fontWeight: FontWeights.medium,
+    letterSpacing: -0.14,
+    fontFamily: 'Montserrat-Regular',
   },
-
-  // Product Card Styles
-  productsList: {
-    paddingHorizontal: Spacing.lg,
-    gap: Spacing.md,
+  saleText: {
+    color: '#CA3327',
+    fontWeight: '600',
+    fontFamily: 'Montserrat-SemiBold',
   },
-  productCard: {
-    width: 160,
-    backgroundColor: '#FFFFFF',
-    borderRadius: BorderRadius.lg,
-    padding: Spacing.md,
-    ...Shadows.small,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-  },
-  productImage: {
-    width: '100%',
-    height: 120,
-    backgroundColor: '#F8F8F8',
-    borderRadius: BorderRadius.md,
+  arrowIcon: {
+    width: 24,
+    height: 24,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: Spacing.sm,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
   },
-  productImagePlaceholder: {
-    fontSize: FontSizes.xxxl,
-  },
-  productInfo: {
-    gap: Spacing.xs,
-  },
-  productBrand: {
-    fontSize: FontSizes.xs,
-    color: '#999999',
-    fontWeight: FontWeights.medium,
-    textTransform: 'uppercase',
-  },
-  productName: {
-    fontSize: FontSizes.md,
-    color: '#000000',
-    fontWeight: FontWeights.medium,
-  },
-  productPrice: {
-    fontSize: FontSizes.md,
-    color: '#000000',
-    fontWeight: FontWeights.bold,
-  },
-
-  // Trending Styles
-  trendingList: {
-    paddingHorizontal: Spacing.lg,
-    gap: Spacing.md,
-  },
-  trendingCard: {
-    width: 140,
-    alignItems: 'flex-start',
-  },
-  trendingImage: {
-    width: '100%',
-    height: 100,
-    backgroundColor: '#F8F8F8',
-    borderRadius: BorderRadius.md,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: Spacing.sm,
-    position: 'relative',
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-  },
-  trendingImagePlaceholder: {
-    fontSize: FontSizes.xxl,
-  },
-  discountBadge: {
-    position: 'absolute',
-    top: Spacing.sm,
-    right: Spacing.sm,
-    backgroundColor: '#000000',
-    paddingHorizontal: Spacing.sm,
-    paddingVertical: Spacing.xs,
-    borderRadius: BorderRadius.sm,
-  },
-  discountText: {
-    color: '#FFFFFF',
-    fontSize: FontSizes.xs,
-    fontWeight: FontWeights.bold,
-  },
-  trendingName: {
-    fontSize: FontSizes.md,
-    color: '#000000',
-    fontWeight: FontWeights.medium,
-    marginBottom: Spacing.xs,
-  },
-  trendingPrice: {
-    fontSize: FontSizes.md,
-    color: '#000000',
-    fontWeight: FontWeights.bold,
-  },
-
-  // Collections Banner Styles
-  collectionsBanner: {
-    backgroundColor: '#000000',
-    marginHorizontal: Spacing.lg,
-    borderRadius: BorderRadius.xl,
-    padding: Spacing.xl,
-    alignItems: 'center',
-    marginBottom: Spacing.xl,
-  },
-  collectionsTitle: {
-    fontSize: FontSizes.xxl,
-    fontWeight: FontWeights.bold,
-    color: '#FFFFFF',
-    marginBottom: Spacing.sm,
-    textAlign: 'center',
-  },
-  collectionsSubtitle: {
-    fontSize: FontSizes.md,
-    color: '#F8F8F8',
-    textAlign: 'center',
-    marginBottom: Spacing.lg,
-    lineHeight: 22,
-  },
-  collectionsButton: {
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: Spacing.xl,
-    paddingVertical: Spacing.md,
-    borderRadius: BorderRadius.lg,
-  },
-  collectionsButtonText: {
-    color: '#000000',
-    fontSize: FontSizes.md,
-    fontWeight: FontWeights.semiBold,
-  },
-
-  // Utility Styles
-  bottomSpacing: {
-    height: Spacing.xxl,
+  arrowShape: {
+    width: 8,
+    height: 8,
+    borderTopWidth: 2,
+    borderRightWidth: 2,
+    borderColor: '#292526',
+    transform: [{ rotate: '45deg' }],
   },
 });
 

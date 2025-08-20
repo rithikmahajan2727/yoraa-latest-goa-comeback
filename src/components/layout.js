@@ -89,20 +89,17 @@ const EnhancedLayout = () => {
   };
 
   const shouldShowBottomNav = ['Home', 'Shop', 'Collection', 'Rewards', 'Profile'].includes(currentScreen);
-  const shouldShowHeader = ['Home', 'Shop', 'Rewards', 'Profile'].includes(currentScreen);
+  const shouldShowHeader = ['Shop', 'Rewards', 'Profile'].includes(currentScreen);
 
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.safeContainer}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
         
-        {/* Dynamic Header - Only show for main tabs except Collection */}
-        {shouldShowHeader && (
+        {/* Dynamic Header - Only show for main tabs except Collection and Home */}
+        {shouldShowHeader && activeTab !== 'Home' && (
           <View style={styles.header}>
             <Text style={styles.headerTitle}>{headerTitle}</Text>
-            {activeTab === 'Home' && (
-              <Text style={styles.headerSubtitle}>Fashion Forward</Text>
-            )}
           </View>
         )}
 
@@ -144,13 +141,6 @@ const styles = StyleSheet.create({
     fontWeight: FontWeights.bold,
     color: Colors.textPrimary,
     textAlign: 'center',
-  },
-  headerSubtitle: {
-    fontSize: FontSizes.md,
-    color: Colors.textSecondary,
-    textAlign: 'center',
-    marginTop: Spacing.xs,
-    fontWeight: FontWeights.medium,
   },
   mainContent: {
     flex: 1,
