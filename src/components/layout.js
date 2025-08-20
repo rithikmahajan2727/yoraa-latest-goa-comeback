@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import BottomNavigationBar from './bottomnavigationbar';
 import { Colors, FontSizes, FontWeights, Spacing } from '../constants';
-import { HomeScreen, ShopScreen, CollectionScreen, RewardsScreen, ProfileScreen, CreateAccountMobileNumber, CreateAccountMobileNumberVerification, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen } from '../screens';
+import { HomeScreen, ShopScreen, CollectionScreen, RewardsScreen, ProfileScreen, CreateAccountMobileNumber, CreateAccountMobileNumberVerification, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen, ProductViewOne, ProductViewTwo, ProductViewThree } from '../screens';
 
 // Navigation context for handling screen navigation
 const createNavigation = (setCurrentScreen, setActiveTab) => ({
@@ -27,7 +27,7 @@ const createNavigation = (setCurrentScreen, setActiveTab) => ({
 });
 
 // Placeholder content components for each tab
-const HomeContent = () => <HomeScreen />;
+const HomeContent = ({ navigation }) => <HomeScreen navigation={navigation} />;
 const ShopContent = () => <ShopScreen />;
 const CollectionContent = () => <CollectionScreen />;
 const RewardsContent = ({ navigation }) => <RewardsScreen navigation={navigation} />;
@@ -50,7 +50,7 @@ const EnhancedLayout = () => {
   const renderContent = () => {
     switch (currentScreen) {
       case 'Home':
-        return <HomeContent />;
+        return <HomeContent navigation={navigation} />;
       case 'Shop':
         return <ShopContent />;
       case 'Collection':
@@ -87,6 +87,12 @@ const EnhancedLayout = () => {
         return <LoveUsRateUs navigation={navigation} />;
       case 'FAQ':
         return <FAQScreen navigation={navigation} />;
+      case 'ProductViewOne':
+        return <ProductViewOne navigation={navigation} />;
+      case 'ProductViewTwo':
+        return <ProductViewTwo navigation={navigation} />;
+      case 'ProductViewThree':
+        return <ProductViewThree navigation={navigation} />;
       default:
         return <HomeContent />;
     }

@@ -11,7 +11,7 @@ import SearchIcon from '../assets/icons/SearchIcon';
 import HeartIcon from '../assets/icons/HeartIcon';
 import ShoppingBagIcon from '../assets/icons/ShoppingBagIcon';
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('My');
 
   const categories = [
@@ -32,7 +32,11 @@ const HomeScreen = () => {
   );
 
   const renderCategoryItem = (item) => (
-    <TouchableOpacity key={item.id} style={styles.categoryItem}>
+    <TouchableOpacity 
+      key={item.id} 
+      style={styles.categoryItem}
+      onPress={() => navigation?.navigate('ProductViewOne')}
+    >
       <View style={styles.categoryImageContainer}>
         <View style={styles.categoryImagePlaceholder} />
       </View>
