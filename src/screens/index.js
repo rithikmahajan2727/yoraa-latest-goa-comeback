@@ -20,3 +20,5 @@ export { default as FAQScreen } from './faq';
 export { default as ProductViewOne } from './productviewone';
 export { default as ProductViewTwo } from './productviewtwo';
 export { default as ProductViewThree } from './productviewthree';
+export { default as ProductDetailsMain } from './productdetailsmain';
+export { default as ProductDetailsMainReview } from './productdetailsmainreview';

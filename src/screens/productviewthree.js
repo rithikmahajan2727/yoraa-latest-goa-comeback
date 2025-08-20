@@ -122,7 +122,10 @@ const ProductViewThree = ({ navigation }) => {
         ]}
       >
         {/* Product Image */}
-        <View style={[styles.imageContainer, { height: product.height }]}>
+        <TouchableOpacity 
+          style={[styles.imageContainer, { height: product.height }]}
+          onPress={() => navigation.navigate('ProductDetailsMain', { product, previousScreen: 'ProductViewThree' })}
+        >
           <View style={[styles.imagePlaceholder, { height: product.height }]} />
           
           {/* Heart Icon */}
@@ -141,7 +144,7 @@ const ProductViewThree = ({ navigation }) => {
               <ShoppingBagIcon />
             </View>
           </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
       </View>
     );
   };
