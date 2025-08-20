@@ -20,30 +20,40 @@ const ArrowIcon = () => (
 // Icon Components
 const OrdersIcon = () => (
   <View style={styles.iconContainer}>
-    {/* Main container representing the document/order */}
-    <View style={styles.ordersMainContainer}>
-      {/* Top section (header area) */}
-      <View style={styles.ordersHeader} />
-      {/* Content area with line */}
-      <View style={styles.ordersContent}>
-        <View style={styles.ordersContentLine} />
-      </View>
+    {/* Briefcase icon - exact match to Figma */}
+    <View style={styles.ordersContainer}>
+      <View style={styles.ordersBody} />
+      <View style={styles.ordersHandle} />
+      <View style={styles.ordersLock} />
     </View>
   </View>
 );
 
 const ContactIcon = () => (
   <View style={styles.iconContainer}>
-    <View style={styles.contactCircle} />
-    <View style={styles.contactLine1} />
-    <View style={styles.contactLine2} />
+    {/* Speech bubble with "Aa" text - exact match to Figma */}
+    <View style={styles.contactBubble}>
+      <Text style={styles.contactText}>Aa</Text>
+    </View>
+    <View style={styles.contactTail} />
   </View>
 );
 
 const SettingsIcon = () => (
   <View style={styles.iconContainer}>
-    <View style={styles.settingsGear} />
-    <View style={styles.settingsCenter} />
+    {/* Settings gear icon - exact match to Figma */}
+    <View style={styles.settingsOuter}>
+      <View style={styles.settingsInner} />
+      {/* 8 teeth around the gear */}
+      <View style={[styles.settingsTooth, { top: -3, left: '50%', marginLeft: -1.5 }]} />
+      <View style={[styles.settingsTooth, { bottom: -3, left: '50%', marginLeft: -1.5 }]} />
+      <View style={[styles.settingsTooth, { left: -3, top: '50%', marginTop: -1.5, transform: [{ rotate: '90deg' }] }]} />
+      <View style={[styles.settingsTooth, { right: -3, top: '50%', marginTop: -1.5, transform: [{ rotate: '90deg' }] }]} />
+      <View style={[styles.settingsTooth, { top: 2, right: 2, transform: [{ rotate: '45deg' }] }]} />
+      <View style={[styles.settingsTooth, { bottom: 2, left: 2, transform: [{ rotate: '45deg' }] }]} />
+      <View style={[styles.settingsTooth, { top: 2, left: 2, transform: [{ rotate: '-45deg' }] }]} />
+      <View style={[styles.settingsTooth, { bottom: 2, right: 2, transform: [{ rotate: '-45deg' }] }]} />
+    </View>
   </View>
 );
 
@@ -297,72 +307,101 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'relative',
   },
-  ordersMainContainer: {
+  
+  // Orders Icon - Briefcase (exact Figma match)
+  ordersContainer: {
     width: 20,
-    height: 18,
-    backgroundColor: '#FFFFFF',
+    height: 16,
+    position: 'relative',
+  },
+  ordersBody: {
+    width: 20,
+    height: 12,
+    backgroundColor: '#000000',
+    borderRadius: 1,
+    position: 'absolute',
+    bottom: 0,
+  },
+  ordersHandle: {
+    width: 6,
+    height: 3,
+    backgroundColor: 'transparent',
     borderWidth: 1.5,
     borderColor: '#000000',
-    borderRadius: 2,
-    overflow: 'hidden',
+    borderTopLeftRadius: 1,
+    borderTopRightRadius: 1,
+    borderBottomWidth: 0,
+    position: 'absolute',
+    top: 0,
+    left: 7,
   },
-  ordersHeader: {
-    width: '100%',
-    height: 5,
+  ordersLock: {
+    width: 2,
+    height: 2,
     backgroundColor: '#000000',
+    borderRadius: 1,
+    position: 'absolute',
+    top: 6,
+    left: 9,
   },
-  ordersContent: {
-    flex: 1,
+  
+  // Contact Icon - Speech bubble with "Aa" (exact Figma match)
+  contactBubble: {
+    width: 18,
+    height: 12,
+    backgroundColor: '#000000',
+    borderRadius: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 3,
+    position: 'relative',
   },
-  ordersContentLine: {
-    width: '80%',
-    height: 1.5,
-    backgroundColor: '#000000',
-    borderRadius: 0.5,
+  contactText: {
+    color: '#FFFFFF',
+    fontSize: 7,
+    fontWeight: 'bold',
+    fontFamily: 'System',
   },
-  contactCircle: {
+  contactTail: {
+    width: 0,
+    height: 0,
+    backgroundColor: 'transparent',
+    borderStyle: 'solid',
+    borderTopWidth: 3,
+    borderRightWidth: 3,
+    borderBottomWidth: 0,
+    borderLeftWidth: 0,
+    borderTopColor: '#000000',
+    borderRightColor: 'transparent',
+    position: 'absolute',
+    bottom: -3,
+    left: 3,
+  },
+  
+  // Settings Icon - Gear (exact Figma match)
+  settingsOuter: {
     width: 16,
     height: 16,
     backgroundColor: 'transparent',
     borderWidth: 2,
     borderColor: '#000000',
     borderRadius: 8,
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  contactLine1: {
-    position: 'absolute',
-    width: 8,
-    height: 2,
-    backgroundColor: '#000000',
-    top: 6,
-    left: 4,
-  },
-  contactLine2: {
-    position: 'absolute',
+  settingsInner: {
     width: 6,
-    height: 2,
+    height: 6,
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    borderColor: '#000000',
+    borderRadius: 3,
+  },
+  settingsTooth: {
+    width: 3,
+    height: 3,
     backgroundColor: '#000000',
-    top: 10,
-    left: 5,
-  },
-  settingsGear: {
-    width: 20,
-    height: 20,
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: '#000000',
-    borderRadius: 10,
-  },
-  settingsCenter: {
     position: 'absolute',
-    width: 8,
-    height: 8,
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: '#000000',
-    borderRadius: 4,
   },
 
   // Menu Styles

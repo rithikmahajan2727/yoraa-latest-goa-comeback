@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import BottomNavigationBar from './bottomnavigationbar';
 import { Colors, FontSizes, FontWeights, Spacing } from '../constants';
-import { HomeScreen, ShopScreen, CollectionScreen, RewardsScreen, ProfileScreen, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen } from '../screens';
+import { HomeScreen, ShopScreen, CollectionScreen, RewardsScreen, ProfileScreen, CreateAccountMobileNumber, CreateAccountMobileNumberVerification, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen } from '../screens';
 
 // Navigation context for handling screen navigation
 const createNavigation = (setCurrentScreen, setActiveTab) => ({
@@ -30,7 +30,7 @@ const createNavigation = (setCurrentScreen, setActiveTab) => ({
 const HomeContent = () => <HomeScreen />;
 const ShopContent = () => <ShopScreen />;
 const CollectionContent = () => <CollectionScreen />;
-const RewardsContent = () => <RewardsScreen />;
+const RewardsContent = ({ navigation }) => <RewardsScreen navigation={navigation} />;
 const ProfileContent = ({ navigation }) => <ProfileScreen navigation={navigation} />;
 
 // Enhanced Layout with improved navigation handling
@@ -56,9 +56,13 @@ const EnhancedLayout = () => {
       case 'Collection':
         return <CollectionContent />;
       case 'Rewards':
-        return <RewardsContent />;
+        return <RewardsContent navigation={navigation} />;
       case 'Profile':
         return <ProfileContent navigation={navigation} />;
+      case 'CreateAccountMobileNumber':
+        return <CreateAccountMobileNumber navigation={navigation} />;
+      case 'CreateAccountMobileNumberVerification':
+        return <CreateAccountMobileNumberVerification navigation={navigation} />;
       case 'Orders':
         return <OrdersScreen navigation={navigation} />;
       case 'EditProfile':
@@ -89,7 +93,7 @@ const EnhancedLayout = () => {
   };
 
   const shouldShowBottomNav = ['Home', 'Shop', 'Collection', 'Rewards', 'Profile'].includes(currentScreen);
-  const shouldShowHeader = ['Shop', 'Rewards', 'Profile'].includes(currentScreen);
+  const shouldShowHeader = ['Profile'].includes(currentScreen);
 
   return (
     <View style={styles.container}>
@@ -97,7 +101,7 @@ const EnhancedLayout = () => {
         <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
         
         {/* Dynamic Header - Only show for main tabs except Collection and Home */}
-        {shouldShowHeader && activeTab !== 'Home' && (
+        {shouldShowHeader && activeTab !== 'Home' && activeTab !== 'Profile' && (
           <View style={styles.header}>
             <Text style={styles.headerTitle}>{headerTitle}</Text>
           </View>

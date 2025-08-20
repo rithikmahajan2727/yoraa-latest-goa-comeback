@@ -3,6 +3,8 @@ export { default as ShopScreen } from './ShopScreen';
 export { default as CollectionScreen } from './CollectionScreen';
 export { default as RewardsScreen } from './RewardsScreen';
 export { default as ProfileScreen } from './ProfileScreen';
+export { default as CreateAccountMobileNumber } from './createaccountmobilenumber';
+export { default as CreateAccountMobileNumberVerification } from './createaccountmobilenumberverification';
 export { default as OrdersScreen } from './orders';
 export { default as EditProfile } from './editprofile';
 export { default as SettingsScreen } from './settings';
