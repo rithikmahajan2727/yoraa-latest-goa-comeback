@@ -8,26 +8,10 @@ import {
 } from 'react-native';
 import BottomNavigationBar from './bottomnavigationbar';
 import { Colors, FontSizes, FontWeights, Spacing } from '../constants';
-import { HomeScreen, ShopScreen, CollectionScreen, RewardsScreen, ProfileScreen, CreateAccountMobileNumber, CreateAccountMobileNumberVerification, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen } from '../screens';
-
-// Navigation context for handling screen navigation
-const createNavigation = (setCurrentScreen, setActiveTab) => ({
-  navigate: (screenName, params) => {
-    if (['Home', 'Shop', 'Collection', 'Rewards', 'Profile'].includes(screenName)) {
-      setActiveTab(screenName);
-      setCurrentScreen(screenName);
-    } else {
-      setCurrentScreen(screenName);
-    }
-  },
-  goBack: () => {
-    setCurrentScreen('Profile');
-    setActiveTab('Profile');
-  },
-});
+import { HomeScreen, ShopScreen, CollectionScreen, RewardsScreen, ProfileScreen, CreateAccountMobileNumber, CreateAccountMobileNumberVerification, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen, ProductViewOne, ProductViewTwo, ProductViewThree, ProductDetailsMain, ProductDetailsMainReview } from '../screens';
 
 // Placeholder content components for each tab
-const HomeContent = () => <HomeScreen />;
+const HomeContent = ({ navigation }) => <HomeScreen navigation={navigation} />;
 const ShopContent = () => <ShopScreen />;
 const CollectionContent = () => <CollectionScreen />;
 const RewardsContent = ({ navigation }) => <RewardsScreen navigation={navigation} />;
@@ -38,8 +22,49 @@ const EnhancedLayout = () => {
   const [activeTab, setActiveTab] = useState('Home');
   const [currentScreen, setCurrentScreen] = useState('Home');
   const [headerTitle, setHeaderTitle] = useState('YORAA');
+  const [routeParams, setRouteParams] = useState(null);
+  const [navigationHistory, setNavigationHistory] = useState(['Home']);
 
-  const navigation = createNavigation(setCurrentScreen, setActiveTab);
+  // Navigation context for handling screen navigation
+  const createNavigation = (setCurrentScreen, setActiveTab, setRouteParams, setNavigationHistory) => ({
+    navigate: (screenName, params) => {
+      if (['Home', 'Shop', 'Collection', 'Rewards', 'Profile'].includes(screenName)) {
+        setActiveTab(screenName);
+        setCurrentScreen(screenName);
+        setNavigationHistory([screenName]);
+      } else {
+        setCurrentScreen(screenName);
+        setNavigationHistory(prev => [...prev, screenName]);
+      }
+      setRouteParams(params || null);
+    },
+    goBack: () => {
+      setNavigationHistory(prev => {
+        const newHistory = [...prev];
+        newHistory.pop(); // Remove current screen
+        const previousScreen = newHistory[newHistory.length - 1] || 'Profile';
+        
+        // Handle back navigation to previous screen
+        if (routeParams?.previousScreen) {
+          setCurrentScreen(routeParams.previousScreen);
+          if (['Home', 'Shop', 'Collection', 'Rewards', 'Profile'].includes(routeParams.previousScreen)) {
+            setActiveTab(routeParams.previousScreen);
+          }
+        } else {
+          setCurrentScreen(previousScreen);
+          if (['Home', 'Shop', 'Collection', 'Rewards', 'Profile'].includes(previousScreen)) {
+            setActiveTab(previousScreen);
+          }
+        }
+        
+        setRouteParams(null);
+        return newHistory.length > 0 ? newHistory : ['Home'];
+      });
+    },
+    route: { params: routeParams },
+  });
+
+  const navigation = createNavigation(setCurrentScreen, setActiveTab, setRouteParams, setNavigationHistory);
 
   const handleTabChange = (tabName) => {
     setActiveTab(tabName);
@@ -50,7 +75,7 @@ const EnhancedLayout = () => {
   const renderContent = () => {
     switch (currentScreen) {
       case 'Home':
-        return <HomeContent />;
+        return <HomeContent navigation={navigation} />;
       case 'Shop':
         return <ShopContent />;
       case 'Collection':
@@ -87,6 +112,16 @@ const EnhancedLayout = () => {
         return <LoveUsRateUs navigation={navigation} />;
       case 'FAQ':
         return <FAQScreen navigation={navigation} />;
+      case 'ProductViewOne':
+        return <ProductViewOne navigation={navigation} />;
+      case 'ProductViewTwo':
+        return <ProductViewTwo navigation={navigation} />;
+      case 'ProductViewThree':
+        return <ProductViewThree navigation={navigation} />;
+      case 'ProductDetailsMain':
+        return <ProductDetailsMain navigation={navigation} route={{ params: routeParams }} />;
+      case 'ProductDetailsMainReview':
+        return <ProductDetailsMainReview navigation={navigation} route={{ params: routeParams }} />;
       default:
         return <HomeContent />;
     }
