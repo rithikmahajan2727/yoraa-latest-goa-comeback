@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
+  Platform,
 } from 'react-native';
 import { Colors, FontSizes, FontWeights, FontFamilies, Spacing, Shadows } from '../constants';
 import {
@@ -76,13 +77,12 @@ const BottomNavigationBar = ({ activeTab = 'Home', onTabChange }) => {
             >
               <tab.icon 
                 active={isActive} 
-                color={isActive ? Colors.primary : Colors.textTertiary}
-                size={24}
+                color={isActive ? '#000000' : '#848688'}
+                size={18}
               />
               <Text style={[styles.tabLabel, isActive && styles.activeTabLabel]}>
                 {tab.label}
               </Text>
-              {isActive && <View style={styles.activeIndicator} />}
             </TouchableOpacity>
           );
         })}
@@ -93,32 +93,46 @@ const BottomNavigationBar = ({ activeTab = 'Home', onTabChange }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.background,
-    ...Shadows.medium,
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 16,
+    elevation: 8,
   },
   navigationBar: {
     flexDirection: 'row',
-    backgroundColor: Colors.background,
-    paddingTop: Spacing.md,
-    paddingBottom: Spacing.sm,
-    paddingHorizontal: Spacing.lg,
-    borderTopWidth: 1,
-    borderTopColor: Colors.borderLight,
+    backgroundColor: '#FFFFFF',
+    paddingTop: 13,
+    paddingHorizontal: 15,
+    height: 54,
+    alignItems: 'flex-start',
   },
   tabButton: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: Spacing.md,
+    justifyContent: 'flex-start',
+    paddingTop: 0,
     position: 'relative',
+    minHeight: 37,
   },
-  activeIndicator: {
-    position: 'absolute',
-    top: -2,
-    width: 24,
-    height: 3,
-    backgroundColor: Colors.primary,
-    borderRadius: 2,
+  tabLabel: {
+    fontSize: 10,
+    fontWeight: FontWeights.normal,
+    fontFamily: FontFamilies.regular,
+    color: '#848688',
+    marginTop: 4,
+    textAlign: 'center',
+    letterSpacing: -0.2,
+    lineHeight: 12,
+  },
+  activeTabLabel: {
+    color: '#000000',
+    fontWeight: FontWeights.bold,
+    fontFamily: FontFamilies.bold,
   },
 });
 
