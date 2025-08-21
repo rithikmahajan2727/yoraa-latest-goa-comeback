@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import BottomNavigationBar from './bottomnavigationbar';
 import { Colors, FontSizes, FontWeights, Spacing } from '../constants';
-import { HomeScreen, ShopScreen, CollectionScreen, RewardsScreen, ProfileScreen, CreateAccountMobileNumber, CreateAccountMobileNumberVerification, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen, ProductViewOne, ProductViewTwo, ProductViewThree, ProductDetailsMain, ProductDetailsMainReview } from '../screens';
+import { HomeScreen, ShopScreen, CollectionScreen, RewardsScreen, ProfileScreen, BagScreen, CreateAccountMobileNumber, CreateAccountMobileNumberVerification, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen, ProductViewOne, ProductViewTwo, ProductViewThree, ProductDetailsMain, ProductDetailsMainReview, ProductDetailsReviewThreePointSelection, ProductDetailsWrittenUserReview } from '../screens';
 
 // Placeholder content components for each tab
 const HomeContent = ({ navigation }) => <HomeScreen navigation={navigation} />;
@@ -84,6 +84,8 @@ const EnhancedLayout = () => {
         return <RewardsContent navigation={navigation} />;
       case 'Profile':
         return <ProfileContent navigation={navigation} />;
+      case 'Bag':
+        return <BagScreen navigation={navigation} />;
       case 'CreateAccountMobileNumber':
         return <CreateAccountMobileNumber navigation={navigation} />;
       case 'CreateAccountMobileNumberVerification':
@@ -122,6 +124,10 @@ const EnhancedLayout = () => {
         return <ProductDetailsMain navigation={navigation} route={{ params: routeParams }} />;
       case 'ProductDetailsMainReview':
         return <ProductDetailsMainReview navigation={navigation} route={{ params: routeParams }} />;
+      case 'ProductDetailsReviewThreePointSelection':
+        return <ProductDetailsReviewThreePointSelection navigation={navigation} route={{ params: routeParams }} />;
+      case 'ProductDetailsWrittenUserReview':
+        return <ProductDetailsWrittenUserReview navigation={navigation} route={{ params: routeParams }} />;
       default:
         return <HomeContent />;
     }

@@ -10,9 +10,11 @@ import {
   Dimensions,
   FlatList,
   Animated,
+  Modal,
 } from 'react-native';
 import { FontSizes, FontWeights, Spacing, BorderRadius } from '../constants';
 import BottomNavigationBar from '../components/bottomnavigationbar';
+import SizeSelectionModal from './productdetailsmainsizeselectionchart';
 
 const { width } = Dimensions.get('window');
 
@@ -25,6 +27,7 @@ const ProductDetailsMain = ({ navigation, route }) => {
   });
   const [selectedProductIndex, setSelectedProductIndex] = useState(0);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [showSizeModal, setShowSizeModal] = useState(false);
   const imageSliderRef = useRef(null);
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
@@ -348,7 +351,10 @@ const ProductDetailsMain = ({ navigation, route }) => {
         </TouchableOpacity>
 
         {/* Shopping Bag Icon */}
-        <TouchableOpacity style={styles.bagButton}>
+        <TouchableOpacity 
+          style={styles.bagButton}
+          onPress={() => navigation.navigate('Bag')}
+        >
           <View style={styles.bagButtonContainer}>
             <ShoppingBagIcon />
           </View>
@@ -513,7 +519,10 @@ const ProductDetailsMain = ({ navigation, route }) => {
       )}
 
       <View style={styles.buyNowContainer}>
-        <TouchableOpacity style={styles.buyNowButton}>
+        <TouchableOpacity 
+          style={styles.buyNowButton}
+          onPress={() => setShowSizeModal(true)}
+        >
           <Text style={styles.buyNowText}>Buy Now</Text>
         </TouchableOpacity>
       </View>
@@ -535,7 +544,10 @@ const ProductDetailsMain = ({ navigation, route }) => {
             <HeartIcon />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.cartButton}>
+        <TouchableOpacity 
+          style={styles.cartButton}
+          onPress={() => navigation.navigate('Bag')}
+        >
           <View style={styles.cartButtonContainer}>
             <ShoppingBagIcon />
           </View>
@@ -630,6 +642,16 @@ const ProductDetailsMain = ({ navigation, route }) => {
       <BottomNavigationBar 
         activeTab="Home" 
         onTabChange={handleTabChange}
+      />
+
+      {/* Size Selection Modal */}
+      <SizeSelectionModal
+        visible={showSizeModal}
+        onClose={() => setShowSizeModal(false)}
+        product={currentProduct}
+        activeSize={activeSize}
+        setActiveSize={setActiveSize}
+        navigation={navigation}
       />
     </SafeAreaView>
   );

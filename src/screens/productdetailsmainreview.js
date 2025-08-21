@@ -226,7 +226,10 @@ const ProductDetailsMainReview = ({ navigation, route }) => {
         </View>
 
         {/* Write Review Button */}
-        <TouchableOpacity style={styles.writeReviewButton}>
+        <TouchableOpacity 
+          style={styles.writeReviewButton}
+          onPress={() => navigation.navigate('ProductDetailsReviewThreePointSelection')}
+        >
           <Text style={styles.writeReviewText}>Write a Review</Text>
         </TouchableOpacity>
       </ScrollView>
