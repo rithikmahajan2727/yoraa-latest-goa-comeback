@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { PanResponder } from 'react-native';
 import {
   View,
   Text,
@@ -81,6 +82,38 @@ const StarIcon = ({ filled, onPress }) => (
 );
 
 const ContactUsScreen = ({ navigation, visible = true }) => {
+  // PanResponder for swipe down to dismiss
+  const panY = useRef(new Animated.Value(0)).current;
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (evt, gestureState) => {
+        // Only respond to vertical swipes
+        return Math.abs(gestureState.dy) > 10 && Math.abs(gestureState.dx) < 30;
+      },
+      onPanResponderMove: (evt, gestureState) => {
+        if (gestureState.dy > 0) {
+          panY.setValue(gestureState.dy);
+        }
+      },
+      onPanResponderRelease: (evt, gestureState) => {
+        if (gestureState.dy > 80) {
+          handleClose();
+          panY.setValue(0);
+        } else {
+          Animated.spring(panY, {
+            toValue: 0,
+            useNativeDriver: true,
+          }).start();
+        }
+      },
+      onPanResponderTerminate: () => {
+        Animated.spring(panY, {
+          toValue: 0,
+          useNativeDriver: true,
+        }).start();
+      },
+    })
+  ).current;
   const slideAnim = useRef(new Animated.Value(300)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
   const chatSlideAnim = useRef(new Animated.Value(300)).current;
@@ -467,12 +500,15 @@ const ContactUsScreen = ({ navigation, visible = true }) => {
           ]}
         />
         <Animated.View 
-          style={[
+          style={[ 
             styles.modalContainer,
             {
-              transform: [{ translateY: slideAnim }]
+              transform: [
+                { translateY: Animated.add(slideAnim, panY) }
+              ]
             }
           ]}
+          {...panResponder.panHandlers}
         >
           <TouchableOpacity activeOpacity={1} style={styles.modalContent}>
             {/* Top Handle */}

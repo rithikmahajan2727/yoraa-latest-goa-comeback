@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingTop: 54,
+    paddingTop: 16, // 15mm ≈ 56.7px
     paddingBottom: 16,
     backgroundColor: '#FFFFFF',
   },
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   headerIcons: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 20, // Increased gap for better distancing between icons
   },
   iconButton: {
     padding: 8,

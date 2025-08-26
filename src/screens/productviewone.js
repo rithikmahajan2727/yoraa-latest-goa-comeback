@@ -12,6 +12,7 @@ import Svg, { Path, Rect } from 'react-native-svg';
 import HeartFilledIcon from '../assets/icons/HeartFilledIcon';
 import { FontSizes, FontWeights, Spacing, BorderRadius } from '../constants';
 import GlobalSearchIcon from '../assets/icons/GlobalSearchIcon';
+import FilterIcon from '../assets/icons/FilterIcon';
 import BottomNavigationBar from '../components/bottomnavigationbar';
 
 const ProductViewOne = ({ navigation }) => {
@@ -76,16 +77,7 @@ const ProductViewOne = ({ navigation }) => {
     </Svg>
   );
 
-  const FilterIcon = () => (
-    <View style={styles.filterIcon}>
-      <View style={styles.filterDot1} />
-      <View style={styles.filterLine1} />
-      <View style={styles.filterDot2} />
-      <View style={styles.filterLine2} />
-      <View style={styles.filterDot3} />
-      <View style={styles.filterLine3} />
-    </View>
-  );
+  // Removed custom FilterIcon, using imported SVG FilterIcon instead
 
 
 
