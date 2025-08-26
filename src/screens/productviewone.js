@@ -8,7 +8,10 @@ import {
   SafeAreaView,
   StatusBar,
 } from 'react-native';
+import Svg, { Path, Rect } from 'react-native-svg';
+import HeartFilledIcon from '../assets/icons/HeartFilledIcon';
 import { FontSizes, FontWeights, Spacing, BorderRadius } from '../constants';
+import GlobalSearchIcon from '../assets/icons/GlobalSearchIcon';
 import BottomNavigationBar from '../components/bottomnavigationbar';
 
 const ProductViewOne = ({ navigation }) => {
@@ -57,25 +60,20 @@ const ProductViewOne = ({ navigation }) => {
   };
 
   const BackIcon = () => (
-    <View style={styles.backIcon}>
-      <View style={styles.backArrow} />
-    </View>
-  );
-
-  const SearchIcon = () => (
-    <View style={styles.searchIcon}>
-      <View style={styles.searchCircle} />
-      <View style={styles.searchHandle} />
-    </View>
+    <Svg width="10" height="17" viewBox="0 0 10 17" fill="none">
+      <Path d="M8.5 16L1 8.5L8.5 1" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </Svg>
   );
 
   const GridIcon = () => (
-    <View style={styles.gridIcon}>
-      <View style={[styles.gridSquare, styles.topLeft]} />
-      <View style={[styles.gridSquare, styles.topRight]} />
-      <View style={[styles.gridSquare, styles.bottomLeft]} />
-      <View style={[styles.gridSquare, styles.bottomRight]} />
-    </View>
+    <Svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <Rect x="1.54761" y="1.5" width="5.16247" height="8.33334" stroke="black" />
+      <Rect x="8.94263" y="1.5" width="5.16247" height="8.33334" stroke="black" />
+      <Rect x="16.3375" y="1.5" width="5.16247" height="8.33334" stroke="black" />
+      <Rect x="1.54761" y="12.1666" width="5.16247" height="8.33334" stroke="black" />
+      <Rect x="8.94263" y="12.1666" width="5.16247" height="8.33334" stroke="black" />
+      <Rect x="16.3375" y="12.1666" width="5.16247" height="8.33334" stroke="black" />
+    </Svg>
   );
 
   const FilterIcon = () => (
@@ -89,11 +87,7 @@ const ProductViewOne = ({ navigation }) => {
     </View>
   );
 
-  const HeartIcon = ({ filled = false }) => (
-    <View style={styles.heartIcon}>
-      <View style={[styles.heartShape, filled && styles.heartFilled]} />
-    </View>
-  );
+
 
   const ShoppingBagIcon = () => (
     <View style={styles.bagIcon}>
@@ -135,7 +129,7 @@ const ProductViewOne = ({ navigation }) => {
             onPress={() => toggleLike(product.id)}
           >
             <View style={styles.heartIconContainer}>
-              <HeartIcon filled={isLiked} />
+              <HeartFilledIcon />
             </View>
           </TouchableOpacity>
 
@@ -191,7 +185,7 @@ const ProductViewOne = ({ navigation }) => {
         
         <View style={styles.headerRight}>
           <TouchableOpacity style={styles.iconButton}>
-            <SearchIcon />
+            <GlobalSearchIcon size={20} color="#000000" />
           </TouchableOpacity>
           
           <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate('ProductViewTwo')}>
@@ -281,31 +275,6 @@ const styles = StyleSheet.create({
     borderColor: '#000000',
     transform: [{ rotate: '45deg' }],
     marginRight: 2,
-  },
-
-  searchIcon: {
-    width: 24,
-    height: 24,
-    position: 'relative',
-  },
-  searchCircle: {
-    position: 'absolute',
-    top: 3,
-    left: 3,
-    width: 14,
-    height: 14,
-    borderRadius: 7,
-    borderWidth: 1.5,
-    borderColor: '#262626',
-  },
-  searchHandle: {
-    position: 'absolute',
-    bottom: 1,
-    right: 1,
-    width: 6,
-    height: 2,
-    backgroundColor: '#262626',
-    transform: [{ rotate: '45deg' }],
   },
 
   gridIcon: {

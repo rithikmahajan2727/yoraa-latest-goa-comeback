@@ -11,18 +11,6 @@ import { Spacing, BorderRadius, Shadows } from '../constants';
 import Svg, { Path } from 'react-native-svg';
 
 // SVG Icon Components
-const BackIcon = ({ color = '#000000' }) => (
-  <Svg width={10} height={17} viewBox="0 0 10 17" fill="none">
-    <Path
-      d="M8.5 16L1 8.5L8.5 1"
-      stroke={color}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-    />
-  </Svg>
-);
-
 const SearchIcon = ({ color = '#262626' }) => (
   <Svg width={20} height={20} viewBox="0 0 20 20" fill="none">
     <Path
@@ -177,11 +165,8 @@ const ShopScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Header with back and search */}
+      {/* Header with search */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton}>
-          <BackIcon />
-        </TouchableOpacity>
         <TouchableOpacity style={styles.searchButton}>
           <SearchIcon />
         </TouchableOpacity>
@@ -245,17 +230,11 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     paddingHorizontal: Spacing.xl,
     paddingTop: 54, // Status bar height + padding
     paddingBottom: Spacing.lg,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   searchButton: {
     width: 40,

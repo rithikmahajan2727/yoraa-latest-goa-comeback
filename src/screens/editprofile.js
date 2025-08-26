@@ -10,15 +10,7 @@ import {
   Modal,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
-// Back Arrow Icon Component
-const BackArrowIcon = () => (
-  <View style={styles.backIcon}>
-    <View style={styles.backArrowLine} />
-    <View style={styles.backArrowHead1} />
-    <View style={styles.backArrowHead2} />
-  </View>
-);
+import GlobalBackButton from '../components/GlobalBackButton';
 
 const EditProfile = ({ navigation }) => {
   const [formData, setFormData] = useState({
@@ -169,26 +161,14 @@ const EditProfile = ({ navigation }) => {
     return addressParts.length > 0 ? addressParts.join(', ') : 'XYZ Street';
   };
 
-  const handleGoBack = () => {
-    if (navigation && navigation.goBack) {
-      // Add animation with 300ms ease-out
-      setTimeout(() => {
-        navigation.goBack();
-      }, 300);
-    }
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton} 
-          onPress={handleGoBack}
-          activeOpacity={0.7}
-        >
-          <BackArrowIcon />
-        </TouchableOpacity>
+        <GlobalBackButton 
+          navigation={navigation}
+          animationDuration={300}
+        />
         <Text style={styles.headerTitle}>Profile</Text>
         <View style={styles.placeholder} />
       </View>
@@ -367,13 +347,10 @@ const EditProfile = ({ navigation }) => {
         <SafeAreaView style={styles.modalContainer}>
           {/* Address Modal Header */}
           <View style={styles.modalHeader}>
-            <TouchableOpacity 
-              style={styles.backButton} 
+            <GlobalBackButton 
               onPress={handleCloseAddressModal}
-              activeOpacity={0.7}
-            >
-              <BackArrowIcon />
-            </TouchableOpacity>
+              style={styles.backButton}
+            />
             <Text style={styles.modalTitle}>Address</Text>
             <View style={styles.placeholder} />
           </View>

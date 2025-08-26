@@ -8,13 +8,7 @@ import {
   Animated,
   Easing,
 } from 'react-native';
-
-// Back Arrow Icon Component - Simple Chevron style to match Figma
-const BackArrowIcon = () => (
-  <View style={styles.backArrowIcon}>
-    <Text style={styles.backChevronText}>〈</Text>
-  </View>
-);
+import GlobalBackButton from '../components/GlobalBackButton';
 
 // Right Arrow Icon Component - Simple Chevron style to match Figma
 const RightArrowIcon = () => (
@@ -35,18 +29,6 @@ const SettingsScreen = ({ navigation }) => {
       useNativeDriver: true,
     }).start();
   }, [slideAnim]);
-
-  const handleBack = () => {
-    // Animate out then navigate back
-    Animated.timing(slideAnim, {
-      toValue: 300,
-      duration: 300,
-      easing: Easing.in(Easing.back(1.7)),
-      useNativeDriver: true,
-    }).start(() => {
-      navigation.goBack();
-    });
-  };
 
   const handleDeliveryAddresses = () => {
     if (navigation && navigation.navigate) {
@@ -88,9 +70,11 @@ const SettingsScreen = ({ navigation }) => {
       >
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-            <BackArrowIcon />
-          </TouchableOpacity>
+          <GlobalBackButton 
+            navigation={navigation}
+            animationDuration={300}
+            customEasing={Easing.in(Easing.back(1.7))}
+          />
           <Text style={styles.headerTitle}>Settings</Text>
           <View style={styles.headerSpacer} />
         </View>

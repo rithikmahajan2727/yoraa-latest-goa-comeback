@@ -8,14 +8,7 @@ import {
   Animated,
   Easing,
 } from 'react-native';
-
-// Back Arrow Icon Component
-const BackArrowIcon = () => (
-  <View style={styles.backArrowIcon}>
-    <View style={styles.backArrowLine} />
-    <View style={styles.backArrowHead} />
-  </View>
-);
+import GlobalBackButton from '../components/GlobalBackButton';
 
 // Chain Link Icon Component
 const ChainLinkIcon = () => (
@@ -38,18 +31,6 @@ const LinkedAccountScreen = ({ navigation }) => {
     }).start();
   }, [slideAnim]);
 
-  const handleBack = () => {
-    // Animate out then navigate back
-    Animated.timing(slideAnim, {
-      toValue: 300,
-      duration: 300,
-      easing: Easing.in(Easing.back(1.7)),
-      useNativeDriver: true,
-    }).start(() => {
-      navigation.goBack();
-    });
-  };
-
   const handleUpdate = () => {
     console.log('Update pressed');
     // Add update functionality here
@@ -67,13 +48,11 @@ const LinkedAccountScreen = ({ navigation }) => {
       >
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity 
-            style={styles.backButton}
-            onPress={handleBack}
-            activeOpacity={0.7}
-          >
-            <BackArrowIcon />
-          </TouchableOpacity>
+          <GlobalBackButton 
+            navigation={navigation}
+            animationDuration={300}
+            customEasing={Easing.in(Easing.back(1.7))}
+          />
           <Text style={styles.headerTitle}>Linked Accounts</Text>
           <View style={styles.headerSpacer} />
         </View>

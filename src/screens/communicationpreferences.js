@@ -8,14 +8,7 @@ import {
   Animated,
   Easing,
 } from 'react-native';
-
-// Back Arrow Icon Component
-const BackArrowIcon = () => (
-  <View style={styles.backArrowIcon}>
-    <View style={styles.backArrowLine} />
-    <View style={styles.backArrowHead} />
-  </View>
-);
+import GlobalBackButton from '../components/GlobalBackButton';
 
 // Checkbox Component
 const Checkbox = ({ checked, onPress }) => (
@@ -78,9 +71,11 @@ const CommunicationPreferences = ({ navigation }) => {
       >
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-            <BackArrowIcon />
-          </TouchableOpacity>
+          <GlobalBackButton 
+            navigation={navigation}
+            animationDuration={300}
+            customEasing={Easing.in(Easing.back(1.7))}
+          />
           <Text style={styles.headerTitle}>Communication Preferences</Text>
           <View style={styles.headerSpacer} />
         </View>

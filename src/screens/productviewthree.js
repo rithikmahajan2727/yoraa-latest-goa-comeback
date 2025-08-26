@@ -9,7 +9,10 @@ import {
   StatusBar,
   Image,
 } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
+import HeartFilledIcon from '../assets/icons/HeartFilledIcon';
 import { FontSizes, FontWeights, Spacing, BorderRadius } from '../constants';
+import GlobalSearchIcon from '../assets/icons/GlobalSearchIcon';
 import BottomNavigationBar from '../components/bottomnavigationbar';
 
 const ProductViewThree = ({ navigation }) => {
@@ -61,16 +64,9 @@ const ProductViewThree = ({ navigation }) => {
 
   // Icon Components
   const BackIcon = () => (
-    <View style={styles.backIcon}>
-      <View style={styles.backArrow} />
-    </View>
-  );
-
-  const SearchIcon = () => (
-    <View style={styles.searchIcon}>
-      <View style={styles.searchCircle} />
-      <View style={styles.searchHandle} />
-    </View>
+    <Svg width="10" height="17" viewBox="0 0 10 17" fill="none">
+      <Path d="M8.5 16L1 8.5L8.5 1" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </Svg>
   );
 
   const GridIcon = () => (
@@ -93,15 +89,7 @@ const ProductViewThree = ({ navigation }) => {
     </View>
   );
 
-  const HeartIcon = ({ filled = false }) => (
-    <View style={styles.heartIcon}>
-      {filled ? (
-        <View style={styles.heartFilled} />
-      ) : (
-        <View style={styles.heartOutline} />
-      )}
-    </View>
-  );
+
 
   const ShoppingBagIcon = () => (
     <View style={styles.bagIcon}>
@@ -134,7 +122,7 @@ const ProductViewThree = ({ navigation }) => {
             onPress={() => toggleLike(product.id)}
           >
             <View style={styles.heartIconContainer}>
-              <HeartIcon filled={isLiked} />
+              <HeartFilledIcon />
             </View>
           </TouchableOpacity>
 
@@ -195,7 +183,7 @@ const ProductViewThree = ({ navigation }) => {
         
         <View style={styles.headerRight}>
           <TouchableOpacity style={styles.iconButton}>
-            <SearchIcon />
+            <GlobalSearchIcon size={20} color="#000000" />
           </TouchableOpacity>
           
           <TouchableOpacity style={styles.iconButton} onPress={handleGridPress}>
@@ -298,32 +286,6 @@ const styles = StyleSheet.create({
     borderColor: '#000000',
     transform: [{ rotate: '-45deg' }],
     marginRight: 4,
-  },
-  
-  searchIcon: {
-    width: 24,
-    height: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  
-  searchCircle: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    borderWidth: 1.5,
-    borderColor: '#262626',
-    marginBottom: 2,
-  },
-  
-  searchHandle: {
-    width: 6,
-    height: 2,
-    backgroundColor: '#262626',
-    position: 'absolute',
-    bottom: 3,
-    right: 3,
-    transform: [{ rotate: '45deg' }],
   },
   
   gridIcon: {

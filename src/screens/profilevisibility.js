@@ -11,14 +11,7 @@ import {
 } from 'react-native';
 import { Colors } from '../constants/colors';
 import { Spacing, FontSizes, FontWeights, BorderRadius } from '../constants/styles';
-
-// Back Arrow Icon Component
-const BackArrowIcon = () => (
-  <View style={styles.backArrowIcon}>
-    <View style={styles.backArrowLine} />
-    <View style={styles.backArrowHead} />
-  </View>
-);
+import GlobalBackButton from '../components/GlobalBackButton';
 
 // Radio Button Component
 const RadioButton = ({ selected, onPress, label, description }) => (
@@ -108,9 +101,12 @@ const ProfileVisibilityScreen = ({ navigation }) => {
       >
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-            <BackArrowIcon />
-          </TouchableOpacity>
+          <GlobalBackButton 
+            navigation={navigation}
+            onPress={handleBack}
+            animationDuration={300}
+            customEasing={Easing.in(Easing.back(1.7))}
+          />
           <Text style={styles.headerTitle}>Product Review Visibility</Text>
           <View style={styles.placeholder} />
         </View>

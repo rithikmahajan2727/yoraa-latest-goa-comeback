@@ -13,7 +13,7 @@ import {
   StatusBar,
 } from 'react-native';
 import { FontSizes, FontWeights, Spacing, BorderRadius } from '../constants';
-import { SearchIcon, FilterIcon, ShoppingBagIcon, HeartIcon } from '../assets/icons';
+import { GlobalSearchIcon, FilterIcon, ShoppingBagIcon, HeartIcon } from '../assets/icons';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -331,11 +331,8 @@ const CollectionScreen = () => {
         
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton}>
-            <Text style={styles.backButtonText}>‹</Text>
-          </TouchableOpacity>
           <TouchableOpacity style={styles.searchButton}>
-            <SearchIcon size={20} />
+            <GlobalSearchIcon size={20} />
           </TouchableOpacity>
         </View>
 
@@ -416,22 +413,11 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingTop: 15,
     paddingBottom: 20,
-  },
-  backButton: {
-    width: 24,
-    height: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  backButtonText: {
-    fontSize: 24,
-    color: '#000000',
-    fontWeight: '300',
   },
   searchButton: {
     width: 24,

@@ -5,5 +5,7 @@ export { default as RewardsIcon } from './RewardsIcon';
 export { default as ProfileIcon } from './ProfileIcon';
 export { default as ShoppingBagIcon } from './ShoppingBagIcon';
 export { default as SearchIcon } from './SearchIcon';
+export { default as GlobalSearchIcon } from './GlobalSearchIcon';
 export { default as FilterIcon } from './FilterIcon';
 export { default as HeartIcon } from './HeartIcon';
+export { default as BackIcon } from './BackIcon';

@@ -7,9 +7,9 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { FontSizes, FontWeights, Spacing, BorderRadius } from '../constants';
-import SearchIcon from '../assets/icons/SearchIcon';
-import HeartIcon from '../assets/icons/HeartIcon';
-import ShoppingBagIcon from '../assets/icons/ShoppingBagIcon';
+import GlobalSearchIcon from '../assets/icons/GlobalSearchIcon';
+import NewIcon from '../assets/icons/NewIcon';
+import LockIcon from '../assets/icons/LockIcon';
 
 const HomeScreen = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('My');
@@ -56,13 +56,13 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.shopTitle}>Shop</Text>
         <View style={styles.headerIcons}>
           <TouchableOpacity style={styles.iconButton}>
-            <SearchIcon size={24} color="#000000" />
+            <GlobalSearchIcon size={24} color="#000000" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton}>
-            <HeartIcon size={24} color="#000000" />
+            <NewIcon size={24} color="#000000" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton}>
-            <ShoppingBagIcon size={24} color="#000000" />
+            <LockIcon size={24} color="#000000" />
           </TouchableOpacity>
         </View>
       </View>
