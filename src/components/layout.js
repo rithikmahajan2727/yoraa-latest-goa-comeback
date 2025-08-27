@@ -8,12 +8,12 @@ import {
 } from 'react-native';
 import BottomNavigationBar from './bottomnavigationbar';
 import { Colors, FontSizes, FontWeights, Spacing } from '../constants';
-import { HomeScreen, ShopScreen, CollectionScreen, RewardsScreen, ProfileScreen, BagScreen, CreateAccountMobileNumber, CreateAccountMobileNumberVerification, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen, ProductViewOne, ProductViewTwo, ProductViewThree, ProductDetailsMain, ProductDetailsMainReview, ProductDetailsReviewThreePointSelection, ProductDetailsWrittenUserReview, DeliveryOptionsStepOneScreen, DeliveryAddAddress, Language, Region, MembersExclusive, PointsHistory, InviteAFriend } from '../screens';
+import { HomeScreen, ShopScreen, CollectionScreen, SearchScreen, RewardsScreen, ProfileScreen, BagScreen, CreateAccountMobileNumber, CreateAccountMobileNumberVerification, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen, ProductViewOne, ProductViewTwo, ProductViewThree, ProductDetailsMain, ProductDetailsMainReview, ProductDetailsReviewThreePointSelection, ProductDetailsWrittenUserReview, DeliveryOptionsStepOneScreen, DeliveryAddAddress, Language, Region, MembersExclusive, PointsHistory, InviteAFriend } from '../screens';
 
 // Placeholder content components for each tab
 const HomeContent = ({ navigation }) => <HomeScreen navigation={navigation} />;
-const ShopContent = () => <ShopScreen />;
-const CollectionContent = () => <CollectionScreen />;
+const ShopContent = ({ navigation }) => <ShopScreen navigation={navigation} />;
+const CollectionContent = ({ navigation }) => <CollectionScreen navigation={navigation} />;
 const RewardsContent = ({ navigation, route }) => <RewardsScreen navigation={navigation} route={route} />;
 const ProfileContent = ({ navigation }) => <ProfileScreen navigation={navigation} />;
 
@@ -75,9 +75,11 @@ const EnhancedLayout = () => {
       case 'Home':
         return <HomeContent navigation={navigation} />;
       case 'Shop':
-        return <ShopContent />;
+        return <ShopContent navigation={navigation} />;
       case 'Collection':
-        return <CollectionContent />;
+        return <CollectionContent navigation={navigation} />;
+      case 'SearchScreen':
+        return <SearchScreen navigation={navigation} />;
       case 'Rewards':
         return <RewardsContent navigation={navigation} route={{ params: routeParams }} />;
       case 'Profile':

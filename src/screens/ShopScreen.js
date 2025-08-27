@@ -106,7 +106,7 @@ const SALE_CATEGORIES = [
 
 const TABS = ['Men', 'Women', 'Kids'];
 
-const ShopScreen = () => {
+const ShopScreen = ({ navigation }) => {
   const [selectedTab, setSelectedTab] = useState('Men');
   const [favorites, setFavorites] = useState(new Set());
 
@@ -167,7 +167,10 @@ const ShopScreen = () => {
     <View style={styles.container}>
       {/* Header with search */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.searchButton}>
+        <TouchableOpacity 
+          style={styles.searchButton}
+          onPress={() => navigation?.navigate('SearchScreen')}
+        >
           <SearchIcon />
         </TouchableOpacity>
       </View>

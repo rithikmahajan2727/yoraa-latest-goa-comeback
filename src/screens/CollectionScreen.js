@@ -250,7 +250,7 @@ const FILTER_OPTIONS = {
   kidsSizes: ['BOY', 'GIRL'],
 };
 
-const CollectionScreen = () => {
+const CollectionScreen = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('TOP WEAR');
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [products, setProducts] = useState(SAMPLE_PRODUCTS);
@@ -331,7 +331,10 @@ const CollectionScreen = () => {
         
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity style={styles.searchButton}>
+          <TouchableOpacity 
+            style={styles.searchButton}
+            onPress={() => navigation?.navigate('SearchScreen')}
+          >
             <GlobalSearchIcon size={20} />
           </TouchableOpacity>
         </View>
