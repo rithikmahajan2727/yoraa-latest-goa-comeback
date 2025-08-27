@@ -57,8 +57,15 @@ const ProductDetailsWrittenUserReview = ({ navigation, route }) => {
 
   const handleContinueShopping = () => {
     setShowThanksModal(false);
-    // Navigate to productdetailsmain.js
-    navigation.navigate('ProductDetailsMain');
+    
+    // Check if user came from orders.js (via rate product flow)
+    if (route.params?.order) {
+      // Navigate back to orders if user came from orders.js
+      navigation.navigate('Orders');
+    } else {
+      // Navigate to productdetailsmain.js if came from regular product details flow
+      navigation.navigate('ProductDetailsMain');
+    }
   };
 
   const handleCloseModal = () => {

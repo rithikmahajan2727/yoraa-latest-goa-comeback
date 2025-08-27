@@ -81,7 +81,10 @@ const CancelOrderRequest = forwardRef((props, ref) => {
           <TouchableOpacity
             onPress={() => {
               setVisible(false);
-              props.onRequestConfirmed?.();
+              // Open confirmation modal after a short delay to allow the current modal to close
+              setTimeout(() => {
+                props.onRequestConfirmed?.();
+              }, 300);
             }}
             style={{
               backgroundColor: "black",

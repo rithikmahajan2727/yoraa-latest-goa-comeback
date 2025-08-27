@@ -46,7 +46,10 @@ const ProductDetailsReviewThreePointSelection = ({ navigation, route }) => {
       durability: durabilityRating
     };
     
-    navigation.navigate('ProductDetailsWrittenUserReview', { reviewData });
+    navigation.navigate('ProductDetailsWrittenUserReview', { 
+      reviewData,
+      order: route?.params?.order // Pass order data if it exists
+    });
   };
 
   const renderRatingScale = (rating, setRating, labels) => (

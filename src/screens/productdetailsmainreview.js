@@ -228,7 +228,9 @@ const ProductDetailsMainReview = ({ navigation, route }) => {
         {/* Write Review Button */}
         <TouchableOpacity 
           style={styles.writeReviewButton}
-          onPress={() => navigation.navigate('ProductDetailsReviewThreePointSelection')}
+          onPress={() => navigation.navigate('ProductDetailsReviewThreePointSelection', {
+            order: route?.params?.order // Pass order data if it exists
+          })}
         >
           <Text style={styles.writeReviewText}>Write a Review</Text>
         </TouchableOpacity>

@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import TrackingModal from './orderstrackmodeloverlay';
 import CancelOrderRequest from './orderscancelordermodal';
+import CancelledOrderConfirm from './orderscancelorderconfirmationmodal';
 
 // Mock order data based on Figma design
 const mockOrders = [
@@ -107,6 +108,8 @@ const OrderCard = ({ order, onTrack, onCancelOrder, navigation }) => (
             navigation?.navigate('OrdersReturnExchange', { order });
           } else if (action.id === 'cancel_order') {
             onCancelOrder(order);
+          } else if (action.id === 'rate_product') {
+            navigation?.navigate('ProductDetailsMainReview', { order });
           } else {
             console.log(`${action.title} pressed for order ${order.id}`);
           }
@@ -127,6 +130,7 @@ const OrderCard = ({ order, onTrack, onCancelOrder, navigation }) => (
 const OrdersScreen = ({ navigation }) => {
   const trackingModalRef = useRef(null);
   const cancelOrderModalRef = useRef(null);
+  const cancelConfirmationModalRef = useRef(null);
 
   // Mock tracking data - you can replace this with actual API data
   const getTrackingData = (order) => {
@@ -154,6 +158,11 @@ const OrdersScreen = ({ navigation }) => {
 
   const handleCancelOrder = (order) => {
     cancelOrderModalRef.current?.open();
+  };
+
+  const handleCancelOrderConfirmed = () => {
+    // Open the confirmation modal
+    cancelConfirmationModalRef.current?.open();
   };
 
   return (
@@ -194,7 +203,13 @@ const OrdersScreen = ({ navigation }) => {
       <TrackingModal ref={trackingModalRef} />
       
       {/* Cancel Order Modal */}
-      <CancelOrderRequest ref={cancelOrderModalRef} />
+      <CancelOrderRequest 
+        ref={cancelOrderModalRef} 
+        onRequestConfirmed={handleCancelOrderConfirmed}
+      />
+      
+      {/* Cancel Order Confirmation Modal */}
+      <CancelledOrderConfirm ref={cancelConfirmationModalRef} />
     </SafeAreaView>
   );
 };

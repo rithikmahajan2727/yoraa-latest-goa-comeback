@@ -87,7 +87,7 @@ const ReturnRequestScreen = ({ navigation, route }) => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <GlobalBackButton onPress={() => navigation?.goBack()} />
+        <GlobalBackButton onPress={() => navigation?.navigate('Orders')} />
         <Text style={styles.headerTitle}>Return Request</Text>
         <View style={styles.headerRight} />
       </View>
