@@ -28,6 +28,9 @@ const ReturnRequestScreen = ({ navigation, route }) => {
     // Navigate to size selection screen if size/fit issue is selected
     if (reason.id === 'size_fit') {
       navigation.navigate('OrdersExchangeSizeSelectionChart');
+    } else {
+      // Navigate to return request modal for other reasons
+      navigation.navigate('OrdersReturnRequest');
     }
   };
 

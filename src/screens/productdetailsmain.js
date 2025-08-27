@@ -245,7 +245,12 @@ const ProductDetailsMain = ({ navigation, route }) => {
 
   const handleBackPress = () => {
     if (navigation) {
-      navigation.goBack();
+      // Check if we came from orders screen via "Buy It Again"
+      if (route?.params?.order) {
+        navigation.navigate('Orders');
+      } else {
+        navigation.goBack();
+      }
     }
   };
 

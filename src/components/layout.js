@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import BottomNavigationBar from './bottomnavigationbar';
 import { Colors, FontSizes, FontWeights, Spacing } from '../constants';
-import { HomeScreen, ShopScreen, CollectionScreen, SearchScreen, ScanBarcodeFlow, RewardsScreen, ProfileScreen, BagScreen, CreateAccountMobileNumber, CreateAccountMobileNumberVerification, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen, ProductViewOne, ProductViewTwo, ProductViewThree, ProductDetailsMain, ProductDetailsMainReview, ProductDetailsReviewThreePointSelection, ProductDetailsWrittenUserReview, DeliveryOptionsStepOneScreen, DeliveryAddAddress, Language, Region, MembersExclusive, PointsHistory, InviteAFriend, OrdersReturnExchange, OrdersExchangeSizeSelectionChart, OrdersCancelOrderModal } from '../screens';
+import { HomeScreen, ShopScreen, CollectionScreen, SearchScreen, ScanBarcodeFlow, RewardsScreen, ProfileScreen, BagScreen, CreateAccountMobileNumber, CreateAccountMobileNumberVerification, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen, ProductViewOne, ProductViewTwo, ProductViewThree, ProductDetailsMain, ProductDetailsMainReview, ProductDetailsReviewThreePointSelection, ProductDetailsWrittenUserReview, DeliveryOptionsStepOneScreen, DeliveryAddAddress, Language, Region, MembersExclusive, PointsHistory, InviteAFriend, OrdersReturnExchange, OrdersExchangeSizeSelectionChart, OrdersCancelOrderModal, OrdersReturnRequest, OrdersReturnAcceptedModal } from '../screens';
 
 // Placeholder content components for each tab
 const HomeContent = ({ navigation }) => <HomeScreen navigation={navigation} />;
@@ -85,6 +85,10 @@ const EnhancedLayout = () => {
         return <OrdersScreen navigation={navigation} />;
       case 'OrdersReturnExchange':
         return <OrdersReturnExchange navigation={navigation} route={{ params: routeParams }} />;
+      case 'OrdersReturnRequest':
+        return <OrdersReturnRequest navigation={navigation} route={{ params: routeParams }} />;
+      case 'OrdersReturnAcceptedModal':
+        return <OrdersReturnAcceptedModal navigation={navigation} route={{ params: routeParams }} />;
       case 'OrdersExchangeSizeSelectionChart':
         return <OrdersExchangeSizeSelectionChart navigation={navigation} route={{ params: routeParams }} />;
       case 'OrdersCancelOrder':

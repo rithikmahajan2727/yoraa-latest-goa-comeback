@@ -110,6 +110,8 @@ const OrderCard = ({ order, onTrack, onCancelOrder, navigation }) => (
             onCancelOrder(order);
           } else if (action.id === 'rate_product') {
             navigation?.navigate('ProductDetailsMainReview', { order });
+          } else if (action.id === 'buy_again') {
+            navigation?.navigate('ProductDetailsMain', { order });
           } else {
             console.log(`${action.title} pressed for order ${order.id}`);
           }

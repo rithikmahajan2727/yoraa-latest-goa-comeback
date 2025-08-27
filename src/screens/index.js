@@ -35,5 +35,7 @@ export { default as MembersExclusive } from './membersexclusive';
 export { default as PointsHistory } from './pointshistory';
 export { default as InviteAFriend } from './InviteAFriend';
 export { default as OrdersReturnExchange } from './ordersreturnexchange';
+export { default as OrdersReturnRequest } from './ordersreturnrequest';
+export { default as OrdersReturnAcceptedModal } from './ordersreturnacceptedmodal';
 export { default as OrdersExchangeSizeSelectionChart } from './ordersexchangesizeselectionchart';
 export { default as OrdersCancelOrderModal } from './orderscancelordermodal';
