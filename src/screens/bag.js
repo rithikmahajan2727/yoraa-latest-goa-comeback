@@ -104,8 +104,8 @@ const BagScreen = ({ navigation }) => {
   };
 
   const handleCheckout = () => {
-    // Handle checkout logic
-    console.log('Proceeding to checkout');
+    // Navigate to delivery options
+    navigation.navigate('DeliveryOptionsStepOneScreen');
   };
 
   const togglePromoCode = () => {

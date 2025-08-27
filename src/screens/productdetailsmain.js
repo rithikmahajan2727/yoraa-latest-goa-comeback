@@ -12,6 +12,7 @@ import {
   Animated,
   Modal,
 } from 'react-native';
+import Svg, { Circle, G, Path, Defs, ClipPath, Rect } from 'react-native-svg';
 import { FontSizes, FontWeights, Spacing, BorderRadius } from '../constants';
 import BottomNavigationBar from '../components/bottomnavigationbar';
 import SizeSelectionModal from './productdetailsmainsizeselectionchart';
@@ -185,9 +186,22 @@ const ProductDetailsMain = ({ navigation, route }) => {
   );
 
   const HeartIcon = () => (
-    <View style={styles.heartIcon}>
-      <View style={styles.heartShape} />
-    </View>
+    <Svg width={34} height={34} viewBox="0 0 34 34" fill="none">
+      <Circle cx={17} cy={17} r={17} fill="white" />
+      <G clipPath="url(#clip0_10455_54515)">
+        <Path
+          d="M17 24.5L23.9813 17.4188C24.7139 16.6861 25.1255 15.6924 25.1255 14.6563C25.1255 13.6201 24.7139 12.6264 23.9813 11.8938C23.2486 11.1611 22.2549 10.7495 21.2188 10.7495C20.1826 10.7495 19.1889 11.1611 18.4563 11.8938L17 13.25L15.5438 11.8938C14.8111 11.1611 13.8174 10.7495 12.7813 10.7495C11.7451 10.7495 10.7514 11.1611 10.0188 11.8938C9.28612 12.6264 8.87451 13.6201 8.87451 14.6563C8.87451 15.6924 9.28612 16.6861 10.0188 17.4188L17 24.5Z"
+          stroke="black"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </G>
+      <Defs>
+        <ClipPath id="clip0_10455_54515">
+          <Rect width={20} height={20} fill="white" transform="translate(7 7)" />
+        </ClipPath>
+      </Defs>
+    </Svg>
   );
 
   const ShoppingBagIcon = () => (
@@ -593,14 +607,9 @@ const ProductDetailsMain = ({ navigation, route }) => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       
-      {/* System Bar */}
+      {/* System Bar - removed extra icons above header as per Figma */}
       <View style={styles.systemBar}>
-        <Text style={styles.systemTime}>9:41</Text>
-        <View style={styles.systemIcons}>
-          <View style={styles.signalIcon} />
-          <View style={styles.wifiIcon} />
-          <View style={styles.batteryIcon} />
-        </View>
+        {/* Removed 9:41 text as per Figma */}
       </View>
 
       {/* Header */}
@@ -608,12 +617,7 @@ const ProductDetailsMain = ({ navigation, route }) => {
         <TouchableOpacity style={styles.headerButton} onPress={handleBackPress}>
           <BackIcon />
         </TouchableOpacity>
-        
         <Text style={styles.headerTitle}>Nike Everyday Plus Cush...</Text>
-        
-        <TouchableOpacity style={styles.headerButton}>
-          <SearchIcon />
-        </TouchableOpacity>
       </View>
 
       <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
@@ -1322,19 +1326,7 @@ const styles = StyleSheet.create({
   },
 
   heartIcon: {
-    width: 20,
-    height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  heartShape: {
-    width: 13,
-    height: 12,
-    borderWidth: 1,
-    borderColor: '#000000',
-    backgroundColor: 'transparent',
-    borderRadius: 6,
-    transform: [{ rotate: '45deg' }],
+    // Removed, not needed for SVG
   },
 
   bagIcon: {

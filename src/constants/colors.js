@@ -30,6 +30,13 @@ export const Colors = {
   switchTrackFalse: '#E5E5E5',
   switchTrackTrue: '#FF6B6B',
   switchThumb: '#FFFFFF',
+
+  // Additional colors for delivery screen
+  white: '#FFFFFF',
+  black: '#000000',
+  gray600: '#767676',
+  gray100: '#F6F6F6',
+  gray200: '#E4E4E4',
 };
 
 export default Colors;

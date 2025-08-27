@@ -25,3 +25,5 @@ export { default as ProductDetailsMain } from './productdetailsmain';
 export { default as ProductDetailsMainReview } from './productdetailsmainreview';
 export { default as ProductDetailsReviewThreePointSelection } from './productdetailsreviewthreepointselection';
 export { default as ProductDetailsWrittenUserReview } from './productdetailswrittenuserreview';
+export { default as DeliveryOptionsStepOneScreen } from './deliveryoptionsstepone';
+export { default as DeliveryAddAddress } from './deliveryaddaddress';
