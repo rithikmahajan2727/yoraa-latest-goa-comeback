@@ -9,6 +9,7 @@ import {
   Image,
 } from 'react-native';
 import TrackingModal from './orderstrackmodeloverlay';
+import CancelOrderRequest from './orderscancelordermodal';
 
 // Mock order data based on Figma design
 const mockOrders = [
@@ -77,7 +78,7 @@ const getStatusText = (status) => {
   }
 };
 
-const OrderCard = ({ order, onTrack, navigation }) => (
+const OrderCard = ({ order, onTrack, onCancelOrder, navigation }) => (
   <View style={styles.orderContainer}>
     <View style={styles.productContainer}>
       <Image source={{ uri: order.image }} style={styles.productImage} />
@@ -104,6 +105,8 @@ const OrderCard = ({ order, onTrack, navigation }) => (
             onTrack(order);
           } else if (action.id === 'return_exchange') {
             navigation?.navigate('OrdersReturnExchange', { order });
+          } else if (action.id === 'cancel_order') {
+            onCancelOrder(order);
           } else {
             console.log(`${action.title} pressed for order ${order.id}`);
           }
@@ -123,6 +126,7 @@ const OrderCard = ({ order, onTrack, navigation }) => (
 
 const OrdersScreen = ({ navigation }) => {
   const trackingModalRef = useRef(null);
+  const cancelOrderModalRef = useRef(null);
 
   // Mock tracking data - you can replace this with actual API data
   const getTrackingData = (order) => {
@@ -146,6 +150,10 @@ const OrdersScreen = ({ navigation }) => {
   const handleTrackOrder = (order) => {
     const trackingData = getTrackingData(order);
     trackingModalRef.current?.openModal(trackingData);
+  };
+
+  const handleCancelOrder = (order) => {
+    cancelOrderModalRef.current?.open();
   };
 
   return (
@@ -176,6 +184,7 @@ const OrdersScreen = ({ navigation }) => {
             key={order.id} 
             order={order} 
             onTrack={handleTrackOrder}
+            onCancelOrder={handleCancelOrder}
             navigation={navigation}
           />
         ))}
@@ -183,6 +192,9 @@ const OrdersScreen = ({ navigation }) => {
 
       {/* Tracking Modal */}
       <TrackingModal ref={trackingModalRef} />
+      
+      {/* Cancel Order Modal */}
+      <CancelOrderRequest ref={cancelOrderModalRef} />
     </SafeAreaView>
   );
 };

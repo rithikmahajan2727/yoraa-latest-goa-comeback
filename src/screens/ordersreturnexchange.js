@@ -24,6 +24,11 @@ const ReturnRequestScreen = ({ navigation, route }) => {
 
   const handleReasonSelect = (reason) => {
     setSelectedReason(reason);
+    
+    // Navigate to size selection screen if size/fit issue is selected
+    if (reason.id === 'size_fit') {
+      navigation.navigate('OrdersExchangeSizeSelectionChart');
+    }
   };
 
   const handleImageUpload = () => {
