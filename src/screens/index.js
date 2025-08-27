@@ -31,3 +31,4 @@ export { default as Language } from './language';
 export { default as Region } from './region';
 export { default as MembersExclusive } from './membersexclusive';
 export { default as PointsHistory } from './pointshistory';
+export { default as InviteAFriend } from './InviteAFriend';

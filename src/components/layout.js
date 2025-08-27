@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import BottomNavigationBar from './bottomnavigationbar';
 import { Colors, FontSizes, FontWeights, Spacing } from '../constants';
-import { HomeScreen, ShopScreen, CollectionScreen, RewardsScreen, ProfileScreen, BagScreen, CreateAccountMobileNumber, CreateAccountMobileNumberVerification, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen, ProductViewOne, ProductViewTwo, ProductViewThree, ProductDetailsMain, ProductDetailsMainReview, ProductDetailsReviewThreePointSelection, ProductDetailsWrittenUserReview, DeliveryOptionsStepOneScreen, DeliveryAddAddress, Language, Region, MembersExclusive, PointsHistory } from '../screens';
+import { HomeScreen, ShopScreen, CollectionScreen, RewardsScreen, ProfileScreen, BagScreen, CreateAccountMobileNumber, CreateAccountMobileNumberVerification, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen, ProductViewOne, ProductViewTwo, ProductViewThree, ProductDetailsMain, ProductDetailsMainReview, ProductDetailsReviewThreePointSelection, ProductDetailsWrittenUserReview, DeliveryOptionsStepOneScreen, DeliveryAddAddress, Language, Region, MembersExclusive, PointsHistory, InviteAFriend } from '../screens';
 
 // Placeholder content components for each tab
 const HomeContent = ({ navigation }) => <HomeScreen navigation={navigation} />;
@@ -109,7 +109,7 @@ const EnhancedLayout = () => {
       case 'Invoice':
         return <InvoiceScreen navigation={navigation} />;
       case 'LoveUsRateUs':
-        return <LoveUsRateUs navigation={navigation} />;
+        return <LoveUsRateUs navigation={navigation} route={{ params: routeParams }} />;
       case 'FAQ':
         return <FAQScreen navigation={navigation} />;
       case 'ProductViewOne':
@@ -138,6 +138,8 @@ const EnhancedLayout = () => {
         return <MembersExclusive navigation={navigation} />;
       case 'PointsHistory':
         return <PointsHistory navigation={navigation} route={{ params: routeParams }} />;
+      case 'InviteAFriend':
+        return <InviteAFriend navigation={navigation} route={{ params: routeParams }} />;
       default:
         return <HomeContent />;
     }

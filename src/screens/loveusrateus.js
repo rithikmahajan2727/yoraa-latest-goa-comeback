@@ -89,11 +89,12 @@ const SuccessModal = ({ visible, onClose }) => (
   </Modal>
 );
 
-const LoveUsRateUs = ({ navigation }) => {
+const LoveUsRateUs = ({ navigation, route }) => {
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState('');
   const [uploadedImages, setUploadedImages] = useState([]);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const previousScreen = route?.params?.previousScreen || 'Profile';
   
   const slideAnim = useRef(new Animated.Value(300)).current;
 
@@ -114,7 +115,11 @@ const LoveUsRateUs = ({ navigation }) => {
       easing: Easing.in(Easing.ease),
       useNativeDriver: true,
     }).start(() => {
-      navigation.goBack();
+      if (navigation && navigation.navigate) {
+        navigation.navigate(previousScreen);
+      } else if (navigation && navigation.goBack) {
+        navigation.goBack();
+      }
     });
   };
 

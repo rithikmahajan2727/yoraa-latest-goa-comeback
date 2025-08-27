@@ -99,12 +99,14 @@ const ProfileScreen = ({ navigation }) => {
 
   const handleLoveUs = () => {
     if (navigation && navigation.navigate) {
-      navigation.navigate('LoveUsRateUs');
+      navigation.navigate('LoveUsRateUs', { previousScreen: 'Profile' });
     }
   };
 
   const handleInviteFriend = () => {
-    console.log('Invite a friend pressed');
+    if (navigation && navigation.navigate) {
+      navigation.navigate('InviteAFriend', { previousScreen: 'Profile' });
+    }
   };
 
   const handlePrivacyPolicy = () => {
