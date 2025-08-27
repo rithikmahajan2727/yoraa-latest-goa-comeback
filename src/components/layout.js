@@ -14,7 +14,7 @@ import { HomeScreen, ShopScreen, CollectionScreen, RewardsScreen, ProfileScreen,
 const HomeContent = ({ navigation }) => <HomeScreen navigation={navigation} />;
 const ShopContent = () => <ShopScreen />;
 const CollectionContent = () => <CollectionScreen />;
-const RewardsContent = ({ navigation }) => <RewardsScreen navigation={navigation} />;
+const RewardsContent = ({ navigation, route }) => <RewardsScreen navigation={navigation} route={route} />;
 const ProfileContent = ({ navigation }) => <ProfileScreen navigation={navigation} />;
 
 // Enhanced Layout with improved navigation handling
@@ -79,7 +79,7 @@ const EnhancedLayout = () => {
       case 'Collection':
         return <CollectionContent />;
       case 'Rewards':
-        return <RewardsContent navigation={navigation} />;
+        return <RewardsContent navigation={navigation} route={{ params: routeParams }} />;
       case 'Profile':
         return <ProfileContent navigation={navigation} />;
       case 'Bag':
@@ -137,7 +137,7 @@ const EnhancedLayout = () => {
       case 'MembersExclusive':
         return <MembersExclusive navigation={navigation} />;
       case 'PointsHistory':
-        return <PointsHistory navigation={navigation} />;
+        return <PointsHistory navigation={navigation} route={{ params: routeParams }} />;
       default:
         return <HomeContent />;
     }

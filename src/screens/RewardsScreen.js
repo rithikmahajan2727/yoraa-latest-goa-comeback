@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -43,11 +43,18 @@ const REGIONS = [
 const SHOPPING_PREFERENCES = ['Women', 'Men'];
 const ADDITIONAL_PREFERENCES = ['Boy', 'Women', 'Mens', 'Girls'];
 
-const RewardsScreen = ({ navigation }) => {
+const RewardsScreen = ({ navigation, route }) => {
   const [activeTab, setActiveTab] = useState('giveaways'); // Default to giveaways as per requirement
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [selectedRegion, setSelectedRegion] = useState('IN');
   const [selectedShoppingPreference, setSelectedShoppingPreference] = useState('Women');
+
+  // Handle navigation back from other screens with specific sub-tab
+  useEffect(() => {
+    if (route?.params?.activeSubTab) {
+      setActiveTab(route.params.activeSubTab);
+    }
+  }, [route?.params?.activeSubTab]);
   const [selectedAdditionalPreferences, setSelectedAdditionalPreferences] = useState(['Boy']);
   const scrollY = useRef(new Animated.Value(0)).current;
 
@@ -114,7 +121,7 @@ const RewardsScreen = ({ navigation }) => {
         </Text>
         
         <View style={styles.pointsSection}>
-          <TouchableOpacity onPress={() => navigation.navigate('PointsHistory', { previousScreen: 'Rewards' })}>
+          <TouchableOpacity onPress={() => navigation.navigate('PointsHistory', { previousScreen: 'Rewards', activeSubTab: activeTab })}>
             <Text style={styles.currentPointsLabel}>Current Points</Text>
           </TouchableOpacity>
           <View style={styles.pointsRow}>

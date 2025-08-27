@@ -65,7 +65,7 @@ const POINTS_USED_DATA = [
   },
 ];
 
-const PointsHistory = ({ navigation }) => {
+const PointsHistory = ({ navigation, route }) => {
   const [activeTab, setActiveTab] = useState('received');
   const [fadeAnim] = useState(new Animated.Value(1));
 
@@ -86,7 +86,16 @@ const PointsHistory = ({ navigation }) => {
 
   const handleBack = () => {
     if (navigation && navigation.goBack) {
-      navigation.goBack();
+      // Pass the activeSubTab information back to maintain the correct sub-tab
+      const previousScreen = route?.params?.previousScreen;
+      const activeSubTab = route?.params?.activeSubTab;
+      
+      if (previousScreen && activeSubTab) {
+        // Navigate back to the specific screen with sub-tab information
+        navigation.navigate(previousScreen, { activeSubTab });
+      } else {
+        navigation.goBack();
+      }
     }
   };
 
