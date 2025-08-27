@@ -27,3 +27,7 @@ export { default as ProductDetailsReviewThreePointSelection } from './productdet
 export { default as ProductDetailsWrittenUserReview } from './productdetailswrittenuserreview';
 export { default as DeliveryOptionsStepOneScreen } from './deliveryoptionsstepone';
 export { default as DeliveryAddAddress } from './deliveryaddaddress';
+export { default as Language } from './language';
+export { default as Region } from './region';
+export { default as MembersExclusive } from './membersexclusive';
+export { default as PointsHistory } from './pointshistory';

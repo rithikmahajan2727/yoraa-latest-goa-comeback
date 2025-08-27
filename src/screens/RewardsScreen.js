@@ -114,7 +114,7 @@ const RewardsScreen = ({ navigation }) => {
         </Text>
         
         <View style={styles.pointsSection}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('PointsHistory', { previousScreen: 'Rewards' })}>
             <Text style={styles.currentPointsLabel}>Current Points</Text>
           </TouchableOpacity>
           <View style={styles.pointsRow}>
@@ -152,7 +152,10 @@ const RewardsScreen = ({ navigation }) => {
         <Text style={styles.expiresText}>Expires in 8 days</Text>
         <Text style={styles.giveawayTitle}>YORAA Concert Giveaways</Text>
         
-        <TouchableOpacity style={styles.membersExclusiveButton}>
+        <TouchableOpacity 
+          style={styles.membersExclusiveButton}
+          onPress={() => navigation.navigate('MembersExclusive', { previousScreen: 'Rewards' })}
+        >
           <Text style={styles.membersExclusiveText}>MEMBERS EXCLUSIVE</Text>
         </TouchableOpacity>
       </Animated.View>
@@ -179,7 +182,10 @@ const RewardsScreen = ({ navigation }) => {
         <View style={styles.preferencesSection}>
           <Text style={styles.sectionTitle}>Language and region</Text>
           
-          <TouchableOpacity style={styles.preferenceItem}>
+          <TouchableOpacity 
+            style={styles.preferenceItem}
+            onPress={() => navigation.navigate('Language', { previousScreen: 'Rewards' })}
+          >
             <View style={styles.preferenceLeft}>
               <Text style={styles.flagIcon}>🌐</Text>
               <View>
@@ -190,7 +196,10 @@ const RewardsScreen = ({ navigation }) => {
             <Text style={styles.chevron}>›</Text>
           </TouchableOpacity>
           
-          <TouchableOpacity style={styles.preferenceItem}>
+          <TouchableOpacity 
+            style={styles.preferenceItem}
+            onPress={() => navigation.navigate('Region', { previousScreen: 'Rewards' })}
+          >
             <View style={styles.preferenceLeft}>
               <Text style={styles.flagIcon}>🇮🇳</Text>
               <View>

@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import BottomNavigationBar from './bottomnavigationbar';
 import { Colors, FontSizes, FontWeights, Spacing } from '../constants';
-import { HomeScreen, ShopScreen, CollectionScreen, RewardsScreen, ProfileScreen, BagScreen, CreateAccountMobileNumber, CreateAccountMobileNumberVerification, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen, ProductViewOne, ProductViewTwo, ProductViewThree, ProductDetailsMain, ProductDetailsMainReview, ProductDetailsReviewThreePointSelection, ProductDetailsWrittenUserReview, DeliveryOptionsStepOneScreen, DeliveryAddAddress } from '../screens';
+import { HomeScreen, ShopScreen, CollectionScreen, RewardsScreen, ProfileScreen, BagScreen, CreateAccountMobileNumber, CreateAccountMobileNumberVerification, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen, ProductViewOne, ProductViewTwo, ProductViewThree, ProductDetailsMain, ProductDetailsMainReview, ProductDetailsReviewThreePointSelection, ProductDetailsWrittenUserReview, DeliveryOptionsStepOneScreen, DeliveryAddAddress, Language, Region, MembersExclusive, PointsHistory } from '../screens';
 
 // Placeholder content components for each tab
 const HomeContent = ({ navigation }) => <HomeScreen navigation={navigation} />;
@@ -26,7 +26,7 @@ const EnhancedLayout = () => {
   const [navigationHistory, setNavigationHistory] = useState(['Home']);
 
   // Navigation context for handling screen navigation
-  const createNavigation = (setCurrentScreen, setActiveTab, setRouteParams, setNavigationHistory) => ({
+  const navigation = {
     navigate: (screenName, params) => {
       if (['Home', 'Shop', 'Collection', 'Rewards', 'Profile'].includes(screenName)) {
         setActiveTab(screenName);
@@ -62,9 +62,7 @@ const EnhancedLayout = () => {
       });
     },
     route: { params: routeParams },
-  });
-
-  const navigation = createNavigation(setCurrentScreen, setActiveTab, setRouteParams, setNavigationHistory);
+  };
 
   const handleTabChange = (tabName) => {
     setActiveTab(tabName);
@@ -132,6 +130,14 @@ const EnhancedLayout = () => {
         return <DeliveryOptionsStepOneScreen navigation={navigation} />;
       case 'DeliveryAddAddress':
         return <DeliveryAddAddress navigation={navigation} route={{ params: routeParams }} />;
+      case 'Language':
+        return <Language navigation={navigation} />;
+      case 'Region':
+        return <Region navigation={navigation} />;
+      case 'MembersExclusive':
+        return <MembersExclusive navigation={navigation} />;
+      case 'PointsHistory':
+        return <PointsHistory navigation={navigation} />;
       default:
         return <HomeContent />;
     }
