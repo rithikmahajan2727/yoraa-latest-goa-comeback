@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import BottomNavigationBar from './bottomnavigationbar';
 import { Colors, FontSizes, FontWeights, Spacing } from '../constants';
-import { HomeScreen, ShopScreen, CollectionScreen, SearchScreen, RewardsScreen, ProfileScreen, BagScreen, CreateAccountMobileNumber, CreateAccountMobileNumberVerification, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen, ProductViewOne, ProductViewTwo, ProductViewThree, ProductDetailsMain, ProductDetailsMainReview, ProductDetailsReviewThreePointSelection, ProductDetailsWrittenUserReview, DeliveryOptionsStepOneScreen, DeliveryAddAddress, Language, Region, MembersExclusive, PointsHistory, InviteAFriend } from '../screens';
+import { HomeScreen, ShopScreen, CollectionScreen, SearchScreen, ScanBarcodeFlow, RewardsScreen, ProfileScreen, BagScreen, CreateAccountMobileNumber, CreateAccountMobileNumberVerification, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen, ProductViewOne, ProductViewTwo, ProductViewThree, ProductDetailsMain, ProductDetailsMainReview, ProductDetailsReviewThreePointSelection, ProductDetailsWrittenUserReview, DeliveryOptionsStepOneScreen, DeliveryAddAddress, Language, Region, MembersExclusive, PointsHistory, InviteAFriend } from '../screens';
 
 // Placeholder content components for each tab
 const HomeContent = ({ navigation }) => <HomeScreen navigation={navigation} />;
@@ -23,7 +23,6 @@ const EnhancedLayout = () => {
   const [currentScreen, setCurrentScreen] = useState('Home');
   const [headerTitle, setHeaderTitle] = useState('YORAA');
   const [routeParams, setRouteParams] = useState(null);
-  const [navigationHistory, setNavigationHistory] = useState(['Home']);
 
   // Navigation context for handling screen navigation
   const navigation = {
@@ -31,35 +30,25 @@ const EnhancedLayout = () => {
       if (['Home', 'Shop', 'Collection', 'Rewards', 'Profile'].includes(screenName)) {
         setActiveTab(screenName);
         setCurrentScreen(screenName);
-        setNavigationHistory([screenName]);
       } else {
         setCurrentScreen(screenName);
-        setNavigationHistory(prev => [...prev, screenName]);
       }
       setRouteParams(params || null);
     },
     goBack: () => {
-      setNavigationHistory(prev => {
-        const newHistory = [...prev];
-        newHistory.pop(); // Remove current screen
-        const previousScreen = newHistory[newHistory.length - 1] || 'Profile';
-        
-        // Handle back navigation to previous screen
-        if (routeParams?.previousScreen) {
-          setCurrentScreen(routeParams.previousScreen);
-          if (['Home', 'Shop', 'Collection', 'Rewards', 'Profile'].includes(routeParams.previousScreen)) {
-            setActiveTab(routeParams.previousScreen);
-          }
-        } else {
-          setCurrentScreen(previousScreen);
-          if (['Home', 'Shop', 'Collection', 'Rewards', 'Profile'].includes(previousScreen)) {
-            setActiveTab(previousScreen);
-          }
+      // Handle back navigation to previous screen
+      if (routeParams?.previousScreen) {
+        setCurrentScreen(routeParams.previousScreen);
+        if (['Home', 'Shop', 'Collection', 'Rewards', 'Profile'].includes(routeParams.previousScreen)) {
+          setActiveTab(routeParams.previousScreen);
         }
-        
-        setRouteParams(null);
-        return newHistory.length > 0 ? newHistory : ['Home'];
-      });
+      } else {
+        // Default back to Home if no previous screen
+        setCurrentScreen('Home');
+        setActiveTab('Home');
+      }
+      
+      setRouteParams(null);
     },
     route: { params: routeParams },
   };
@@ -80,6 +69,8 @@ const EnhancedLayout = () => {
         return <CollectionContent navigation={navigation} />;
       case 'SearchScreen':
         return <SearchScreen navigation={navigation} />;
+      case 'ScanBarcode':
+        return <ScanBarcodeFlow navigation={navigation} />;
       case 'Rewards':
         return <RewardsContent navigation={navigation} route={{ params: routeParams }} />;
       case 'Profile':
