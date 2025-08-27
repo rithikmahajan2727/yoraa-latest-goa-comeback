@@ -63,12 +63,14 @@ const ProfileScreen = ({ navigation }) => {
 
   const handleEditProfile = () => {
     if (navigation && navigation.navigate) {
-      navigation.navigate('EditProfile');
+      navigation.navigate('EditProfile', { previousScreen: 'Profile' });
     }
   };
 
   const handleOrders = () => {
-    console.log('Orders pressed');
+    if (navigation && navigation.navigate) {
+      navigation.navigate('Orders', { previousScreen: 'Profile' });
+    }
   };
 
   const handleContactUs = () => {
@@ -77,7 +79,7 @@ const ProfileScreen = ({ navigation }) => {
 
   const handleSettings = () => {
     if (navigation && navigation.navigate) {
-      navigation.navigate('Settings');
+      navigation.navigate('Settings', { previousScreen: 'Profile' });
     }
   };
 
@@ -87,13 +89,13 @@ const ProfileScreen = ({ navigation }) => {
 
   const handleFAQ = () => {
     if (navigation && navigation.navigate) {
-      navigation.navigate('FAQ');
+      navigation.navigate('FAQ', { previousScreen: 'Profile' });
     }
   };
 
   const handleInvoices = () => {
     if (navigation && navigation.navigate) {
-      navigation.navigate('Invoice');
+      navigation.navigate('Invoice', { previousScreen: 'Profile' });
     }
   };
 
