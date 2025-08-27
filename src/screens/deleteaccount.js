@@ -34,26 +34,8 @@ const DeleteAccount = ({ navigation }) => {
       return;
     }
 
-    // Proceed with account deletion
-    Alert.alert(
-      'Confirm Deletion',
-      'Are you sure you want to delete your account? This action cannot be undone.',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => {
-            // Handle account deletion logic here
-            console.log('Account deletion confirmed');
-            // You can add your account deletion API call here
-          },
-        },
-      ]
-    );
+    // Navigate to delete account confirmation screen
+    navigation.navigate('DeleteAccountConfirmation', { previousScreen: 'DeleteAccount' });
   };
 
   const renderCheckbox = (isChecked, onPress) => (

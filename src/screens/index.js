@@ -15,6 +15,8 @@ export { default as DeliveryAddressesSettings } from './deliveryaddressessetting
 export { default as CommunicationPreferences } from './communicationpreferences';
 export { default as LinkedAccountScreen } from './linkedaccount';
 export { default as DeleteAccount } from './deleteaccount';
+export { default as DeleteAccountConfirmation } from './deleteaccountconfirmation';
+export { default as DeleteAccountConfirmationModal } from './deleteaccountconfirmationmodal';
 export { default as ProfileVisibilityScreen } from './profilevisibility';
 export { default as ContactUsScreen } from './contactus';
 export { default as InvoiceScreen } from './invoice';
