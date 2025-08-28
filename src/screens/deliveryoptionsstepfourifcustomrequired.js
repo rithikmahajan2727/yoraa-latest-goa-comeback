@@ -6,13 +6,11 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Dimensions,
 } from "react-native";
 import React, { useState } from "react";
 import { FontFamilies, FontSizes } from "../constants";
+import GlobalBackButton from "../components/GlobalBackButton";
 
-const { height: screenHeight } = Dimensions.get('window');
-const DEVICE = { HEIGHT: screenHeight };
 const FONT_FAMILY = {
   BOLD: FontFamilies.bold,
   MEDIUM: FontFamilies.medium,
@@ -121,81 +119,88 @@ const CustomClearance = ({ navigation }) => {
   const toggleCheckbox4 = () => {
     setChecked4((prev) => !prev);
   };
+
+  // Close dropdowns when scrolling or touching elsewhere
+  const closeDropdowns = () => {
+    setShowDocTypeDropdown(false);
+    setShowProofDropdown(false);
+  };
   return (
     <View
       style={{
         flex: 1,
         backgroundColor: "#fff",
         paddingTop: "15%",
-        gap: 15,
-        paddingHorizontal: 15,
+        paddingHorizontal: 16,
       }}
     >
       {/* Back button */}
-      <TouchableOpacity
-        onPress={() => navigation?.goBack()}
-        style={{ marginLeft: -10 }}
-      >
-        <Text style={{ fontSize: 24, color: 'black' }}>←</Text>
-      </TouchableOpacity>
+      <GlobalBackButton 
+        navigation={navigation}
+        style={{ marginBottom: 20 }}
+        animationDuration={0}
+      />
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : null}
       >
         <ScrollView
-          contentContainerStyle={{ flexGrow: 1, gap: 10 }}
+          contentContainerStyle={{ flexGrow: 1, gap: 16 }}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
+          onScrollBeginDrag={closeDropdowns}
         >
           {/* HEADING */}
-          <View style={{}}>
+          <View style={{ marginBottom: 12 }}>
             <Text
               style={{
                 fontFamily: FONT_FAMILY.BOLD,
-                fontSize: FONT_SIZE.LARGE,
+                fontSize: 20,
+                color: "black",
+                lineHeight: 24,
               }}
             >
-              ID for Custom Clearance
+              ID for Customs Clearance
             </Text>
           </View>
           {/* sub heading */}
-          <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+          <View style={{ marginBottom: 24 }}>
             <Text
               style={{
-                fontFamily: FONT_FAMILY.BOLD,
-                fontSize: FONT_SIZE.S,
-                color: "gray",
+                fontFamily: FONT_FAMILY.MEDIUM,
+                fontSize: 14,
+                color: "#666",
+                lineHeight: 20,
               }}
             >
-              Provide your National ID information to expedite the customs
-              clearance process. If you don't provide this information at
-              Checkout, you will be asked to provide it once your order has been
-              processed. Please ensure the address on your KYC document matches
-              your shipping address.
+              Provide your National ID information to expedite the customs clearance process. If you don't provide this information at Checkout, you will be asked to provide it once your order has been processed. Please ensure the address on your KYC document matches your shipping address.
             </Text>
           </View>
           {/* Choice of ids */}
-          <View style={{ gap: 10 }}>
+          <View style={{ gap: 12, marginBottom: 24 }}>
             {DOCUMENT_OPTIONS.map((option, index) => (
               <TouchableOpacity
-                key={index}
+                key={`document-option-${option.value}`}
                 onPress={() => {
                   setDocType({ label: "Select Document Type", value: null });
                   setDocOption(option);
                 }}
                 style={{
-                  padding: 10,
+                  paddingVertical: 14,
+                  paddingHorizontal: 16,
                   borderWidth: 1,
                   borderColor:
-                    docOption?.value === option.value ? "black" : "lightgray",
-                  borderRadius: 5,
+                    docOption?.value === option.value ? "#000" : "#E0E0E0",
+                  borderRadius: 8,
+                  backgroundColor: "white",
                 }}
               >
                 <Text
                   style={{
-                    fontFamily: FONT_FAMILY.BOLD,
-                    fontSize: FONT_SIZE.XS,
+                    fontFamily: FONT_FAMILY.MEDIUM,
+                    fontSize: 14,
+                    color: "#000",
                   }}
                 >
                   {option.label}
@@ -207,49 +212,65 @@ const CustomClearance = ({ navigation }) => {
           {/*  for indian national  */}
           {(docOption.value === "indianResident" ||
             docOption.value === "foreignNational") && (
-            <View>
+            <View style={{ marginBottom: 16, position: 'relative', zIndex: 100 }}>
               <TouchableOpacity
                 style={{
                   borderWidth: 1,
-                  borderColor: "lightgray",
-                  borderRadius: 5,
+                  borderColor: "#E0E0E0",
+                  borderRadius: 8,
                   width: "100%",
-                  padding: 10,
+                  paddingVertical: 14,
+                  paddingHorizontal: 16,
                   flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "center",
+                  backgroundColor: "white",
                 }}
                 onPress={() => setShowDocTypeDropdown(!showDocTypeDropdown)}
               >
                 <Text
                   style={{
-                    fontFamily: FONT_FAMILY.BOLD,
-                    fontSize: FONT_SIZE.XS,
-                    color: docType.value ? "black" : "gray",
+                    fontFamily: FONT_FAMILY.MEDIUM,
+                    fontSize: 14,
+                    color: docType.value ? "#000" : "#999",
                   }}
                 >
                   {docType.label}
                 </Text>
-                <Text style={{ color: "gray" }}>▼</Text>
+                <Text style={{ color: "#999", fontSize: 12 }}>▼</Text>
               </TouchableOpacity>
               
               {showDocTypeDropdown && (
                 <View
                   style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: 0,
+                    right: 0,
+                    zIndex: 1000,
                     borderWidth: 1,
-                    borderColor: "lightgray",
-                    borderRadius: 5,
+                    borderColor: "#E0E0E0",
+                    borderRadius: 8,
                     backgroundColor: "white",
-                    marginTop: 5,
+                    marginTop: 4,
+                    shadowColor: "#000",
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 4,
+                    elevation: 3,
                   }}
                 >
                   {docOption?.documentTypes?.map((item, index) => (
                     <TouchableOpacity
-                      key={index}
+                      key={`doc-type-${item.value}-${index}`}
                       style={{
-                        padding: 10,
+                        paddingVertical: 14,
+                        paddingHorizontal: 16,
                         borderBottomWidth: index < docOption.documentTypes.length - 1 ? 1 : 0,
-                        borderBottomColor: "lightgray",
+                        borderBottomColor: "#f0f0f0",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
                       }}
                       onPress={() => {
                         setDocType(item);
@@ -258,13 +279,16 @@ const CustomClearance = ({ navigation }) => {
                     >
                       <Text
                         style={{
-                          fontFamily: FONT_FAMILY.BOLD,
-                          fontSize: FONT_SIZE.XS,
-                          color: "black",
+                          fontFamily: FONT_FAMILY.MEDIUM,
+                          fontSize: 14,
+                          color: "#000",
                         }}
                       >
                         {item.label}
                       </Text>
+                      {docType.value === item.value && (
+                        <Text style={{ color: "#000", fontSize: 16, fontWeight: "bold" }}>✓</Text>
+                      )}
                     </TouchableOpacity>
                   ))}
                 </View>
@@ -272,133 +296,135 @@ const CustomClearance = ({ navigation }) => {
             </View>
           )}
           {/*  for adhaar card  */}
-          {docOption.value == "indianResident" &&
-            docType.label == "Aadhar Card" && (
-              <TextInput
-                placeholder="Adhaar number"
-                style={{
-                  fontFamily: FONT_FAMILY.BOLD,
-                  fontSize: FONT_SIZE.XS,
-                  // flex: 1,
-                  // paddingLeft: 10,
-                  alignItems: "center",
-                  borderWidth: 1,
-                  borderColor: "lightgray",
-                  borderRadius: 5,
-                  width: "100%",
-                  padding: 10,
-                  // paddingLeft: 10,
-                }}
-                placeholderTextColor={"gray"}
-                keyboardType="number-pad"
-              />
+          {docOption.value === "indianResident" &&
+            docType.label === "Aadhar Card" && (
+              <View style={{ marginBottom: 16 }}>
+                <TextInput
+                  placeholder="Adhaar number"
+                  style={{
+                    fontFamily: FONT_FAMILY.MEDIUM,
+                    fontSize: 14,
+                    borderWidth: 1,
+                    borderColor: "#E0E0E0",
+                    borderRadius: 8,
+                    width: "100%",
+                    paddingVertical: 14,
+                    paddingHorizontal: 16,
+                    backgroundColor: "white",
+                  }}
+                  placeholderTextColor={"#999"}
+                  keyboardType="number-pad"
+                />
+              </View>
             )}
           {/*  for voter card  */}
-          {docOption.value == "indianResident" &&
-            docType.label == "Election/Voter ID Card" && (
-              <TextInput
-                placeholder="Voter id number"
-                style={{
-                  fontFamily: FONT_FAMILY.BOLD,
-                  fontSize: FONT_SIZE.XS,
-                  // flex: 1,
-                  // paddingLeft: 10,
-                  alignItems: "center",
-                  borderWidth: 1,
-                  borderColor: "lightgray",
-                  borderRadius: 5,
-                  width: "100%",
-                  padding: 10,
-                  // paddingLeft: 10,
-                }}
-                placeholderTextColor={"gray"}
-                keyboardType="number-pad"
-              />
+          {docOption.value === "indianResident" &&
+            docType.label === "Election/Voter ID Card" && (
+              <View style={{ marginBottom: 16 }}>
+                <TextInput
+                  placeholder="Voter id number"
+                  style={{
+                    fontFamily: FONT_FAMILY.MEDIUM,
+                    fontSize: 14,
+                    borderWidth: 1,
+                    borderColor: "#E0E0E0",
+                    borderRadius: 8,
+                    width: "100%",
+                    paddingVertical: 14,
+                    paddingHorizontal: 16,
+                    backgroundColor: "white",
+                  }}
+                  placeholderTextColor={"#999"}
+                  keyboardType="number-pad"
+                />
+              </View>
             )}
           {/*  for passport number  */}
-          {(docOption.value == "indianResident" ||
-            docOption.value == "foreignNational") &&
-            docType.label == "Passport Number" && (
-              <TextInput
-                placeholder="Passport number"
-                style={{
-                  fontFamily: FONT_FAMILY.BOLD,
-                  fontSize: FONT_SIZE.XS,
-                  // flex: 1,
-                  // paddingLeft: 10,
-                  alignItems: "center",
-                  borderWidth: 1,
-                  borderColor: "lightgray",
-                  borderRadius: 5,
-                  width: "100%",
-                  padding: 10,
-                  // paddingLeft: 10,
-                }}
-                placeholderTextColor={"gray"}
-                keyboardType="number-pad"
-              />
+          {(docOption.value === "indianResident" ||
+            docOption.value === "foreignNational") &&
+            docType.label === "Passport Number" && (
+              <View style={{ marginBottom: 16 }}>
+                <TextInput
+                  placeholder="Passport number"
+                  style={{
+                    fontFamily: FONT_FAMILY.MEDIUM,
+                    fontSize: 14,
+                    borderWidth: 1,
+                    borderColor: "#E0E0E0",
+                    borderRadius: 8,
+                    width: "100%",
+                    paddingVertical: 14,
+                    paddingHorizontal: 16,
+                    backgroundColor: "white",
+                  }}
+                  placeholderTextColor={"#999"}
+                  keyboardType="default"
+                />
+              </View>
             )}
           {/*  for passport expiry  */}
-          {(docOption.value == "indianResident" ||
-            docOption.value == "foreignNational") &&
-            docType.label == "Passport Number" && (
-              <TextInput
-                placeholder="Passport Expiry Date"
-                style={{
-                  fontFamily: FONT_FAMILY.BOLD,
-                  fontSize: FONT_SIZE.XS,
-                  // flex: 1,
-                  // paddingLeft: 10,
-                  alignItems: "center",
-                  borderWidth: 1,
-                  borderColor: "lightgray",
-                  borderRadius: 5,
-                  width: "100%",
-                  padding: 10,
-                  // paddingLeft: 10,
-                }}
-                placeholderTextColor={"gray"}
-                keyboardType="number-pad"
-              />
+          {(docOption.value === "indianResident" ||
+            docOption.value === "foreignNational") &&
+            docType.label === "Passport Number" && (
+              <View style={{ marginBottom: 16 }}>
+                <TextInput
+                  placeholder="Passport Expiry Date"
+                  style={{
+                    fontFamily: FONT_FAMILY.MEDIUM,
+                    fontSize: 14,
+                    borderWidth: 1,
+                    borderColor: "#E0E0E0",
+                    borderRadius: 8,
+                    width: "100%",
+                    paddingVertical: 14,
+                    paddingHorizontal: 16,
+                    backgroundColor: "white",
+                  }}
+                  placeholderTextColor={"#999"}
+                  keyboardType="default"
+                />
+              </View>
             )}
           {/* checkbox 1 */}
           <TouchableOpacity
             onPress={toggleCheckbox1}
             style={{
               flexDirection: "row",
-              alignItems: "center",
-              gap: 5,
-              marginTop: 15,
+              alignItems: "flex-start",
+              gap: 12,
+              marginTop: 20,
+              marginBottom: 16,
             }}
           >
             {/* Custom box */}
             <View
               style={{
-                width: DEVICE.HEIGHT * 0.018,
-                height: DEVICE.HEIGHT * 0.018,
-                borderWidth: 1.5,
-                borderColor: "gray",
+                width: 16,
+                height: 16,
+                borderWidth: 1,
+                borderColor: checked1 ? "#000" : "#E0E0E0",
+                backgroundColor: checked1 ? "#000" : "transparent",
                 justifyContent: "center",
                 alignItems: "center",
+                marginTop: 2,
               }}
             >
               {checked1 && (
-                <Text style={{ fontSize: 12, color: 'black' }}>✓</Text>
+                <Text style={{ fontSize: 10, color: 'white' }}>✓</Text>
               )}
             </View>
 
             {/* Label */}
             <Text
               style={{
-                fontFamily: FONT_FAMILY.BOLD,
-                fontSize: FONT_SIZE.XS,
-                color: "gray",
+                fontFamily: FONT_FAMILY.MEDIUM,
+                fontSize: 14,
+                color: "#666",
                 flex: 1,
-                flexWrap: "wrap",
+                lineHeight: 20,
               }}
             >
-              I authorise Aramex India Pvt. Ltd. and its group companies agents
-              to act as my/our agent to Custom clear my/our shipments. Read more
+              I authorise Aramex India Pvt. Ltd. and its group companies agents to act as my/our agent to Custom clear my/our shipments. Read more
             </Text>
           </TouchableOpacity>
 
@@ -407,91 +433,94 @@ const CustomClearance = ({ navigation }) => {
             onPress={toggleCheckbox2}
             style={{
               flexDirection: "row",
-              alignItems: "center",
-              gap: 5,
+              alignItems: "flex-start",
+              gap: 12,
+              marginBottom: 24,
             }}
           >
             {/* Custom box */}
             <View
               style={{
-                width: DEVICE.HEIGHT * 0.018,
-                height: DEVICE.HEIGHT * 0.018,
-                borderWidth: 1.5,
-                borderColor: "gray",
+                width: 16,
+                height: 16,
+                borderWidth: 1,
+                borderColor: checked2 ? "#000" : "#E0E0E0",
+                backgroundColor: checked2 ? "#000" : "transparent",
                 justifyContent: "center",
                 alignItems: "center",
+                marginTop: 2,
               }}
             >
               {checked2 && (
-                <Text style={{ fontSize: 12, color: 'black' }}>✓</Text>
+                <Text style={{ fontSize: 10, color: 'white' }}>✓</Text>
               )}
             </View>
 
             {/* Label */}
             <Text
               style={{
-                fontFamily: FONT_FAMILY.BOLD,
-                fontSize: FONT_SIZE.XS,
-                color: "gray",
+                fontFamily: FONT_FAMILY.MEDIUM,
+                fontSize: 14,
+                color: "#666",
                 flex: 1,
-                flexWrap: "wrap",
+                lineHeight: 20,
               }}
             >
-              I have read and consent for processing my information in
-              accordance with the Privacy Statement and Cookie Policy
+              I have read and consent for processing my information in accordance with the Privacy Statement and Cookie Policy
             </Text>
           </TouchableOpacity>
 
           {/* Upload id part */}
           {/* HEADING */}
-          {docOption.value == "indianResident" && (
-            <View style={{ paddingTop: 10 }}>
+          {docOption.value === "indianResident" && (
+            <View style={{ marginTop: 32, marginBottom: 12 }}>
               <Text
                 style={{
                   fontFamily: FONT_FAMILY.BOLD,
-                  fontSize: FONT_SIZE.LARGE,
+                  fontSize: 20,
+                  color: "#000",
+                  lineHeight: 24,
                 }}
               >
-                Front & Back of ID
+                Upload Passport
               </Text>
             </View>
           )}
           {/* sub heading */}
-          {docOption.value == "indianResident" && (
-            <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+          {docOption.value === "indianResident" && (
+            <View style={{ marginBottom: 24 }}>
               <Text
                 style={{
-                  fontFamily: FONT_FAMILY.BOLD,
-                  fontSize: FONT_SIZE.S,
-                  color: "gray",
+                  fontFamily: FONT_FAMILY.MEDIUM,
+                  fontSize: 14,
+                  color: "#666",
+                  lineHeight: 20,
                 }}
               >
-                Be sure that your name, photograph, and ID number are clearly
-                visible in the ID photograph, or it may be rejected at customs,
-                causing delivery delays.
+                Be sure that your name, photograph, and ID number are clearly visible in the ID photograph, or it may be rejected at customs, causing delivery delays.
               </Text>
             </View>
           )}
           {/* front side  */}
-          {docOption.value == "indianResident" && (
-            <View style={{ gap: 2 }}>
+          {docOption.value === "indianResident" && (
+            <View style={{ marginBottom: 16 }}>
               <TouchableOpacity
                 style={{
                   borderWidth: 1,
-                  borderColor: "lightgray",
-                  borderRadius: 12,
-                  alignSelf: "flex-start",
-                  padding: 5,
+                  borderColor: "#E0E0E0",
+                  borderRadius: 8,
+                  paddingVertical: 14,
+                  paddingHorizontal: 16,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "white",
                 }}
               >
                 <Text
                   style={{
-                    fontFamily: FONT_FAMILY.BOLD,
-                    fontSize: FONT_SIZE.S,
-                    color: "darkgray",
-
-                    flexWrap: "wrap",
-                    paddingLeft: 5,
+                    fontFamily: FONT_FAMILY.MEDIUM,
+                    fontSize: 14,
+                    color: "#666",
                   }}
                 >
                   Upload front side
@@ -499,9 +528,10 @@ const CustomClearance = ({ navigation }) => {
               </TouchableOpacity>
               <Text
                 style={{
-                  fontFamily: FONT_FAMILY.BOLD,
-                  fontSize: FONT_SIZE.XS,
-                  color: "darkgray",
+                  fontFamily: FONT_FAMILY.MEDIUM,
+                  fontSize: 12,
+                  color: "#999",
+                  marginTop: 4,
                 }}
               >
                 Only .jpg and .jpeg files are allowed.
@@ -509,25 +539,25 @@ const CustomClearance = ({ navigation }) => {
             </View>
           )}
           {/* back side */}
-          {docOption.value == "indianResident" && (
-            <View style={{ gap: 2 }}>
+          {docOption.value === "indianResident" && (
+            <View style={{ marginBottom: 32 }}>
               <TouchableOpacity
                 style={{
                   borderWidth: 1,
-                  borderColor: "lightgray",
-                  borderRadius: 12,
-                  alignSelf: "flex-start",
-                  padding: 5,
+                  borderColor: "#E0E0E0",
+                  borderRadius: 8,
+                  paddingVertical: 14,
+                  paddingHorizontal: 16,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "white",
                 }}
               >
                 <Text
                   style={{
-                    fontFamily: FONT_FAMILY.BOLD,
-                    fontSize: FONT_SIZE.S,
-                    color: "darkgray",
-
-                    flexWrap: "wrap",
-                    paddingLeft: 5,
+                    fontFamily: FONT_FAMILY.MEDIUM,
+                    fontSize: 14,
+                    color: "#666",
                   }}
                 >
                   Upload reverse side
@@ -535,9 +565,10 @@ const CustomClearance = ({ navigation }) => {
               </TouchableOpacity>
               <Text
                 style={{
-                  fontFamily: FONT_FAMILY.BOLD,
-                  fontSize: FONT_SIZE.XS,
-                  color: "darkgray",
+                  fontFamily: FONT_FAMILY.MEDIUM,
+                  fontSize: 12,
+                  color: "#999",
+                  marginTop: 4,
                 }}
               >
                 Only .jpg and .jpeg files are allowed.
@@ -664,19 +695,17 @@ const CustomClearance = ({ navigation }) => {
             <TextInput
               placeholder="Document number"
               style={{
-                fontFamily: FONT_FAMILY.BOLD,
-                fontSize: FONT_SIZE.XS,
-                // flex: 1,
-                // paddingLeft: 10,
-                alignItems: "center",
+                fontFamily: FONT_FAMILY.MEDIUM,
+                fontSize: 14,
                 borderWidth: 1,
-                borderColor: "lightgray",
-                borderRadius: 5,
+                borderColor: "#E0E0E0",
+                borderRadius: 8,
                 width: "100%",
-                padding: 10,
-                // paddingLeft: 10,
+                paddingVertical: 14,
+                paddingHorizontal: 16,
+                backgroundColor: "white",
               }}
-              placeholderTextColor={"gray"}
+              placeholderTextColor={"#999"}
               keyboardType="number-pad"
             />
           )}
@@ -716,26 +745,43 @@ const CustomClearance = ({ navigation }) => {
               </Text>
             </View>
           )}
-          {/* Choice of ids */}
-          <View style={{ gap: 10, paddingVertical: 10 }}>
+          {/* Address options heading */}
+          <View style={{ marginTop: 32, marginBottom: 12 }}>
+            <Text
+              style={{
+                fontFamily: FONT_FAMILY.BOLD,
+                fontSize: 16,
+                color: "#000",
+                lineHeight: 20,
+              }}
+            >
+              Address on ID Matches Shipping Address
+            </Text>
+          </View>
+
+          {/* Choice of address matching */}
+          <View style={{ gap: 12, marginBottom: 32 }}>
             {AddressOptions.map((option, index) => (
               <TouchableOpacity
-                key={index}
+                key={`address-option-${option.value}`}
                 onPress={() => {
                   setAddressType(option);
                 }}
                 style={{
-                  padding: 10,
+                  paddingVertical: 14,
+                  paddingHorizontal: 16,
                   borderWidth: 1,
                   borderColor:
-                    addressType?.value === option.value ? "black" : "lightgray",
-                  borderRadius: 5,
+                    addressType?.value === option.value ? "#000" : "#E0E0E0",
+                  borderRadius: 8,
+                  backgroundColor: "white",
                 }}
               >
                 <Text
                   style={{
-                    fontFamily: FONT_FAMILY.BOLD,
-                    fontSize: FONT_SIZE.XS,
+                    fontFamily: FONT_FAMILY.MEDIUM,
+                    fontSize: 14,
+                    color: "#000",
                   }}
                 >
                   {option.label}
@@ -744,12 +790,14 @@ const CustomClearance = ({ navigation }) => {
             ))}
           </View>
           {/*  proof of residence */}
-          {docOption.value == "foreignNational" && (
-            <View style={{ paddingTop: 10 }}>
+          {docOption.value === "foreignNational" && (
+            <View style={{ marginTop: 32, marginBottom: 12 }}>
               <Text
                 style={{
                   fontFamily: FONT_FAMILY.BOLD,
-                  fontSize: FONT_SIZE.LARGE,
+                  fontSize: 20,
+                  color: "#000",
+                  lineHeight: 24,
                 }}
               >
                 Upload Proof of residence
@@ -791,49 +839,65 @@ const CustomClearance = ({ navigation }) => {
 
           {/*  for foreign national  proof of residence */}
           {docOption.value === "foreignNational" && (
-            <View>
+            <View style={{ position: 'relative', zIndex: 50 }}>
               <TouchableOpacity
                 style={{
                   borderWidth: 1,
-                  borderColor: "lightgray",
-                  borderRadius: 5,
+                  borderColor: "#E0E0E0",
+                  borderRadius: 8,
                   width: "100%",
-                  padding: 10,
+                  paddingVertical: 14,
+                  paddingHorizontal: 16,
                   flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "center",
+                  backgroundColor: "white",
                 }}
                 onPress={() => setShowProofDropdown(!showProofDropdown)}
               >
                 <Text
                   style={{
-                    fontFamily: FONT_FAMILY.BOLD,
-                    fontSize: FONT_SIZE.XS,
-                    color: proofOfResidence.value ? "black" : "gray",
+                    fontFamily: FONT_FAMILY.MEDIUM,
+                    fontSize: 14,
+                    color: proofOfResidence.value ? "#000" : "#999",
                   }}
                 >
                   {proofOfResidence.label}
                 </Text>
-                <Text style={{ color: "gray" }}>▼</Text>
+                <Text style={{ color: "#999", fontSize: 12 }}>▼</Text>
               </TouchableOpacity>
               
               {showProofDropdown && (
                 <View
                   style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: 0,
+                    right: 0,
+                    zIndex: 1000,
                     borderWidth: 1,
-                    borderColor: "lightgray",
-                    borderRadius: 5,
+                    borderColor: "#E0E0E0",
+                    borderRadius: 8,
                     backgroundColor: "white",
-                    marginTop: 5,
+                    marginTop: 4,
+                    shadowColor: "#000",
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 4,
+                    elevation: 3,
                   }}
                 >
                   {docOption?.proofOfResidence?.map((item, index) => (
                     <TouchableOpacity
-                      key={index}
+                      key={`proof-residence-${item.value}-${index}`}
                       style={{
-                        padding: 10,
+                        paddingVertical: 14,
+                        paddingHorizontal: 16,
                         borderBottomWidth: index < docOption.proofOfResidence.length - 1 ? 1 : 0,
-                        borderBottomColor: "lightgray",
+                        borderBottomColor: "#f0f0f0",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
                       }}
                       onPress={() => {
                         setProofOfResidence(item);
@@ -842,13 +906,16 @@ const CustomClearance = ({ navigation }) => {
                     >
                       <Text
                         style={{
-                          fontFamily: FONT_FAMILY.BOLD,
-                          fontSize: FONT_SIZE.XS,
-                          color: "black",
+                          fontFamily: FONT_FAMILY.MEDIUM,
+                          fontSize: 14,
+                          color: "#000",
                         }}
                       >
                         {item.label}
                       </Text>
+                      {proofOfResidence.value === item.value && (
+                        <Text style={{ color: "#000", fontSize: 16, fontWeight: "bold" }}>✓</Text>
+                      )}
                     </TouchableOpacity>
                   ))}
                 </View>
@@ -863,19 +930,17 @@ const CustomClearance = ({ navigation }) => {
             <TextInput
               placeholder="Document number"
               style={{
-                fontFamily: FONT_FAMILY.BOLD,
-                fontSize: FONT_SIZE.XS,
-                // flex: 1,
-                // paddingLeft: 10,
-                alignItems: "center",
+                fontFamily: FONT_FAMILY.MEDIUM,
+                fontSize: 14,
                 borderWidth: 1,
-                borderColor: "lightgray",
-                borderRadius: 5,
+                borderColor: "#E0E0E0",
+                borderRadius: 8,
                 width: "100%",
-                padding: 10,
-                // paddingLeft: 10,
+                paddingVertical: 14,
+                paddingHorizontal: 16,
+                backgroundColor: "white",
               }}
-              placeholderTextColor={"gray"}
+              placeholderTextColor={"#999"}
               keyboardType="number-pad"
             />
           )}
@@ -939,32 +1004,34 @@ const CustomClearance = ({ navigation }) => {
               onPress={toggleCheckbox4}
               style={{
                 flexDirection: "row",
-                alignItems: "center",
-                gap: 5,
+                alignItems: "flex-start",
+                gap: 8,
               }}
             >
               <View
                 style={{
-                  width: DEVICE.HEIGHT * 0.018,
-                  height: DEVICE.HEIGHT * 0.018,
-                  borderWidth: 1.5,
-                  borderColor: "gray",
+                  width: 16,
+                  height: 16,
+                  borderWidth: 1,
+                  borderColor: checked4 ? "black" : "#ccc",
+                  backgroundColor: checked4 ? "black" : "transparent",
                   justifyContent: "center",
                   alignItems: "center",
+                  marginTop: 2,
                 }}
               >
                 {checked4 && (
-                  <Text style={{ fontSize: 12, color: 'black' }}>✓</Text>
+                  <Text style={{ fontSize: 10, color: 'white' }}>✓</Text>
                 )}
               </View>
 
               <Text
                 style={{
-                  fontFamily: FONT_FAMILY.BOLD,
+                  fontFamily: FONT_FAMILY.MEDIUM,
                   fontSize: FONT_SIZE.XS,
-                  color: "gray",
+                  color: "#666",
                   flex: 1,
-                  flexWrap: "wrap",
+                  lineHeight: 18,
                 }}
               >
                 I have read and consent for processing my information in
@@ -1005,7 +1072,7 @@ const CustomClearance = ({ navigation }) => {
               {/* Mapped document list */}
               {FOREIGN_PROOF_DOCUMENTS.map((item, index) => (
                 <Text
-                  key={index}
+                  key={`foreign-proof-doc-${index}`}
                   style={{
                     fontFamily: FONT_FAMILY.MEDIUM,
                     fontSize: FONT_SIZE.XS,
@@ -1024,35 +1091,36 @@ const CustomClearance = ({ navigation }) => {
             onPress={toggleCheckbox3}
             style={{
               flexDirection: "row",
-              alignItems: "center",
-              gap: 5,
+              alignItems: "flex-start",
+              gap: 8,
             }}
           >
             {/* Custom box */}
             <View
               style={{
-                width: DEVICE.HEIGHT * 0.021,
-                height: DEVICE.HEIGHT * 0.021,
-                borderWidth: 1.5,
-                borderColor: "gray",
+                width: 16,
+                height: 16,
+                borderWidth: 1,
+                borderColor: checked3 ? "black" : "#ccc",
+                backgroundColor: checked3 ? "black" : "transparent",
                 justifyContent: "center",
                 alignItems: "center",
+                marginTop: 2,
               }}
             >
               {checked3 && (
-                <Text style={{ fontSize: 12, color: 'black' }}>✓</Text>
+                <Text style={{ fontSize: 10, color: 'white' }}>✓</Text>
               )}
             </View>
 
             {/* Label */}
             <Text
               style={{
-                fontFamily: FONT_FAMILY.BOLD,
-                fontSize: FONT_SIZE.S,
+                fontFamily: FONT_FAMILY.MEDIUM,
+                fontSize: FONT_SIZE.XS,
                 color: "black",
                 flex: 1,
-                flexWrap: "wrap",
-                paddingLeft: 5,
+                lineHeight: 18,
               }}
             >
               Billing matches shipping address
@@ -1062,11 +1130,11 @@ const CustomClearance = ({ navigation }) => {
           {/* Place Order Button */}
           <TouchableOpacity
             style={{
-              backgroundColor: "black",
-              borderRadius: 12,
+              backgroundColor: "#000",
+              borderRadius: 8,
               paddingVertical: 16,
-              marginTop: 20,
-              marginHorizontal: 0,
+              marginTop: 40,
+              marginBottom: 20,
               alignItems: "center",
               justifyContent: "center",
             }}
@@ -1075,7 +1143,7 @@ const CustomClearance = ({ navigation }) => {
             <Text
               style={{
                 fontFamily: FONT_FAMILY.BOLD,
-                fontSize: FONT_SIZE.S,
+                fontSize: 16,
                 color: "white",
                 textAlign: "center",
               }}
@@ -1084,7 +1152,7 @@ const CustomClearance = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
           
-          <View style={{ height: 70 }}></View>
+          <View style={{ height: 50 }} />
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
