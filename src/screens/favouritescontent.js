@@ -68,7 +68,7 @@ const FavouritesContent = ({ navigation }) => {
   };
 
   const handleProductPress = (product) => {
-    navigation.navigate('ProductDetailsMain', { 
+    navigation.navigate('FavouritesModalOverlayForSizeSelection', { 
       product, 
       previousScreen: 'FavouritesContent' 
     });

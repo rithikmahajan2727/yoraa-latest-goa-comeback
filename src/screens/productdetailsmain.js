@@ -11,11 +11,13 @@ import {
   FlatList,
   Animated,
   Modal,
+  Share,
 } from 'react-native';
 import Svg, { Circle, G, Path, Defs, ClipPath, Rect } from 'react-native-svg';
 import { FontSizes, FontWeights, Spacing, BorderRadius } from '../constants';
 import BottomNavigationBar from '../components/bottomnavigationbar';
 import SizeSelectionModal from './productdetailsmainsizeselectionchart';
+import GlobalBackButton from '../components/GlobalBackButton';
 
 const { width } = Dimensions.get('window');
 
@@ -29,6 +31,7 @@ const ProductDetailsMain = ({ navigation, route }) => {
   const [selectedProductIndex, setSelectedProductIndex] = useState(0);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [showSizeModal, setShowSizeModal] = useState(false);
+  const [showProductDetails, setShowProductDetails] = useState(false);
   const imageSliderRef = useRef(null);
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
@@ -86,6 +89,31 @@ const ProductDetailsMain = ({ navigation, route }) => {
 
   // Get product data from route params or use default
   const product = route?.params?.product || currentProduct;
+
+  // Share function
+  const handleShare = async () => {
+    try {
+      const message = `Check out this ${currentProduct.name} - ${currentProduct.subtitle}\nPrice: ${currentProduct.discountedPrice}\n\nShop now on Yoraa App!`;
+      
+      const result = await Share.share({
+        message: message,
+        title: currentProduct.name,
+        url: '', // Add your product URL here if available
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      console.error('Error sharing:', error.message);
+    }
+  };
 
   // Mock related products data
   const youMightAlsoLike = [
@@ -172,12 +200,6 @@ const ProductDetailsMain = ({ navigation, route }) => {
   ];
 
   // Icon Components
-  const BackIcon = () => (
-    <View style={styles.backIcon}>
-      <View style={styles.backArrow} />
-    </View>
-  );
-
   const SearchIcon = () => (
     <View style={styles.searchIcon}>
       <View style={styles.searchCircle} />
@@ -212,21 +234,62 @@ const ProductDetailsMain = ({ navigation, route }) => {
   );
 
   const ShareIcon = () => (
-    <View style={styles.shareIcon}>
-      <View style={styles.shareArrow} />
-      <View style={styles.shareBox} />
-    </View>
+    <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <Path 
+        d="M14.2857 5.14289L12.0251 2.85718L9.71425 5.14289M12 2.85718V13.1429M8.57139 7.42861H7.42854C6.82233 7.42861 6.24095 7.66942 5.81229 8.09808C5.38364 8.52673 5.14282 9.10811 5.14282 9.71432V17.7143C5.14282 18.3205 5.38364 18.9019 5.81229 19.3306C6.24095 19.7592 6.82233 20 7.42854 20H16.5714C17.1776 20 17.759 19.7592 18.1876 19.3306C18.6163 18.9019 18.8571 18.3205 18.8571 17.7143V9.71432C18.8571 9.10811 18.6163 8.52673 18.1876 8.09808C17.759 7.66942 17.1776 7.42861 16.5714 7.42861H15.4285" 
+        stroke="#767676" 
+        strokeWidth="1.5" 
+        strokeLinecap="round" 
+        strokeLinejoin="round"
+      />
+    </Svg>
+  );
+
+  const RedBannerIcon = () => (
+    <Svg width="82" height="39" viewBox="0 0 82 39" fill="none">
+      <Rect y="2.99023" width="80.5495" height="35.9825" transform="rotate(-2.12758 0 2.99023)" fill="#EA4335"/>
+    </Svg>
   );
 
   const UpArrowIcon = () => (
-    <View style={styles.upArrow}>
-      <View style={styles.arrowLine} />
-    </View>
+    <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <G clipPath="url(#clip0_10602_37010)">
+        <Path 
+          d="M4.5 15L12 7.5L19.5 15" 
+          stroke="black" 
+          strokeWidth="2" 
+          strokeLinecap="round" 
+          strokeLinejoin="round"
+        />
+      </G>
+      <Defs>
+        <ClipPath id="clip0_10602_37010">
+          <Rect 
+            width="24" 
+            height="24" 
+            fill="white" 
+            transform="matrix(-1 0 0 -1 24 24)"
+          />
+        </ClipPath>
+      </Defs>
+    </Svg>
   );
 
   const StarIcon = ({ filled = true }) => (
     <View style={styles.starIcon}>
-      <View style={[styles.star, filled && styles.starFilled]} />
+      <Svg width="18" height="18" viewBox="0 0 32 32" fill="none">
+        <G clipPath="url(#clip0)">
+          <Path
+            d="M15.1307 5.88797C15.2673 5.55946 15.7327 5.55945 15.8693 5.88797L17.3899 9.54398C17.4476 9.68248 17.5778 9.77711 17.7273 9.78909L21.6743 10.1055C22.0289 10.134 22.1728 10.5766 21.9025 10.808L18.8954 13.384C18.7815 13.4816 18.7317 13.6347 18.7665 13.7806L19.6852 17.6322C19.7678 17.9782 19.3913 18.2518 19.0877 18.0663L15.7085 16.0024C15.5805 15.9242 15.4195 15.9242 15.2915 16.0024L11.9123 18.0663C11.6087 18.2518 11.2322 17.9782 11.3148 17.6322L12.2335 13.7806C12.2683 13.6347 12.2185 13.4816 12.1046 13.384L9.09746 10.808C8.82724 10.5766 8.97105 10.134 9.32572 10.1055L13.2727 9.78909C13.4222 9.77711 13.5525 9.68248 13.6101 9.54398L15.1307 5.88797Z"
+            fill={filled ? "#FBBC05" : "#E5E5E5"}
+          />
+        </G>
+        <Defs>
+          <ClipPath id="clip0">
+            <Rect width="32" height="32" fill="white"/>
+          </ClipPath>
+        </Defs>
+      </Svg>
     </View>
   );
 
@@ -243,7 +306,7 @@ const ProductDetailsMain = ({ navigation, route }) => {
     }
   };
 
-  const handleBackPress = () => {
+  const handleCustomBackPress = () => {
     if (navigation) {
       // Check if we came from orders screen via "Buy It Again"
       if (route?.params?.order) {
@@ -391,12 +454,20 @@ const ProductDetailsMain = ({ navigation, route }) => {
       
       <View style={styles.priceContainer}>
         <Text style={styles.originalPrice}>{currentProduct.originalPrice}</Text>
-        <Text style={styles.discountedPrice}>{currentProduct.discountedPrice}</Text>
+        <View style={styles.discountedPriceContainer}>
+          <View style={styles.redBannerContainer}>
+            <RedBannerIcon />
+          </View>
+          <Text style={styles.discountedPrice}>{currentProduct.discountedPrice}</Text>
+        </View>
       </View>
 
-      <TouchableOpacity style={styles.viewDetailsButton}>
+      <TouchableOpacity 
+        style={styles.viewDetailsContainer}
+        onPress={() => setShowProductDetails(!showProductDetails)}
+      >
         <Text style={styles.viewDetailsText}>View Product Details</Text>
-        <TouchableOpacity style={styles.shareButton}>
+        <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
           <ShareIcon />
         </TouchableOpacity>
       </TouchableOpacity>
@@ -520,21 +591,25 @@ const ProductDetailsMain = ({ navigation, route }) => {
 
   const renderContentSections = () => (
     <View style={styles.contentContainer}>
-      <Text style={styles.contentTitle}>Description & Specifications</Text>
-      <Text style={styles.contentDescription}>
-        The Nike Everyday Plus Cushioned Socks bring comfort to your workout with extra cushioning under the heel and forefoot and a snug, supportive arch band. Sweat-wicking power and breathability up top help keep your feet dry and cool to help push you through that extra set.
-      </Text>
+      {showProductDetails && (
+        <>
+          <Text style={styles.contentTitle}>Description & Specifications</Text>
+          <Text style={styles.contentDescription}>
+            The Nike Everyday Plus Cushioned Socks bring comfort to your workout with extra cushioning under the heel and forefoot and a snug, supportive arch band. Sweat-wicking power and breathability up top help keep your feet dry and cool to help push you through that extra set.
+          </Text>
 
-      {renderExpandableSection(
-        'Manufacturing Details',
-        'manufacturing',
-        'Cushioning under the forefoot and heel helps soften the impact of your workout.\n\nDri-FIT technology helps your feet stay dry and comfortable.\n\nBand around the arch feels snug and supportive.\n\nBreathable knit pattern on top adds ventilation.\n\nReinforced heel and toe are made to last.'
-      )}
+          {renderExpandableSection(
+            'Manufacturing Details',
+            'manufacturing',
+            'Cushioning under the forefoot and heel helps soften the impact of your workout.\n\nDri-FIT technology helps your feet stay dry and comfortable.\n\nBand around the arch feels snug and supportive.\n\nBreathable knit pattern on top adds ventilation.\n\nReinforced heel and toe are made to last.'
+          )}
 
-      {renderExpandableSection(
-        'Shipping,Return & Exchanges',
-        'shipping',
-        'Fabric: 61-67% cotton/30-36% polyester/2% spandex/1% nylon\n\nMachine wash\n\nImported\n\nNote: Material percentages may vary slightly depending on color. Check label for actual content.\n\nShown: Multi-Color\n\nStyle: SX6897-965'
+          {renderExpandableSection(
+            'Shipping,Return & Exchanges',
+            'shipping',
+            'Fabric: 61-67% cotton/30-36% polyester/2% spandex/1% nylon\n\nMachine wash\n\nImported\n\nNote: Material percentages may vary slightly depending on color. Check label for actual content.\n\nShown: Multi-Color\n\nStyle: SX6897-965'
+          )}
+        </>
       )}
 
       <View style={styles.buyNowContainer}>
@@ -546,10 +621,10 @@ const ProductDetailsMain = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Size and Fit Section */}
+      {/* Size and Fit Section - Always visible */}
       {renderSizeAndFitSection()}
 
-      {/* Rating Section */}
+      {/* Rating Section - Always visible */}
       {renderRatingSection()}
     </View>
   );
@@ -619,9 +694,13 @@ const ProductDetailsMain = ({ navigation, route }) => {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.headerButton} onPress={handleBackPress}>
-          <BackIcon />
-        </TouchableOpacity>
+        <GlobalBackButton 
+          navigation={navigation}
+          style={styles.headerButton}
+          iconColor="#000000"
+          iconSize={24}
+          onPress={handleCustomBackPress}
+        />
         <Text style={styles.headerTitle}>Nike Everyday Plus Cush...</Text>
       </View>
 
@@ -716,14 +795,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingTop: 54,
+    paddingBottom: 12,
     backgroundColor: '#FFFFFF',
-    height: 66,
+    borderBottomWidth: 0,
   },
   headerButton: {
     width: 68,
-    alignItems: 'center',
-    padding: 8,
+    alignItems: 'flex-start',
+    paddingVertical: 8,
+    paddingLeft: 0,
   },
   headerTitle: {
     flex: 1,
@@ -733,6 +814,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'Montserrat-Medium',
     letterSpacing: -0.4,
+    marginRight: 68,
   },
 
   scrollContainer: {
@@ -829,36 +911,38 @@ const styles = StyleSheet.create({
   thumbnailContainer: {
     flexDirection: 'row',
     height: 123,
-    marginTop: 4,
-    paddingHorizontal: 4,
-    gap: 4,
+    marginTop: 0,
+    paddingHorizontal: 0,
+    gap: 0,
+    borderBottomWidth: 1.5,
+    borderBottomColor: '#000000',
   },
   thumbnailImage: {
     flex: 1,
     backgroundColor: 'transparent',
     position: 'relative',
-    borderRadius: 12,
+    borderRadius: 0,
     overflow: 'hidden',
-    borderWidth: 2,
+    borderWidth: 0,
     borderColor: 'transparent',
   },
   thumbnailImageContent: {
     flex: 1,
     backgroundColor: '#EEEEEE',
-    borderRadius: 10,
-    shadowColor: '#000',
+    borderRadius: 0,
+    shadowColor: 'transparent',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 0,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOpacity: 0,
+    shadowRadius: 0,
+    elevation: 0,
   },
   activeThumbnail: {
     borderColor: '#000000',
-    borderWidth: 2,
-    transform: [{ scale: 1.02 }],
+    borderBottomWidth: 1.5,
+    transform: [{ scale: 1 }],
   },
   selectedIndicator: {
     position: 'absolute',
@@ -884,9 +968,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 35,
     paddingBottom: 35,
+    height: 246,
   },
   productDescription: {
-    marginBottom: 16,
+    marginBottom: 24,
   },
   productSubtitle: {
     fontSize: 16,
@@ -907,7 +992,7 @@ const styles = StyleSheet.create({
   priceContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 37,
     gap: 8,
   },
   originalPrice: {
@@ -918,18 +1003,30 @@ const styles = StyleSheet.create({
     textDecorationLine: 'line-through',
     letterSpacing: -0.5,
   },
+  discountedPriceContainer: {
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  redBannerContainer: {
+    position: 'absolute',
+    zIndex: 1,
+  },
   discountedPrice: {
     fontSize: 20,
     fontWeight: '600',
-    color: '#000000',
+    color: '#FFFFFF',
     fontFamily: 'Montserrat-SemiBold',
     letterSpacing: -0.5,
+    zIndex: 2,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
   },
-  viewDetailsButton: {
+  viewDetailsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 8,
+    justifyContent: 'space-between',
+    marginBottom: 13,
   },
   viewDetailsText: {
     fontSize: 20,
@@ -938,10 +1035,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Medium',
     textDecorationLine: 'underline',
     textAlign: 'center',
+    flex: 1,
   },
   shareButton: {
-    marginLeft: 196,
-    padding: 4,
+    position: 'absolute',
+    right: 0,
+    padding: 0,
+    width: 24,
+    height: 24,
   },
   outOfStockText: {
     fontSize: 12,
@@ -949,7 +1050,9 @@ const styles = StyleSheet.create({
     color: '#848688',
     fontFamily: 'Montserrat-Medium',
     textAlign: 'center',
-    marginTop: -3,
+    position: 'absolute',
+    bottom: -3,
+    left: 150,
   },
 
   // Expandable Sections
@@ -1042,7 +1145,7 @@ const styles = StyleSheet.create({
 
   // Rating Section
   ratingSectionContainer: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 22,
     paddingVertical: 20,
   },
   ratingSectionTitle: {
@@ -1051,7 +1154,7 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontFamily: 'Montserrat-Medium',
     lineHeight: 24,
-    marginBottom: 48,
+    marginBottom: 20,
   },
   ratingScoresContainer: {
     flexDirection: 'row',
@@ -1068,7 +1171,7 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontFamily: 'Montserrat-ExtraBold',
     lineHeight: 57.6,
-    marginBottom: 16,
+    marginBottom: 4,
   },
   starsContainer: {
     flexDirection: 'row',
@@ -1386,21 +1489,6 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: '#767676',
     backgroundColor: 'transparent',
-  },
-
-  upArrow: {
-    width: 24,
-    height: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  arrowLine: {
-    width: 8,
-    height: 14,
-    borderLeftWidth: 1,
-    borderTopWidth: 1,
-    borderColor: '#14142B',
-    transform: [{ rotate: '45deg' }],
   },
 
   starIcon: {

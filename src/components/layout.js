@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import BottomNavigationBar from './bottomnavigationbar';
 import { Colors, FontSizes, FontWeights, Spacing } from '../constants';
-import { HomeScreen, FavouritesScreen, FavouritesContent, FavouritesContentEditView, ShopScreen, CollectionScreen, FiltersScreen, SearchScreen, ScanBarcodeFlow, RewardsScreen, ProfileScreen, BagScreen, CreateAccountMobileNumber, CreateAccountEmail, CreateAccountEmailSuccessModal, CreateAccountMobileNumberVerification, CreateAccountMobileNumberAccountCreatedConfirmationModal, LoginAccountMobileNumber, LoginAccountEmail, ForgotLoginPassword, ForgotLoginPasswordVerificationCode, ForgotLoginPasswordCreateNewPassword, ForgotLoginPasswordConfirmationModal, LoginAccountMobileNumberVerificationCode, LoginAccountEmailVerificationCode, TermsAndConditions, PreferenceSelector, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, DeleteAccountConfirmation, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen, ProductViewOne, ProductViewTwo, ProductViewThree, ProductDetailsMain, ProductDetailsMainReview, ProductDetailsReviewThreePointSelection, ProductDetailsWrittenUserReview, DeliveryOptionsStepOneScreen, Language, Region, MembersExclusive, PointsHistory, InviteAFriend, OrdersReturnExchange, OrdersExchangeSizeSelectionChart, OrdersCancelOrderModal, OrdersReturnRequest, OrdersReturnAcceptedModal, Inbox, OrderConfirmationPhone, DeliveryOptionsStepFourIfCustomRequired } from '../screens';
+import { HomeScreen, FavouritesScreen, FavouritesContent, FavouritesContentEditView, FavouritesModalOverlayForSizeSelection, FavouritesAddedToBagConfirmationModal, FavouritesSizeChartReference, ShopScreen, CollectionScreen, FiltersScreen, SearchScreen, ScanBarcodeFlow, RewardsScreen, ProfileScreen, BagScreen, CreateAccountMobileNumber, CreateAccountEmail, CreateAccountEmailSuccessModal, CreateAccountMobileNumberVerification, CreateAccountMobileNumberAccountCreatedConfirmationModal, LoginAccountMobileNumber, LoginAccountEmail, ForgotLoginPassword, ForgotLoginPasswordVerificationCode, ForgotLoginPasswordCreateNewPassword, ForgotLoginPasswordConfirmationModal, LoginAccountMobileNumberVerificationCode, LoginAccountEmailVerificationCode, TermsAndConditions, PreferenceSelector, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, DeleteAccountConfirmation, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen, ProductViewOne, ProductViewTwo, ProductViewThree, ProductDetailsMain, ProductDetailsMainReview, ProductDetailsReviewThreePointSelection, ProductDetailsWrittenUserReview, DeliveryOptionsStepOneScreen, Language, Region, MembersExclusive, PointsHistory, InviteAFriend, OrdersReturnExchange, OrdersExchangeSizeSelectionChart, OrdersCancelOrderModal, OrdersReturnRequest, OrdersReturnAcceptedModal, Inbox, OrderConfirmationPhone, DeliveryOptionsStepFourIfCustomRequired } from '../screens';
 
 // Placeholder content components for each tab
 const HomeContent = ({ navigation }) => <HomeScreen navigation={navigation} />;
@@ -79,6 +79,12 @@ const EnhancedLayout = () => {
         return <FavouritesContent navigation={navigation} />;
       case 'FavouritesContentEditView':
         return <FavouritesContentEditView navigation={navigation} />;
+      case 'FavouritesModalOverlayForSizeSelection':
+        return <FavouritesModalOverlayForSizeSelection navigation={navigation} route={{ params: routeParams }} />;
+      case 'FavouritesAddedToBagConfirmationModal':
+        return <FavouritesAddedToBagConfirmationModal navigation={navigation} route={{ params: routeParams }} />;
+      case 'FavouritesSizeChartReference':
+        return <FavouritesSizeChartReference navigation={navigation} route={{ params: routeParams }} />;
       case 'Shop':
         return <ShopContent navigation={navigation} />;
       case 'Collection':

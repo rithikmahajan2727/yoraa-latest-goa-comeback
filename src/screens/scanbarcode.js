@@ -187,7 +187,7 @@ const CameraScanningScreen = ({ navigation }) => {
       easing: Easing.out(Easing.ease),
       useNativeDriver: true,
     }).start(() => {
-      navigation.navigate('Search');
+      navigation.navigate('SearchScreen');
     });
   };
 
@@ -294,7 +294,7 @@ const EnterGTINScreen = ({ navigation }) => {
       useNativeDriver: true,
     }).start(() => {
       setShowSuccessModal(false);
-      navigation.navigate('Search');
+      navigation.navigate('ProductDetailsMain');
     });
   };
 
@@ -398,8 +398,8 @@ const ScanBarcodeFlow = ({ navigation, route }) => {
         case 'EnterGTIN':
           setCurrentStep('gtin');
           break;
-        case 'Search':
-          navigation.goBack();
+        case 'SearchScreen':
+          navigation.navigate('SearchScreen');
           break;
         default:
           navigation.navigate(screenName, params);
@@ -411,10 +411,13 @@ const ScanBarcodeFlow = ({ navigation, route }) => {
           setCurrentStep('instruction');
           break;
         case 'camera':
-          setCurrentStep('manual');
+          navigation.navigate('SearchScreen');
           break;
         case 'gtin':
           setCurrentStep('camera');
+          break;
+        case 'instruction':
+          navigation.navigate('SearchScreen');
           break;
         default:
           navigation.goBack();

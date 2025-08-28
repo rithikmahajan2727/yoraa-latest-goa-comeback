@@ -4,19 +4,37 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  ScrollView,
   Modal,
+  ScrollView,
   Dimensions,
+  PanResponder,
 } from 'react-native';
 import { Colors, FontFamilies } from '../constants';
 
-const { height } = Dimensions.get('window');
+const { width: screenWidth } = Dimensions.get('window');
 
-const FavouritesSizeChartReference = ({ visible, onClose }) => {
+const FavouritesSizeChartReference = ({ route, navigation }) => {
   const [activeTab, setActiveTab] = useState('sizeChart'); // 'sizeChart' or 'howToMeasure'
-  const [selectedUnit, setSelectedUnit] = useState('cm'); // 'in' or 'cm'
+  const [measurementUnit, setMeasurementUnit] = useState('cm'); // 'in' or 'cm'
 
-  const sizeData = [
+  // PanResponder for handling swipe down gesture on header area
+  const panResponder = PanResponder.create({
+    onMoveShouldSetPanResponder: (evt, gestureState) => {
+      // Respond to downward swipes
+      return gestureState.dy > 10 && Math.abs(gestureState.dy) > Math.abs(gestureState.dx);
+    },
+    onPanResponderMove: (evt, gestureState) => {
+      // You can add visual feedback here if needed
+    },
+    onPanResponderRelease: (evt, gestureState) => {
+      // Check if it's a swipe down gesture (positive dy, minimum distance)
+      if (gestureState.dy > 50 && gestureState.vy > 0.3) {
+        handleClose();
+      }
+    },
+  });
+
+  const sizeChartData = [
     { size: 'S', waist: '71.1', inseam: '70.1' },
     { size: 'M', waist: '71.1', inseam: '70.1' },
     { size: 'L', waist: '71.1', inseam: '70.1' },
@@ -24,23 +42,36 @@ const FavouritesSizeChartReference = ({ visible, onClose }) => {
     { size: 'XXL', waist: '71.1', inseam: '70.1' },
   ];
 
+  const sizeChartDataInches = [
+    { size: 'S', waist: '28.0', inseam: '27.6' },
+    { size: 'M', waist: '28.0', inseam: '27.6' },
+    { size: 'L', waist: '28.0', inseam: '27.6' },
+    { size: 'XL', waist: '28.0', inseam: '27.6' },
+    { size: 'XXL', waist: '28.0', inseam: '27.6' },
+  ];
+
+  const handleClose = () => {
+    // Navigate back to the size selection modal
+    navigation.navigate('FavouritesModalOverlayForSizeSelection', route.params);
+  };
+
   const renderSizeChart = () => (
-    <View style={styles.sizeChartContainer}>
-      {/* Unit Selection */}
-      <View style={styles.unitSelectionHeader}>
-        <Text style={styles.unitSelectionLabel}>Select size in</Text>
-        <View style={styles.unitToggleContainer}>
+    <View style={styles.contentContainer}>
+      {/* Unit Toggle */}
+      <View style={styles.unitToggleContainer}>
+        <Text style={styles.selectSizeText}>Select size in</Text>
+        <View style={styles.unitToggle}>
           <TouchableOpacity
             style={[
-              styles.unitOption,
-              selectedUnit === 'in' && styles.unitOptionInactive,
+              styles.unitButton,
+              measurementUnit === 'in' && styles.unitButtonActive,
             ]}
-            onPress={() => setSelectedUnit('in')}
+            onPress={() => setMeasurementUnit('in')}
           >
             <Text
               style={[
-                styles.unitText,
-                selectedUnit === 'in' && styles.unitTextInactive,
+                styles.unitButtonText,
+                measurementUnit === 'in' && styles.unitButtonTextActive,
               ]}
             >
               in
@@ -48,15 +79,15 @@ const FavouritesSizeChartReference = ({ visible, onClose }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[
-              styles.unitOptionActive,
-              selectedUnit === 'cm' && styles.unitOptionActiveSelected,
+              styles.unitButton,
+              measurementUnit === 'cm' && styles.unitButtonActive,
             ]}
-            onPress={() => setSelectedUnit('cm')}
+            onPress={() => setMeasurementUnit('cm')}
           >
             <Text
               style={[
-                styles.unitTextActive,
-                selectedUnit === 'cm' && styles.unitTextActiveSelected,
+                styles.unitButtonText,
+                measurementUnit === 'cm' && styles.unitButtonTextActive,
               ]}
             >
               cm
@@ -65,90 +96,143 @@ const FavouritesSizeChartReference = ({ visible, onClose }) => {
         </View>
       </View>
 
-      {/* Size Table */}
+      {/* Size Chart Table */}
       <View style={styles.tableContainer}>
         {/* Table Header */}
         <View style={styles.tableHeader}>
           <Text style={styles.tableHeaderText}>Size</Text>
-          <Text style={styles.tableHeaderText}>To fit waist({selectedUnit})</Text>
-          <Text style={styles.tableHeaderText}>Inseam Length({selectedUnit})</Text>
+          <Text style={styles.tableHeaderText}>
+            To fit waist({measurementUnit})
+          </Text>
+          <Text style={styles.tableHeaderText}>
+            Inseam Length({measurementUnit})
+          </Text>
         </View>
 
         {/* Table Rows */}
-        {sizeData.map((item, index) => (
-          <View key={index} style={styles.tableRow}>
-            <Text style={styles.tableCellText}>{item.size}</Text>
-            <Text style={styles.tableCellText}>{item.waist}</Text>
-            <Text style={styles.tableCellText}>{item.inseam}</Text>
-          </View>
-        ))}
+        {(measurementUnit === 'cm' ? sizeChartData : sizeChartDataInches).map(
+          (item, index, array) => (
+            <View 
+              key={item.size} 
+              style={[
+                styles.tableRow,
+                index === array.length - 1 && styles.lastTableRow
+              ]}
+            >
+              <Text style={styles.tableCellText}>{item.size}</Text>
+              <Text style={styles.tableCellText}>{item.waist}</Text>
+              <Text style={styles.tableCellText}>{item.inseam}</Text>
+            </View>
+          )
+        )}
       </View>
     </View>
   );
 
   const renderHowToMeasure = () => (
-    <View style={styles.howToMeasureContainer}>
-      <Text style={styles.comingSoonText}>
-        How To Measure instructions coming soon...
-      </Text>
+    <View style={styles.contentContainer}>
+      <View style={styles.measurementImageContainer}>
+        <View style={styles.measurementPlaceholder}>
+          {/* Placeholder for measurement illustration */}
+          <View style={styles.pantsDiagram}>
+            {/* Waist measurement */}
+            <View style={styles.waistMeasurement}>
+              <Text style={styles.measurementLabel}>To Fit Waist</Text>
+              <View style={styles.measurementLine} />
+            </View>
+            
+            {/* Rise measurement */}
+            <View style={styles.riseMeasurement}>
+              <Text style={styles.measurementLabel}>Rise</Text>
+            </View>
+            
+            {/* Thigh measurement */}
+            <View style={styles.thighMeasurement}>
+              <Text style={styles.measurementLabel}>Thigh</Text>
+            </View>
+            
+            {/* Inseam measurement */}
+            <View style={styles.inseamMeasurement}>
+              <Text style={styles.measurementLabel}>Inseam</Text>
+              <View style={styles.measurementLineVertical} />
+            </View>
+            
+            {/* Outseam measurement */}
+            <View style={styles.outseamMeasurement}>
+              <Text style={styles.measurementLabel}>Outseam Length</Text>
+            </View>
+            
+            {/* Bottom hem measurement */}
+            <View style={styles.bottomHemMeasurement}>
+              <Text style={styles.measurementLabel}>Bottom Hem</Text>
+            </View>
+          </View>
+        </View>
+      </View>
     </View>
   );
 
   return (
     <Modal
-      visible={visible}
+      visible={true}
       animationType="slide"
-      presentationStyle="pageSheet"
-      onRequestClose={onClose}
+      transparent={true}
+      onRequestClose={handleClose}
     >
-      <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-          {/* Header */}
-          <View style={styles.header}>
+      <View style={styles.overlay}>
+        <TouchableOpacity style={styles.overlayBackground} onPress={handleClose} />
+        <View style={styles.modalContainer}>
+          {/* Header Section with Swipe Gesture */}
+          <View style={styles.headerSection} {...panResponder.panHandlers}>
+            {/* Handle */}
+            <View style={styles.drawerHandle} />
+
+            {/* Header */}
             <Text style={styles.headerTitle}>SIZE SELECTION</Text>
-          </View>
 
-          {/* Tab Container */}
-          <View style={styles.tabContainer}>
-            <TouchableOpacity
-              style={[
-                styles.tab,
-                activeTab === 'sizeChart' && styles.activeTab,
-              ]}
-              onPress={() => setActiveTab('sizeChart')}
-            >
-              <Text
+            {/* Tab Navigation */}
+            <View style={styles.tabContainer}>
+              <TouchableOpacity
                 style={[
-                  styles.tabText,
-                  activeTab === 'sizeChart' && styles.activeTabText,
+                  styles.tab,
+                  activeTab === 'sizeChart' && styles.activeTab,
                 ]}
+                onPress={() => setActiveTab('sizeChart')}
               >
-                Size Chart
-              </Text>
-              {activeTab === 'sizeChart' && <View style={styles.tabUnderline} />}
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.tab,
-                activeTab === 'howToMeasure' && styles.activeTab,
-              ]}
-              onPress={() => setActiveTab('howToMeasure')}
-            >
-              <Text
+                <Text
+                  style={[
+                    styles.tabText,
+                    activeTab === 'sizeChart' && styles.activeTabText,
+                  ]}
+                >
+                  Size Chart
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={[
-                  styles.tabText,
-                  activeTab === 'howToMeasure' && styles.activeTabText,
+                  styles.tab,
+                  activeTab === 'howToMeasure' && styles.activeTab,
                 ]}
+                onPress={() => setActiveTab('howToMeasure')}
               >
-                How To Measure
-              </Text>
-              {activeTab === 'howToMeasure' && <View style={styles.tabUnderline} />}
-            </TouchableOpacity>
+                <Text
+                  style={[
+                    styles.tabText,
+                    activeTab === 'howToMeasure' && styles.activeTabText,
+                  ]}
+                >
+                  How To Measure
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           {/* Content */}
-          <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+          <ScrollView 
+            style={styles.scrollContainer} 
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContentContainer}
+          >
             {activeTab === 'sizeChart' ? renderSizeChart() : renderHowToMeasure()}
           </ScrollView>
         </View>
@@ -158,173 +242,227 @@ const FavouritesSizeChartReference = ({ visible, onClose }) => {
 };
 
 const styles = StyleSheet.create({
-  modalContainer: {
+  overlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'flex-end',
   },
-  modalContent: {
-    backgroundColor: Colors.white,
-    borderTopLeftRadius: 36,
-    borderTopRightRadius: 36,
-    maxHeight: height * 0.8,
-    paddingBottom: 20,
+  overlayBackground: {
+    flex: 1,
   },
-  header: {
-    alignItems: 'center',
-    paddingVertical: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.lightGray,
+  modalContainer: {
+    backgroundColor: Colors.white,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    paddingBottom: 34,
+    height: '85%',
+    flex: 1,
+  },
+  headerSection: {
+    backgroundColor: Colors.white,
+  },
+  drawerHandle: {
+    width: 64,
+    height: 6,
+    backgroundColor: '#E6E6E6',
+    borderRadius: 40,
+    alignSelf: 'center',
+    marginTop: 8,
+    marginBottom: 16,
   },
   headerTitle: {
     fontSize: 16,
-    fontFamily: FontFamilies.montserratMedium,
+    fontWeight: '500',
+    fontFamily: FontFamilies.montserrat,
     color: Colors.black,
     textAlign: 'center',
+    marginBottom: 24,
+    letterSpacing: -0.16,
   },
   tabContainer: {
     flexDirection: 'row',
-    backgroundColor: Colors.white,
-    height: 51,
-    alignItems: 'center',
+    marginHorizontal: 24,
+    marginBottom: 24,
   },
   tab: {
     flex: 1,
+    paddingVertical: 12,
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 16,
-    position: 'relative',
+    borderBottomWidth: 2,
+    borderBottomColor: 'transparent',
   },
   activeTab: {
-    backgroundColor: Colors.white,
+    borderBottomColor: Colors.black,
   },
   tabText: {
     fontSize: 16,
-    fontFamily: FontFamilies.montserratMedium,
-    color: Colors.black,
+    fontWeight: '400',
+    fontFamily: FontFamilies.montserrat,
+    color: '#767676',
+    letterSpacing: -0.16,
   },
   activeTabText: {
-    fontFamily: FontFamilies.montserratSemiBold,
     color: Colors.black,
+    fontWeight: '500',
   },
-  tabUnderline: {
-    position: 'absolute',
-    bottom: 0,
-    height: 2,
-    backgroundColor: Colors.black,
-    width: '88%',
-    borderRadius: 50,
-  },
-  content: {
+  scrollContainer: {
     flex: 1,
-    paddingHorizontal: 0,
   },
-  sizeChartContainer: {
-    flex: 1,
-    backgroundColor: Colors.white,
+  scrollContentContainer: {
+    flexGrow: 1,
+    paddingBottom: 20,
   },
-  unitSelectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    backgroundColor: Colors.white,
-    height: 45,
-  },
-  unitSelectionLabel: {
-    fontSize: 14,
-    fontFamily: FontFamilies.montserratRegular,
-    color: Colors.black,
+  contentContainer: {
+    paddingHorizontal: 24,
+    paddingBottom: 40,
   },
   unitToggleContainer: {
     flexDirection: 'row',
-    backgroundColor: '#EDEDED',
-    borderRadius: 50,
-    width: 80,
-    height: 30,
-    position: 'relative',
-  },
-  unitOption: {
-    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 50,
+    justifyContent: 'space-between',
+    marginBottom: 24,
   },
-  unitOptionActive: {
-    flex: 1,
+  selectSizeText: {
+    fontSize: 14,
+    fontWeight: '400',
+    fontFamily: FontFamilies.montserrat,
+    color: Colors.black,
+    letterSpacing: -0.14,
+  },
+  unitToggle: {
+    flexDirection: 'row',
+    backgroundColor: '#F6F6F6',
+    borderRadius: 20,
+    padding: 2,
+  },
+  unitButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 18,
+    minWidth: 40,
     alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 50,
+  },
+  unitButtonActive: {
     backgroundColor: Colors.black,
   },
-  unitOptionActiveSelected: {
-    backgroundColor: Colors.black,
+  unitButtonText: {
+    fontSize: 14,
+    fontWeight: '400',
+    fontFamily: FontFamilies.montserrat,
+    color: '#767676',
+    letterSpacing: -0.14,
   },
-  unitOptionInactive: {
-    backgroundColor: 'transparent',
-  },
-  unitText: {
-    fontSize: 12,
-    fontFamily: FontFamilies.montserratRegular,
-    color: Colors.black,
-  },
-  unitTextActive: {
-    fontSize: 12,
-    fontFamily: FontFamilies.montserratSemiBold,
+  unitButtonTextActive: {
     color: Colors.white,
-  },
-  unitTextActiveSelected: {
-    color: Colors.white,
-  },
-  unitTextInactive: {
-    color: Colors.black,
   },
   tableContainer: {
-    marginTop: 0,
-    backgroundColor: Colors.white,
+    borderWidth: 1,
+    borderColor: '#E4E4E4',
+    borderRadius: 8,
+    overflow: 'hidden',
   },
   tableHeader: {
     flexDirection: 'row',
     backgroundColor: Colors.black,
-    height: 45,
-    alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
   },
   tableHeaderText: {
     flex: 1,
-    fontSize: 13,
-    fontFamily: FontFamilies.montserratSemiBold,
+    fontSize: 12,
+    fontWeight: '500',
+    fontFamily: FontFamilies.montserrat,
     color: Colors.white,
-    textAlign: 'left',
+    textAlign: 'center',
+    letterSpacing: -0.12,
   },
   tableRow: {
     flexDirection: 'row',
-    backgroundColor: Colors.white,
-    height: 45,
-    alignItems: 'center',
-    paddingHorizontal: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#F2F2F2',
+    borderBottomColor: '#E4E4E4',
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+  },
+  lastTableRow: {
+    borderBottomWidth: 0,
   },
   tableCellText: {
     flex: 1,
-    fontSize: 16,
-    fontFamily: FontFamilies.montserratRegular,
+    fontSize: 14,
+    fontWeight: '400',
+    fontFamily: FontFamilies.montserrat,
     color: Colors.black,
-    textAlign: 'left',
-  },
-  howToMeasureContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 50,
-  },
-  comingSoonText: {
-    fontSize: 16,
-    fontFamily: FontFamilies.montserratMedium,
-    color: Colors.gray,
     textAlign: 'center',
+    letterSpacing: -0.14,
+  },
+  measurementImageContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 24,
+  },
+  measurementPlaceholder: {
+    width: screenWidth - 48,
+    height: 400,
+    backgroundColor: '#F6F6F6',
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  pantsDiagram: {
+    width: 200,
+    height: 350,
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  waistMeasurement: {
+    position: 'absolute',
+    top: 20,
+    alignItems: 'center',
+  },
+  measurementLabel: {
+    fontSize: 12,
+    fontWeight: '400',
+    fontFamily: FontFamilies.montserrat,
+    color: '#767676',
+    marginBottom: 4,
+  },
+  measurementLine: {
+    width: 80,
+    height: 1,
+    backgroundColor: '#767676',
+  },
+  measurementLineVertical: {
+    width: 1,
+    height: 120,
+    backgroundColor: '#767676',
+  },
+  riseMeasurement: {
+    position: 'absolute',
+    top: 80,
+    left: -60,
+  },
+  thighMeasurement: {
+    position: 'absolute',
+    top: 140,
+    left: -60,
+  },
+  inseamMeasurement: {
+    position: 'absolute',
+    top: 100,
+    right: -80,
+    alignItems: 'center',
+  },
+  outseamMeasurement: {
+    position: 'absolute',
+    top: 200,
+    right: -80,
+  },
+  bottomHemMeasurement: {
+    position: 'absolute',
+    bottom: 20,
+    alignItems: 'center',
   },
 });
 
