@@ -51,7 +51,7 @@ const DeleteAccount = ({ navigation }) => {
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.backButton} 
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate('Settings')}
         >
           <Text style={styles.backButtonText}>‹</Text>
         </TouchableOpacity>

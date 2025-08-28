@@ -19,6 +19,7 @@ export { default as ForgotLoginPasswordVerificationCode } from './forgotloginpas
 export { default as ForgotLoginPasswordCreateNewPassword } from './forgotloginpqasswordcreatenewpasword';
 export { default as ForgotLoginPasswordConfirmationModal } from './forgotloginpasswordconfirmationmodal';
 export { default as LoginAccountMobileNumberVerificationCode } from './loginaccountmobilenumberverificationcode';
+export { default as LoginAccountEmailVerificationCode } from './loginaccountemailverificationcode';
 export { default as TermsAndConditions } from './termsandconditions';
 export { default as PreferenceSelector } from './preferenceselector';
 export { default as OrdersScreen } from './orders';

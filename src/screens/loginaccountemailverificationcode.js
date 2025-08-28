@@ -10,17 +10,18 @@ import {
 } from 'react-native';
 import GlobalBackButton from '../components/GlobalBackButton';
 
-const LoginAccountMobileNumberVerificationCode = ({ navigation }) => {
+const LoginAccountEmailVerificationCode = ({ navigation, route }) => {
   const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
   const [resendTimer, setResendTimer] = useState(30);
   const inputRefs = useRef([]);
+  const email = route?.params?.email || '';
 
   const handleVerification = () => {
     // Handle verification logic
     const code = verificationCode.join('');
-    console.log('Login verification code:', code);
+    console.log('Email login verification code:', code);
     
-    // Navigate to Terms and Conditions screen after successful login verification
+    // Navigate to Terms and Conditions screen after successful email login verification
     if (navigation) {
       navigation.navigate('TermsAndConditions');
     }
@@ -47,7 +48,7 @@ const LoginAccountMobileNumberVerificationCode = ({ navigation }) => {
 
   const handleResendCode = () => {
     // Handle resend code logic
-    console.log('Resend login verification code');
+    console.log('Resend email verification code to:', email);
     setResendTimer(30);
     // Reset timer countdown logic would go here
   };
@@ -61,15 +62,15 @@ const LoginAccountMobileNumberVerificationCode = ({ navigation }) => {
         <View style={styles.header}>
           <GlobalBackButton 
             navigation={navigation}
-            onPress={() => navigation && navigation.navigate('LoginAccountMobileNumber')}
+            onPress={() => navigation && navigation.navigate('LoginAccountEmail')}
           />
         </View>
 
         {/* Title */}
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Verify your mobile number</Text>
+          <Text style={styles.title}>Verify your email</Text>
           <Text style={styles.subtitle}>
-            We've sent a 6-digit verification code to your mobile number for login
+            We've sent a 6-digit verification code to your email for login
           </Text>
         </View>
 
@@ -238,4 +239,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginAccountMobileNumberVerificationCode;
+export default LoginAccountEmailVerificationCode;

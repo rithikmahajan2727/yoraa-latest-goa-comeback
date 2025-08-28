@@ -36,6 +36,18 @@ const LinkedAccountScreen = ({ navigation }) => {
     // Add update functionality here
   };
 
+  const handleBack = () => {
+    // Animate out then navigate back to settings
+    Animated.timing(slideAnim, {
+      toValue: 300,
+      duration: 300,
+      easing: Easing.in(Easing.back(1.7)),
+      useNativeDriver: true,
+    }).start(() => {
+      navigation.navigate('Settings');
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Animated.View 
@@ -50,6 +62,7 @@ const LinkedAccountScreen = ({ navigation }) => {
         <View style={styles.header}>
           <GlobalBackButton 
             navigation={navigation}
+            onPress={handleBack}
             animationDuration={300}
             customEasing={Easing.in(Easing.back(1.7))}
           />

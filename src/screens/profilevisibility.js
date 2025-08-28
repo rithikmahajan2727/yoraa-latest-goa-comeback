@@ -51,7 +51,7 @@ const ProfileVisibilityScreen = ({ navigation }) => {
       easing: Easing.in(Easing.back(1.7)),
       useNativeDriver: true,
     }).start(() => {
-      navigation.goBack();
+      navigation.navigate('Settings');
     });
   };
 

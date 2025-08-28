@@ -8,6 +8,7 @@ import {
   TextInput,
   ScrollView,
 } from 'react-native';
+import GlobalBackButton from '../components/GlobalBackButton';
 
 const LoginAccountEmail = ({ navigation }) => {
   const [isEmailSelected, setIsEmailSelected] = useState(true);
@@ -15,20 +16,13 @@ const LoginAccountEmail = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSkip = () => {
-    // Navigate back or to next screen
-    if (navigation) {
-      navigation.goBack();
-    }
-  };
-
   const handleLogin = () => {
     // Handle login logic
     console.log('Login with email:', { email, password });
     // You can add validation and API call here
-    // After successful login, navigate to terms and conditions
+    // Navigate to email verification screen for login
     if (navigation) {
-      navigation.navigate('TermsAndConditions');
+      navigation.navigate('LoginAccountEmailVerificationCode', { email });
     }
   };
 
@@ -71,11 +65,12 @@ const LoginAccountEmail = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-        {/* Header with Skip button */}
+        {/* Header with Global Back button */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={handleSkip} style={styles.skipButton}>
-            <Text style={styles.skipText}>SKIP</Text>
-          </TouchableOpacity>
+          <GlobalBackButton 
+            navigation={navigation}
+            onPress={() => navigation && navigation.navigate('Rewards')}
+          />
         </View>
 
         {/* Title */}
@@ -213,19 +208,9 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     paddingHorizontal: 32,
     paddingTop: 20,
-  },
-  skipButton: {
-    paddingVertical: 8,
-  },
-  skipText: {
-    fontSize: 14,
-    fontFamily: 'Montserrat-Regular',
-    color: '#000000',
-    textAlign: 'right',
-    lineHeight: 48,
   },
   titleContainer: {
     paddingHorizontal: 33,

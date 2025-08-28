@@ -8,17 +8,11 @@ import {
   TextInput,
   ScrollView,
 } from 'react-native';
+import GlobalBackButton from '../components/GlobalBackButton';
 
 const LoginAccountMobileNumber = ({ navigation }) => {
   const [mobileNumber, setMobileNumber] = useState('');
   const [loginMethod, setLoginMethod] = useState('phone'); // 'phone' or 'email'
-
-  const handleSkip = () => {
-    // Navigate to Home screen
-    if (navigation) {
-      navigation.navigate('Home');
-    }
-  };
 
   const handleLogin = () => {
     // Handle login logic
@@ -45,11 +39,12 @@ const LoginAccountMobileNumber = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-        {/* Header with Skip button */}
+        {/* Header with Global Back button */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={handleSkip} style={styles.skipButton}>
-            <Text style={styles.skipText}>SKIP</Text>
-          </TouchableOpacity>
+          <GlobalBackButton 
+            navigation={navigation}
+            onPress={() => navigation && navigation.navigate('Rewards')}
+          />
         </View>
 
         {/* Title */}
@@ -79,7 +74,12 @@ const LoginAccountMobileNumber = ({ navigation }) => {
                 styles.toggleButton,
                 loginMethod === 'email' && styles.toggleButtonActive,
               ]}
-              onPress={() => setLoginMethod('email')}
+              onPress={() => {
+                setLoginMethod('email');
+                if (navigation) {
+                  navigation.navigate('LoginAccountEmail');
+                }
+              }}
             >
               <Text style={[
                 styles.toggleText,
@@ -198,19 +198,9 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     paddingHorizontal: 32,
     paddingTop: 20,
-  },
-  skipButton: {
-    paddingVertical: 8,
-  },
-  skipText: {
-    fontSize: 14,
-    fontFamily: 'Montserrat-Regular',
-    color: '#000000',
-    textAlign: 'right',
-    lineHeight: 48,
   },
   titleContainer: {
     paddingHorizontal: 33,

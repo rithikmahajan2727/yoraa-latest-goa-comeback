@@ -41,7 +41,7 @@ const CommunicationPreferences = ({ navigation }) => {
       easing: Easing.out(Easing.back(1.7)),
       useNativeDriver: true,
     }).start(() => {
-      navigation.goBack();
+      navigation.navigate('Settings');
     });
   };
 
@@ -73,6 +73,7 @@ const CommunicationPreferences = ({ navigation }) => {
         <View style={styles.header}>
           <GlobalBackButton 
             navigation={navigation}
+            onPress={handleBack}
             animationDuration={300}
             customEasing={Easing.in(Easing.back(1.7))}
           />

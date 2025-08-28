@@ -9,13 +9,7 @@ import {
   Easing,
 } from 'react-native';
 import GlobalBackButton from '../components/GlobalBackButton';
-
-// Right Arrow Icon Component - Simple Chevron style to match Figma
-const RightArrowIcon = () => (
-  <View style={styles.rightArrowIcon}>
-    <Text style={styles.chevronText}>〉</Text>
-  </View>
-);
+import { ForwardArrowIcon } from '../assets/icons';
 
 const SettingsScreen = ({ navigation }) => {
   const slideAnim = React.useRef(new Animated.Value(300)).current;
@@ -58,6 +52,29 @@ const SettingsScreen = ({ navigation }) => {
     navigation.navigate('DeleteAccount');
   };
 
+  const handleBack = () => {
+    // Immediately navigate to Profile screen if animation fails
+    const navigateToProfile = () => {
+      if (navigation && navigation.navigate) {
+        navigation.navigate('Profile');
+      }
+    };
+
+    // Animate out then navigate back to Profile tab
+    Animated.timing(slideAnim, {
+      toValue: 300,
+      duration: 300,
+      easing: Easing.in(Easing.back(1.7)),
+      useNativeDriver: true,
+    }).start((finished) => {
+      // Always navigate to Profile screen, regardless of navigation history
+      navigateToProfile();
+    });
+
+    // Fallback navigation in case animation fails
+    setTimeout(navigateToProfile, 350);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Animated.View 
@@ -72,8 +89,10 @@ const SettingsScreen = ({ navigation }) => {
         <View style={styles.header}>
           <GlobalBackButton 
             navigation={navigation}
+            onPress={handleBack}
             animationDuration={300}
             customEasing={Easing.in(Easing.back(1.7))}
+            iconSize={22}
           />
           <Text style={styles.headerTitle}>Settings</Text>
           <View style={styles.headerSpacer} />
@@ -83,27 +102,27 @@ const SettingsScreen = ({ navigation }) => {
         <View style={styles.menuContainer}>
           <TouchableOpacity style={styles.menuItem} onPress={handleDeliveryAddresses}>
             <Text style={styles.menuItemText}>Delivery addresses</Text>
-            <RightArrowIcon />
+            <ForwardArrowIcon />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.menuItem} onPress={handleCommunicationPreferences}>
             <Text style={styles.menuItemText}>Communication preferences</Text>
-            <RightArrowIcon />
+            <ForwardArrowIcon />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.menuItem} onPress={handleProfileVisibility}>
             <Text style={styles.menuItemText}>Profile visibility</Text>
-            <RightArrowIcon />
+            <ForwardArrowIcon />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.menuItem} onPress={handleLinkedAccounts}>
             <Text style={styles.menuItemText}>Linked accounts</Text>
-            <RightArrowIcon />
+            <ForwardArrowIcon />
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuItem, styles.lastMenuItem]} onPress={handleDeleteAccount}>
             <Text style={[styles.menuItemText, styles.deleteAccountText]}>Delete account</Text>
-            <RightArrowIcon />
+            <ForwardArrowIcon />
           </TouchableOpacity>
         </View>
       </Animated.View>
@@ -125,9 +144,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 20,
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 32,
     borderBottomWidth: 0,
   },
   backButton: {
@@ -135,13 +154,17 @@ const styles = StyleSheet.create({
     marginLeft: -8,
   },
   headerTitle: {
-    fontSize: 17,
+    fontSize: 18,
     fontWeight: '600',
     color: '#000000',
     textAlign: 'center',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    zIndex: -1,
   },
   headerSpacer: {
-    width: 40, // Same width as back button to center the title
+    width: 24, // Match back button width
   },
 
   // Back Arrow Icon - Simple Chevron
@@ -157,31 +180,19 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
 
-  // Right Arrow Icon - Simple Chevron
-  rightArrowIcon: {
-    width: 20,
-    height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  chevronText: {
-    fontSize: 16,
-    color: '#999999',
-    fontWeight: '400',
-  },
-
   // Menu Styles
   menuContainer: {
     paddingHorizontal: 20,
-    paddingTop: 8,
+    paddingTop: 0,
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 18,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
+    paddingVertical: 20,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#E8E8E8',
+    minHeight: 56,
   },
   lastMenuItem: {
     borderBottomWidth: 0,
@@ -190,9 +201,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '400',
     color: '#000000',
+    lineHeight: 20,
   },
   deleteAccountText: {
-    color: '#000000', // Same as other items based on the design
+    color: '#000000',
   },
 });
 

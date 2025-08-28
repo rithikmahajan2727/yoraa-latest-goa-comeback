@@ -174,7 +174,10 @@ const RewardsScreen = ({ navigation, route }) => {
 
         {/* Sign in and Create Account buttons */}
         <View style={styles.authButtons}>
-          <TouchableOpacity style={styles.signInButton}>
+          <TouchableOpacity 
+            style={styles.signInButton}
+            onPress={() => navigation && navigation.navigate('LoginAccountMobileNumber')}
+          >
             <Text style={styles.signInButtonText}>Sign In</Text>
           </TouchableOpacity>
           <TouchableOpacity 
