@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import BottomNavigationBar from './bottomnavigationbar';
 import { Colors, FontSizes, FontWeights, Spacing } from '../constants';
-import { HomeScreen, ShopScreen, CollectionScreen, SearchScreen, ScanBarcodeFlow, RewardsScreen, ProfileScreen, BagScreen, CreateAccountMobileNumber, CreateAccountMobileNumberVerification, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, DeleteAccountConfirmation, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen, ProductViewOne, ProductViewTwo, ProductViewThree, ProductDetailsMain, ProductDetailsMainReview, ProductDetailsReviewThreePointSelection, ProductDetailsWrittenUserReview, DeliveryOptionsStepOneScreen, Language, Region, MembersExclusive, PointsHistory, InviteAFriend, OrdersReturnExchange, OrdersExchangeSizeSelectionChart, OrdersCancelOrderModal, OrdersReturnRequest, OrdersReturnAcceptedModal, Inbox, OrderConfirmationPhone, DeliveryOptionsStepFourIfCustomRequired } from '../screens';
+import { HomeScreen, ShopScreen, CollectionScreen, SearchScreen, ScanBarcodeFlow, RewardsScreen, ProfileScreen, BagScreen, CreateAccountMobileNumber, CreateAccountEmail, CreateAccountEmailSuccessModal, CreateAccountMobileNumberVerification, CreateAccountMobileNumberAccountCreatedConfirmationModal, LoginAccountMobileNumber, LoginAccountEmail, ForgotLoginPassword, ForgotLoginPasswordVerificationCode, ForgotLoginPasswordCreateNewPassword, ForgotLoginPasswordConfirmationModal, LoginAccountMobileNumberVerificationCode, TermsAndConditions, PreferenceSelector, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, DeleteAccountConfirmation, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen, ProductViewOne, ProductViewTwo, ProductViewThree, ProductDetailsMain, ProductDetailsMainReview, ProductDetailsReviewThreePointSelection, ProductDetailsWrittenUserReview, DeliveryOptionsStepOneScreen, Language, Region, MembersExclusive, PointsHistory, InviteAFriend, OrdersReturnExchange, OrdersExchangeSizeSelectionChart, OrdersCancelOrderModal, OrdersReturnRequest, OrdersReturnAcceptedModal, Inbox, OrderConfirmationPhone, DeliveryOptionsStepFourIfCustomRequired } from '../screens';
 
 // Placeholder content components for each tab
 const HomeContent = ({ navigation }) => <HomeScreen navigation={navigation} />;
@@ -79,10 +79,34 @@ const EnhancedLayout = () => {
         return <BagScreen navigation={navigation} />;
       case 'CreateAccountMobileNumber':
         return <CreateAccountMobileNumber navigation={navigation} />;
+      case 'CreateAccountEmail':
+        return <CreateAccountEmail navigation={navigation} />;
+      case 'CreateAccountEmailSuccessModal':
+        return <CreateAccountEmailSuccessModal navigation={navigation} />;
       case 'CreateAccountMobileNumberVerification':
         return <CreateAccountMobileNumberVerification navigation={navigation} />;
+      case 'CreateAccountMobileNumberAccountCreatedConfirmationModal':
+        return <CreateAccountMobileNumberAccountCreatedConfirmationModal navigation={navigation} />;
+      case 'LoginAccountMobileNumber':
+        return <LoginAccountMobileNumber navigation={navigation} />;
+      case 'LoginAccountEmail':
+        return <LoginAccountEmail navigation={navigation} />;
+      case 'ForgotLoginPassword':
+        return <ForgotLoginPassword navigation={navigation} />;
+      case 'ForgotLoginPasswordVerificationCode':
+        return <ForgotLoginPasswordVerificationCode navigation={navigation} route={{ params: routeParams }} />;
+      case 'forgotloginpqasswordcreatenewpasword':
+        return <ForgotLoginPasswordCreateNewPassword navigation={navigation} route={{ params: routeParams }} />;
+      case 'ForgotLoginPasswordConfirmationModal':
+        return <ForgotLoginPasswordConfirmationModal navigation={navigation} />;
+      case 'LoginAccountMobileNumberVerificationCode':
+        return <LoginAccountMobileNumberVerificationCode navigation={navigation} />;
+      case 'TermsAndConditions':
+        return <TermsAndConditions navigation={navigation} />;
+      case 'PreferenceSelector':
+        return <PreferenceSelector navigation={navigation} />;
       case 'Orders':
-        return <OrdersScreen navigation={navigation} />;
+        return <OrdersScreen navigation={navigation} route={{ params: routeParams }} />;
       case 'OrdersReturnExchange':
         return <OrdersReturnExchange navigation={navigation} route={{ params: routeParams }} />;
       case 'OrdersReturnRequest':

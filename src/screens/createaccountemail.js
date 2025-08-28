@@ -7,16 +7,16 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
-  Dimensions,
 } from 'react-native';
-import { FontSizes, FontWeights, Spacing, BorderRadius, Colors } from '../constants';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-
-const CreateAccountMobileNumber = ({ navigation }) => {
-  const [isPhoneSelected, setIsPhoneSelected] = useState(true);
-  const [mobileNumber, setMobileNumber] = useState('');
-  const [countryCode, setCountryCode] = useState('+91');
+const CreateAccountEmail = ({ navigation }) => {
+  const [isEmailSelected, setIsEmailSelected] = useState(true);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSkip = () => {
     // Navigate back or to next screen
@@ -27,29 +27,29 @@ const CreateAccountMobileNumber = ({ navigation }) => {
 
   const handleSignUp = () => {
     // Handle sign up logic
-    console.log('Sign up with mobile:', countryCode + mobileNumber);
+    console.log('Sign up with email:', { name, email, password, confirmPassword });
     // You can add validation and API call here
     
-    // Navigate to verification screen
+    // Navigate to success modal
     if (navigation) {
-      navigation.navigate('CreateAccountMobileNumberVerification');
+      navigation.navigate('CreateAccountEmailSuccessModal');
     }
   };
 
   const handleToggle = (type) => {
-    if (type === 'email') {
-      // Navigate to create account email screen
+    if (type === 'phone') {
+      // Navigate to mobile number screen
       if (navigation) {
-        navigation.navigate('CreateAccountEmail');
+        navigation.navigate('CreateAccountMobileNumber');
       }
     }
-    // Keep phone selected since we're on the mobile number screen
-    setIsPhoneSelected(true);
+    // Keep email selected since we're on the email screen
+    setIsEmailSelected(true);
   };
 
-  const handleSignUpLink = () => {
-    // Handle "Sign Up" link in the footer
-    console.log('Navigate to sign up');
+  const handleLogInLink = () => {
+    // Handle "Log In" link in the footer
+    console.log('Navigate to log in');
   };
 
   const handleAppleLogin = () => {
@@ -83,14 +83,14 @@ const CreateAccountMobileNumber = ({ navigation }) => {
             <TouchableOpacity
               style={[
                 styles.toggleOption,
-                isPhoneSelected && styles.toggleOptionActive,
+                !isEmailSelected && styles.toggleOptionActive,
               ]}
               onPress={() => handleToggle('phone')}
             >
               <Text
                 style={[
                   styles.toggleText,
-                  isPhoneSelected && styles.toggleTextActive,
+                  !isEmailSelected && styles.toggleTextActive,
                 ]}
               >
                 Phone
@@ -99,14 +99,14 @@ const CreateAccountMobileNumber = ({ navigation }) => {
             <TouchableOpacity
               style={[
                 styles.toggleOption,
-                !isPhoneSelected && styles.toggleOptionActive,
+                isEmailSelected && styles.toggleOptionActive,
               ]}
               onPress={() => handleToggle('email')}
             >
               <Text
                 style={[
                   styles.toggleText,
-                  !isPhoneSelected && styles.toggleTextActive,
+                  isEmailSelected && styles.toggleTextActive,
                 ]}
               >
                 Email
@@ -115,33 +115,77 @@ const CreateAccountMobileNumber = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Mobile Number Input */}
-        <View style={styles.inputContainer}>
-          <View style={styles.inputWrapper}>
-            {/* Country flag and code */}
-            <View style={styles.countrySection}>
-              <View style={styles.flagContainer}>
-                <Text style={styles.flagEmoji}>🇮🇳</Text>
-              </View>
-              <Text style={styles.countryCode}>{countryCode}</Text>
-              <View style={styles.chevronContainer}>
-                <Text style={styles.chevronDown}>▼</Text>
-              </View>
-            </View>
-
-            {/* Vertical divider */}
-            <View style={styles.divider} />
-
-            {/* Mobile number input */}
+        {/* Form Container */}
+        <View style={styles.formContainer}>
+          {/* Name Field */}
+          <View style={styles.inputField}>
             <TextInput
               style={styles.textInput}
-              placeholder="Mobile Number"
-              placeholderTextColor="#848688"
-              value={mobileNumber}
-              onChangeText={setMobileNumber}
-              keyboardType="phone-pad"
-              maxLength={10}
+              placeholder="Name"
+              placeholderTextColor="#BDBCBC"
+              value={name}
+              onChangeText={setName}
+              autoCapitalize="words"
             />
+            <View style={styles.underline} />
+          </View>
+
+          {/* Email Field */}
+          <View style={styles.inputField}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="Email"
+              placeholderTextColor="#BDBCBC"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+            <View style={styles.underline} />
+          </View>
+
+          {/* Password Field */}
+          <View style={styles.inputField}>
+            <View style={styles.passwordContainer}>
+              <TextInput
+                style={[styles.textInput, styles.passwordInput]}
+                placeholder="Password"
+                placeholderTextColor="#BDBCBC"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!showPassword}
+                autoCapitalize="none"
+              />
+              <TouchableOpacity
+                style={styles.eyeIcon}
+                onPress={() => setShowPassword(!showPassword)}
+              >
+                <Text style={styles.eyeText}>{showPassword ? '👁️' : '👁️'}</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.underline} />
+          </View>
+
+          {/* Confirm Password Field */}
+          <View style={styles.inputField}>
+            <View style={styles.passwordContainer}>
+              <TextInput
+                style={[styles.textInput, styles.passwordInput]}
+                placeholder="Confirm Password"
+                placeholderTextColor="#BDBCBC"
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                secureTextEntry={!showConfirmPassword}
+                autoCapitalize="none"
+              />
+              <TouchableOpacity
+                style={styles.eyeIcon}
+                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                <Text style={styles.eyeText}>{showConfirmPassword ? '👁️' : '👁️'}</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.underline} />
           </View>
         </View>
 
@@ -150,10 +194,10 @@ const CreateAccountMobileNumber = ({ navigation }) => {
           <Text style={styles.signUpButtonText}>SIGN UP</Text>
         </TouchableOpacity>
 
-        {/* Divider with "or log in with" */}
+        {/* Divider with "or sign up with" */}
         <View style={styles.dividerSection}>
           <View style={styles.dividerLine} />
-          <Text style={styles.dividerText}>or log in with</Text>
+          <Text style={styles.dividerText}>or sign up with</Text>
           <View style={styles.dividerLine} />
         </View>
 
@@ -170,9 +214,9 @@ const CreateAccountMobileNumber = ({ navigation }) => {
         {/* Footer */}
         <View style={styles.footer}>
           <Text style={styles.footerText}>
-            Don't have an account?{' '}
-            <Text style={styles.footerLink} onPress={handleSignUpLink}>
-              Sign Up
+            Already have account?{' '}
+            <Text style={styles.footerLink} onPress={handleLogInLink}>
+              Log In
             </Text>
           </Text>
         </View>
@@ -245,66 +289,44 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-SemiBold',
     fontWeight: '600',
   },
-  inputContainer: {
-    paddingHorizontal: 38,
-    marginTop: 132,
+  formContainer: {
+    paddingHorizontal: 33,
+    marginTop: 40,
   },
-  inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-    borderRadius: 12,
-    height: 47,
-    borderWidth: 1,
-    borderColor: '#E5E5E5',
-  },
-  countrySection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingLeft: 11,
-  },
-  flagContainer: {
-    width: 25,
-    height: 25,
-    borderRadius: 50,
-    backgroundColor: '#ffffff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
-  flagEmoji: {
-    fontSize: 16,
-  },
-  countryCode: {
-    fontSize: 14,
-    fontFamily: 'Montserrat-SemiBold',
-    fontWeight: '600',
-    color: '#000000',
-    marginLeft: 8,
-  },
-  chevronContainer: {
-    marginLeft: 4,
-  },
-  chevronDown: {
-    fontSize: 10,
-    color: '#848688',
-  },
-  divider: {
-    width: 1,
-    height: 34,
-    backgroundColor: '#E9E9E9',
-    marginHorizontal: 8,
+  inputField: {
+    marginBottom: 20,
+    height: 50,
   },
   textInput: {
-    flex: 1,
-    fontSize: 14,
-    fontFamily: 'Montserrat-Regular',
+    fontSize: 16,
+    fontFamily: 'Mulish-Regular',
     color: '#000000',
-    paddingRight: 16,
+    paddingVertical: 0,
+    paddingBottom: 12,
+    height: 30,
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  passwordInput: {
+    flex: 1,
+  },
+  eyeIcon: {
+    padding: 5,
+  },
+  eyeText: {
+    fontSize: 16,
+    color: '#979797',
+  },
+  underline: {
+    height: 1,
+    backgroundColor: '#D6D6D6',
+    marginTop: 8,
   },
   signUpButton: {
-    marginHorizontal: 38,
-    marginTop: 64,
+    marginHorizontal: 33,
+    marginTop: 60,
     backgroundColor: '#000000',
     borderRadius: 26.5,
     height: 51,
@@ -321,8 +343,8 @@ const styles = StyleSheet.create({
   dividerSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: 38,
-    marginTop: 149,
+    marginHorizontal: 33,
+    marginTop: 40,
   },
   dividerLine: {
     flex: 1,
@@ -365,7 +387,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     alignItems: 'center',
-    marginTop: 120,
+    marginTop: 60,
     marginBottom: 40,
   },
   footerText: {
@@ -379,4 +401,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateAccountMobileNumber;
+export default CreateAccountEmail;

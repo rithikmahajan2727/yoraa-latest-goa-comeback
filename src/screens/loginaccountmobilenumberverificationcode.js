@@ -7,13 +7,9 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
-  Dimensions,
 } from 'react-native';
-import { FontSizes, FontWeights, Spacing, BorderRadius, Colors } from '../constants';
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-
-const CreateAccountMobileNumberVerification = ({ navigation }) => {
+const LoginAccountMobileNumberVerificationCode = ({ navigation }) => {
   const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
   const [resendTimer, setResendTimer] = useState(30);
   const inputRefs = useRef([]);
@@ -28,11 +24,11 @@ const CreateAccountMobileNumberVerification = ({ navigation }) => {
   const handleVerification = () => {
     // Handle verification logic
     const code = verificationCode.join('');
-    console.log('Verification code:', code);
+    console.log('Login verification code:', code);
     
-    // Navigate to account created confirmation modal
+    // Navigate to Terms and Conditions screen after successful login verification
     if (navigation) {
-      navigation.navigate('CreateAccountMobileNumberAccountCreatedConfirmationModal');
+      navigation.navigate('TermsAndConditions');
     }
   };
 
@@ -57,7 +53,7 @@ const CreateAccountMobileNumberVerification = ({ navigation }) => {
 
   const handleResendCode = () => {
     // Handle resend code logic
-    console.log('Resend verification code');
+    console.log('Resend login verification code');
     setResendTimer(30);
     // Reset timer countdown logic would go here
   };
@@ -78,7 +74,7 @@ const CreateAccountMobileNumberVerification = ({ navigation }) => {
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Verify your mobile number</Text>
           <Text style={styles.subtitle}>
-            We've sent a 6-digit verification code to your mobile number
+            We've sent a 6-digit verification code to your mobile number for login
           </Text>
         </View>
 
@@ -87,7 +83,9 @@ const CreateAccountMobileNumberVerification = ({ navigation }) => {
           {verificationCode.map((digit, index) => (
             <TextInput
               key={index}
-              ref={ref => inputRefs.current[index] = ref}
+              ref={ref => {
+                inputRefs.current[index] = ref;
+              }}
               style={[
                 styles.codeInput,
                 digit ? styles.codeInputFilled : null,
@@ -115,7 +113,7 @@ const CreateAccountMobileNumberVerification = ({ navigation }) => {
             styles.verifyButtonText,
             !isCodeComplete && styles.verifyButtonTextDisabled
           ]}>
-            VERIFY
+            VERIFY & LOGIN
           </Text>
         </TouchableOpacity>
 
@@ -254,4 +252,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateAccountMobileNumberVerification;
+export default LoginAccountMobileNumberVerificationCode;

@@ -14,7 +14,9 @@ const OrderConfirmationPhone = ({ navigation }) => {
   const handleViewOrder = () => {
     // Navigate to order management screen
     console.log('View or Manage Order pressed');
-    // Add navigation logic here when the target screen is available
+    if (navigation) {
+      navigation.navigate('Orders', { previousScreen: 'OrderConfirmationPhone' });
+    }
   };
 
   const handlePlaceOrder = () => {

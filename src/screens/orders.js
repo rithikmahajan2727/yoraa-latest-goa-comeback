@@ -129,10 +129,22 @@ const OrderCard = ({ order, onTrack, onCancelOrder, navigation }) => (
   </View>
 );
 
-const OrdersScreen = ({ navigation }) => {
+const OrdersScreen = ({ navigation, route }) => {
   const trackingModalRef = useRef(null);
   const cancelOrderModalRef = useRef(null);
   const cancelConfirmationModalRef = useRef(null);
+
+  // Get the previous screen from route params
+  const previousScreen = route?.params?.previousScreen;
+
+  // Custom back handler
+  const handleBackPress = () => {
+    if (previousScreen === 'OrderConfirmationPhone') {
+      navigation.navigate('OrderConfirmationPhone');
+    } else {
+      navigation?.goBack();
+    }
+  };
 
   // Mock tracking data - you can replace this with actual API data
   const getTrackingData = (order) => {
@@ -173,7 +185,7 @@ const OrdersScreen = ({ navigation }) => {
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.backButton}
-          onPress={() => navigation?.goBack()}
+          onPress={handleBackPress}
           activeOpacity={0.7}
         >
           <Text style={styles.backIcon}>‹</Text>
