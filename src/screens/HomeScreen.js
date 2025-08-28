@@ -57,7 +57,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.headerIcons}>
           <TouchableOpacity 
             style={styles.iconButton}
-            onPress={() => navigation?.navigate('SearchScreen')}
+            onPress={() => navigation?.navigate('SearchScreen', { previousScreen: 'Home' })}
           >
             <GlobalSearchIcon size={24} color="#000000" />
           </TouchableOpacity>

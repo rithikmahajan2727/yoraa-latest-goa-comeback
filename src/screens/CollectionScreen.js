@@ -273,12 +273,9 @@ const CollectionScreen = ({ navigation }) => {
   };
 
   const openFilterModal = () => {
-    setShowFilterModal(true);
-    Animated.timing(slideAnim, {
-      toValue: 0,
-      duration: 250,
-      useNativeDriver: true,
-    }).start();
+    if (navigation && navigation.navigate) {
+      navigation.navigate('Filters');
+    }
   };
 
   const closeFilterModal = () => {
@@ -333,7 +330,7 @@ const CollectionScreen = ({ navigation }) => {
         <View style={styles.header}>
           <TouchableOpacity 
             style={styles.searchButton}
-            onPress={() => navigation?.navigate('SearchScreen')}
+            onPress={() => navigation?.navigate('SearchScreen', { previousScreen: 'Collection' })}
           >
             <GlobalSearchIcon size={20} />
           </TouchableOpacity>

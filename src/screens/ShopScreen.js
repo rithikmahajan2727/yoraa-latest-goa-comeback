@@ -169,7 +169,7 @@ const ShopScreen = ({ navigation }) => {
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.searchButton}
-          onPress={() => navigation?.navigate('SearchScreen')}
+          onPress={() => navigation?.navigate('SearchScreen', { previousScreen: 'Shop' })}
         >
           <SearchIcon />
         </TouchableOpacity>

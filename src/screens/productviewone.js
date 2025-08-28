@@ -18,6 +18,18 @@ import BottomNavigationBar from '../components/bottomnavigationbar';
 const ProductViewOne = ({ navigation }) => {
   const [likedProducts, setLikedProducts] = useState(new Set(['3', '4'])); // Some products pre-liked
 
+  const handleFilterPress = () => {
+    if (navigation && navigation.navigate) {
+      navigation.navigate('Filters');
+    }
+  };
+
+  const handleSearchPress = () => {
+    if (navigation && navigation.navigate) {
+      navigation.navigate('SearchScreen', { previousScreen: 'ProductViewOne' });
+    }
+  };
+
   // Mock product data based on the Figma design
   const products = [
     {
@@ -176,7 +188,7 @@ const ProductViewOne = ({ navigation }) => {
         </View>
         
         <View style={styles.headerRight}>
-          <TouchableOpacity style={styles.iconButton}>
+          <TouchableOpacity style={styles.iconButton} onPress={handleSearchPress}>
             <GlobalSearchIcon size={20} color="#000000" />
           </TouchableOpacity>
           
@@ -184,7 +196,7 @@ const ProductViewOne = ({ navigation }) => {
             <GridIcon />
           </TouchableOpacity>
           
-          <TouchableOpacity style={styles.iconButton}>
+          <TouchableOpacity style={styles.iconButton} onPress={handleFilterPress}>
             <FilterIcon />
           </TouchableOpacity>
         </View>
@@ -197,11 +209,13 @@ const ProductViewOne = ({ navigation }) => {
         </View>
       </ScrollView>
 
-      {/* Bottom Navigation */}
-      <BottomNavigationBar 
-        activeTab="Home" 
-        onTabChange={handleTabChange}
-      />
+      {/* Bottom Navigation - Absolute Position */}
+      <View style={styles.bottomNavContainer}>
+        <BottomNavigationBar 
+          activeTab="Home" 
+          onTabChange={handleTabChange}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -367,7 +381,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingHorizontal: 0,
-    paddingBottom: 40,
+    paddingBottom: 100, // Add space for bottom navigation
   },
 
   // Product Styles
@@ -516,6 +530,15 @@ const styles = StyleSheet.create({
     letterSpacing: -0.14,
     fontFamily: 'Montserrat-Medium',
     lineHeight: 17,
+  },
+
+  // Bottom Navigation Container
+  bottomNavContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
   },
 });
 

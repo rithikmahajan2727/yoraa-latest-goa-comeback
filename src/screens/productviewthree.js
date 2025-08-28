@@ -19,6 +19,18 @@ import BottomNavigationBar from '../components/bottomnavigationbar';
 const ProductViewThree = ({ navigation }) => {
   const [likedProducts, setLikedProducts] = useState(new Set(['1', '3'])); // Some products pre-liked
 
+  const handleFilterPress = () => {
+    if (navigation && navigation.navigate) {
+      navigation.navigate('Filters');
+    }
+  };
+
+  const handleSearchPress = () => {
+    if (navigation && navigation.navigate) {
+      navigation.navigate('SearchScreen', { previousScreen: 'ProductViewThree' });
+    }
+  };
+
   // Mock product data for the Pinterest-style layout
   const products = [
     {
@@ -174,7 +186,7 @@ const ProductViewThree = ({ navigation }) => {
         </View>
         
         <View style={styles.headerRight}>
-          <TouchableOpacity style={styles.iconButton}>
+          <TouchableOpacity style={styles.iconButton} onPress={handleSearchPress}>
             <GlobalSearchIcon size={20} color="#000000" />
           </TouchableOpacity>
           
@@ -182,7 +194,7 @@ const ProductViewThree = ({ navigation }) => {
             <GridIcon />
           </TouchableOpacity>
           
-          <TouchableOpacity style={styles.iconButton}>
+          <TouchableOpacity style={styles.iconButton} onPress={handleFilterPress}>
             <FilterIcon />
           </TouchableOpacity>
         </View>
@@ -196,11 +208,13 @@ const ProductViewThree = ({ navigation }) => {
         </View>
       </ScrollView>
 
-      {/* Bottom Navigation */}
-      <BottomNavigationBar 
-        activeTab="Home" 
-        onTabChange={handleTabChange}
-      />
+      {/* Bottom Navigation - Absolute Position */}
+      <View style={styles.bottomNavContainer}>
+        <BottomNavigationBar 
+          activeTab="Home" 
+          onTabChange={handleTabChange}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -448,6 +462,15 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
     borderTopLeftRadius: 4,
     borderTopRightRadius: 4,
+  },
+  
+  // Bottom Navigation Container
+  bottomNavContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
   },
 });
 

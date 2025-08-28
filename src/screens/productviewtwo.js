@@ -18,6 +18,18 @@ import BottomNavigationBar from '../components/bottomnavigationbar';
 const ProductViewTwo = ({ navigation }) => {
   const [likedProducts, setLikedProducts] = useState(new Set(['3', '4'])); // Some products pre-liked
 
+  const handleFilterPress = () => {
+    if (navigation && navigation.navigate) {
+      navigation.navigate('Filters');
+    }
+  };
+
+  const handleSearchPress = () => {
+    if (navigation && navigation.navigate) {
+      navigation.navigate('SearchScreen', { previousScreen: 'ProductViewTwo' });
+    }
+  };
+
   // Mock product data for the 3-column grid layout
   const products = [
     {
@@ -162,7 +174,7 @@ const ProductViewTwo = ({ navigation }) => {
         </View>
         
         <View style={styles.headerRight}>
-          <TouchableOpacity style={styles.iconButton}>
+          <TouchableOpacity style={styles.iconButton} onPress={handleSearchPress}>
             <GlobalSearchIcon size={20} color="#000000" />
           </TouchableOpacity>
           
@@ -170,7 +182,7 @@ const ProductViewTwo = ({ navigation }) => {
             <GridIcon />
           </TouchableOpacity>
           
-          <TouchableOpacity style={styles.iconButton}>
+          <TouchableOpacity style={styles.iconButton} onPress={handleFilterPress}>
             <FilterIcon />
           </TouchableOpacity>
         </View>
@@ -183,11 +195,13 @@ const ProductViewTwo = ({ navigation }) => {
         </View>
       </ScrollView>
 
-      {/* Bottom Navigation */}
-      <BottomNavigationBar 
-        activeTab="Home" 
-        onTabChange={handleTabChange}
-      />
+      {/* Bottom Navigation - Absolute Position */}
+      <View style={styles.bottomNavContainer}>
+        <BottomNavigationBar 
+          activeTab="Home" 
+          onTabChange={handleTabChange}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -245,7 +259,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    paddingBottom: 20,
+    paddingBottom: 100, // Add space for bottom navigation
   },
 
   // Product Styles
@@ -474,6 +488,15 @@ const styles = StyleSheet.create({
     borderColor: '#14142B',
     borderTopLeftRadius: 2,
     borderTopRightRadius: 2,
+  },
+  
+  // Bottom Navigation Container
+  bottomNavContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
   },
 });
 

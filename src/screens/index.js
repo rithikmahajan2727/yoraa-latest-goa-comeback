@@ -1,6 +1,7 @@
 export { default as HomeScreen } from './HomeScreen';
 export { default as ShopScreen } from './ShopScreen';
 export { default as CollectionScreen } from './CollectionScreen';
+export { default as FiltersScreen } from './filters';
 export { default as SearchScreen } from './search';
 export { default as ScanBarcodeFlow } from './scanbarcode';
 export { default as RewardsScreen } from './RewardsScreen';

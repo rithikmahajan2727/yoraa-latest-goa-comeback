@@ -120,7 +120,7 @@ const SEARCH_PRODUCTS = [
   // Add more products as needed
 ];
 
-const SearchScreen = ({ navigation, onClose }) => {
+const SearchScreen = ({ navigation, onClose, route }) => {
   const [searchText, setSearchText] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [searchSuggestions, setSearchSuggestions] = useState([]);
@@ -129,6 +129,9 @@ const SearchScreen = ({ navigation, onClose }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [selectedProductIndex, setSelectedProductIndex] = useState(0);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
+  
+  // Get the previous screen from route params
+  const previousScreen = route?.params?.previousScreen;
   
   const slideAnim = useRef(new Animated.Value(Dimensions.get('window').height)).current;
   const modalSlideAnim = useRef(new Animated.Value(Dimensions.get('window').height)).current;
@@ -168,7 +171,9 @@ const SearchScreen = ({ navigation, onClose }) => {
       duration: 250,
       useNativeDriver: true,
     }).start(() => {
-      if (navigation && navigation.goBack) {
+      if (previousScreen && navigation && navigation.navigate) {
+        navigation.navigate(previousScreen);
+      } else if (navigation && navigation.goBack) {
         navigation.goBack();
       } else if (onClose) {
         onClose();
