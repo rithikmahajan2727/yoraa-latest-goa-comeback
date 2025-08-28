@@ -11,12 +11,14 @@ import {
   Dimensions,
 } from 'react-native';
 import { Colors } from '../constants/colors';
+import AddAddressModal from './deliveryoptionsstepthreeaddaddress';
 
 const { height: screenHeight } = Dimensions.get('window');
 
-const DeliveryOptionsStepTwoModal = ({ visible, onClose, selectedDeliveryOption }) => {
+const DeliveryOptionsStepTwoModal = ({ visible, onClose, selectedDeliveryOption, navigation }) => {
   const [slideAnim] = useState(new Animated.Value(screenHeight));
   const [selectedAddress, setSelectedAddress] = useState('john-smith');
+  const [showAddAddressModal, setShowAddAddressModal] = useState(false);
 
   console.log('Modal visibility changed:', visible); // Debug log
 
@@ -51,15 +53,42 @@ const DeliveryOptionsStepTwoModal = ({ visible, onClose, selectedDeliveryOption 
   };
 
   const handleContinue = () => {
-    // Handle continue action
-    console.log('Continue with delivery options');
-    handleClose();
+    // Handle continue action based on selected delivery option
+    console.log('Continue with delivery options:', selectedDeliveryOption);
+    
+    // Close current modal first
+    Animated.timing(slideAnim, {
+      toValue: screenHeight,
+      duration: 250,
+      useNativeDriver: true,
+    }).start(() => {
+      onClose();
+      
+      // Navigate based on delivery option selection
+      if (selectedDeliveryOption === 'free') {
+        // Navigate to order confirmation screen for free delivery
+        if (navigation) {
+          navigation.navigate('OrderConfirmationPhone');
+        }
+      } else if (selectedDeliveryOption === 'international') {
+        // Navigate to custom clearance screen for international delivery
+        if (navigation) {
+          navigation.navigate('DeliveryOptionsStepFourIfCustomRequired');
+        }
+      }
+    });
   };
 
   const handleAddAddress = () => {
     // Handle add address action
     console.log('Add new address');
-    // Navigate to add address screen
+    setShowAddAddressModal(true);
+  };
+
+  const handleEditAddress = () => {
+    // Handle edit address action
+    console.log('Edit address');
+    setShowAddAddressModal(true);
   };
 
   if (!visible) {
@@ -137,7 +166,7 @@ const DeliveryOptionsStepTwoModal = ({ visible, onClose, selectedDeliveryOption 
                   <Text style={styles.addressName}>John Smith, 652-858-0392</Text>
                   <Text style={styles.addressDetails}>2950 S 108th St, West Allis, United States</Text>
                 </View>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleEditAddress}>
                   <Text style={styles.editText}>Edit</Text>
                 </TouchableOpacity>
               </TouchableOpacity>
@@ -156,6 +185,12 @@ const DeliveryOptionsStepTwoModal = ({ visible, onClose, selectedDeliveryOption 
           </ScrollView>
         </SafeAreaView>
       </Animated.View>
+      
+      {/* Add Address Modal */}
+      <AddAddressModal
+        visible={showAddAddressModal}
+        onClose={() => setShowAddAddressModal(false)}
+      />
     </View>
   );
 };

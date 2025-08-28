@@ -118,6 +118,7 @@ const DeliveryOptionsStepOneScreen = ({ navigation }) => {
         visible={showModal}
         onClose={() => setShowModal(false)}
         selectedDeliveryOption={selectedOption}
+        navigation={navigation}
       />
     </SafeAreaView>
   );
