@@ -11,10 +11,15 @@ import {
   Alert,
 } from 'react-native';
 import { Colors } from '../constants/colors';
+import DeliveryOptionsStepTwoModal from './deliveryoptionsteptwo';
 
 const DeliveryOptionsStepOneScreen = ({ navigation }) => {
   const [postcode, setPostcode] = useState('');
   const [selectedOption, setSelectedOption] = useState('free'); // 'free' or 'international'
+  const [showModal, setShowModal] = useState(false);
+
+  // Debug: Log when component mounts
+  console.log('DeliveryOptionsStepOneScreen rendered, showModal:', showModal);
 
   const handleBackPress = () => {
     navigation.goBack();
@@ -22,10 +27,13 @@ const DeliveryOptionsStepOneScreen = ({ navigation }) => {
 
   const handleUpdatePress = () => {
     // Handle update postcode and refresh delivery options
+    console.log('Update button pressed!'); // Debug log
     if (postcode.trim()) {
       console.log('Updating delivery options for postcode:', postcode);
-      // Navigate to DeliveryAddAddress screen with selected option
-      navigation.navigate('DeliveryAddAddress', { selectedOption });
+      console.log('Selected delivery option:', selectedOption);
+      console.log('Setting modal to true'); // Debug log
+      // Show the modal with animation
+      setShowModal(true);
     } else {
       Alert.alert('Error', 'Please enter a valid postcode');
     }
@@ -104,6 +112,13 @@ const DeliveryOptionsStepOneScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      {/* Delivery Options Step Two Modal */}
+      <DeliveryOptionsStepTwoModal
+        visible={showModal}
+        onClose={() => setShowModal(false)}
+        selectedDeliveryOption={selectedOption}
+      />
     </SafeAreaView>
   );
 };

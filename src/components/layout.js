@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import BottomNavigationBar from './bottomnavigationbar';
 import { Colors, FontSizes, FontWeights, Spacing } from '../constants';
-import { HomeScreen, ShopScreen, CollectionScreen, SearchScreen, ScanBarcodeFlow, RewardsScreen, ProfileScreen, BagScreen, CreateAccountMobileNumber, CreateAccountMobileNumberVerification, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, DeleteAccountConfirmation, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen, ProductViewOne, ProductViewTwo, ProductViewThree, ProductDetailsMain, ProductDetailsMainReview, ProductDetailsReviewThreePointSelection, ProductDetailsWrittenUserReview, DeliveryOptionsStepOneScreen, DeliveryAddAddress, Language, Region, MembersExclusive, PointsHistory, InviteAFriend, OrdersReturnExchange, OrdersExchangeSizeSelectionChart, OrdersCancelOrderModal, OrdersReturnRequest, OrdersReturnAcceptedModal, Inbox } from '../screens';
+import { HomeScreen, ShopScreen, CollectionScreen, SearchScreen, ScanBarcodeFlow, RewardsScreen, ProfileScreen, BagScreen, CreateAccountMobileNumber, CreateAccountMobileNumberVerification, OrdersScreen, EditProfile, SettingsScreen, DeliveryAddressesSettings, CommunicationPreferences, LinkedAccountScreen, DeleteAccount, DeleteAccountConfirmation, ProfileVisibilityScreen, ContactUsScreen, InvoiceScreen, LoveUsRateUs, FAQScreen, ProductViewOne, ProductViewTwo, ProductViewThree, ProductDetailsMain, ProductDetailsMainReview, ProductDetailsReviewThreePointSelection, ProductDetailsWrittenUserReview, DeliveryOptionsStepOneScreen, Language, Region, MembersExclusive, PointsHistory, InviteAFriend, OrdersReturnExchange, OrdersExchangeSizeSelectionChart, OrdersCancelOrderModal, OrdersReturnRequest, OrdersReturnAcceptedModal, Inbox } from '../screens';
 
 // Placeholder content components for each tab
 const HomeContent = ({ navigation }) => <HomeScreen navigation={navigation} />;
@@ -133,8 +133,6 @@ const EnhancedLayout = () => {
         return <ProductDetailsWrittenUserReview navigation={navigation} route={{ params: routeParams }} />;
       case 'DeliveryOptionsStepOneScreen':
         return <DeliveryOptionsStepOneScreen navigation={navigation} />;
-      case 'DeliveryAddAddress':
-        return <DeliveryAddAddress navigation={navigation} route={{ params: routeParams }} />;
       case 'Language':
         return <Language navigation={navigation} />;
       case 'Region':

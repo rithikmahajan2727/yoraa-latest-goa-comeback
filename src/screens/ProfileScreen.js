@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
+  Linking,
 } from 'react-native';
 import LogoutModal from './logoutmodal';
 import ContactUsScreen from './contactus';
@@ -114,11 +115,15 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   const handlePrivacyPolicy = () => {
-    console.log('Privacy policy pressed');
+    Linking.openURL('https://yoraa.co').catch(err => {
+      console.error('Failed to open URL:', err);
+    });
   };
 
   const handleTermsConditions = () => {
-    console.log('T&C pressed');
+    Linking.openURL('https://yoraa.app').catch(err => {
+      console.error('Failed to open URL:', err);
+    });
   };
 
   const handleLogout = () => {
