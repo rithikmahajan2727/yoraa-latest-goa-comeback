@@ -41,3 +41,4 @@ export { default as OrdersReturnRequest } from './ordersreturnrequest';
 export { default as OrdersReturnAcceptedModal } from './ordersreturnacceptedmodal';
 export { default as OrdersExchangeSizeSelectionChart } from './ordersexchangesizeselectionchart';
 export { default as OrdersCancelOrderModal } from './orderscancelordermodal';
+export { default as Inbox } from './inbox';

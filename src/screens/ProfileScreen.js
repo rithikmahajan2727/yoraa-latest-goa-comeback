@@ -84,7 +84,9 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   const handleInbox = () => {
-    console.log('Inbox pressed');
+    if (navigation && navigation.navigate) {
+      navigation.navigate('Inbox', { previousScreen: 'Profile' });
+    }
   };
 
   const handleFAQ = () => {
