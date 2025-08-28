@@ -35,18 +35,8 @@ const HeartIcon = ({ filled = false, color = '#000000' }) => (
   </Svg>
 );
 
-const ShoppingBagIcon = ({ color = '#14142B' }) => (
-  <Svg width={19} height={18} viewBox="0 0 19 18" fill="none">
-    <Path
-      d="M17.6885 0.5L18.5049 17.0596H0.524414L1.34082 0.5H17.6885Z"
-      stroke={color}
-    />
-    <Path
-      d="M1 9.9225L1 5.32483C1 4.17781 1.45565 3.07778 2.26671 2.26671C3.07778 1.45565 4.17781 1 5.32483 1C6.47185 1 7.57188 1.45565 8.38295 2.26671C9.19401 3.07778 9.64966 4.17781 9.64966 5.32483V9.9225"
-      stroke={color}
-    />
-  </Svg>
-);
+// Import GlobalCartIcon from assets
+import { GlobalCartIcon } from '../assets/icons';
 
 // Sample data for new arrivals and trending now
 const NEW_ARRIVALS = [
@@ -131,7 +121,7 @@ const ShopScreen = ({ navigation }) => {
           <HeartIcon filled={favorites.has(item.id)} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.cartButton}>
-          <ShoppingBagIcon />
+          <GlobalCartIcon />
         </TouchableOpacity>
       </View>
       <View style={styles.productInfo}>

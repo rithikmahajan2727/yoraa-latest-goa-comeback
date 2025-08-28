@@ -16,20 +16,23 @@ import {
 } from 'react-native';
 import { EnhancedLayout } from './src/components/layout';
 import { Colors } from './src/constants';
+import { FavoritesProvider } from './src/contexts/FavoritesContext';
 
 // Main App Component with Routing
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
-    <View style={styles.container}>
-      <StatusBar 
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={Colors.background}
-        translucent={false}
-      />
-      <EnhancedLayout />
-    </View>
+    <FavoritesProvider>
+      <View style={styles.container}>
+        <StatusBar 
+          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+          backgroundColor={Colors.background}
+          translucent={false}
+        />
+        <EnhancedLayout />
+      </View>
+    </FavoritesProvider>
   );
 }
 

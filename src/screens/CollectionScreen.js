@@ -13,7 +13,7 @@ import {
   StatusBar,
 } from 'react-native';
 import { FontSizes, FontWeights, Spacing, BorderRadius } from '../constants';
-import { GlobalSearchIcon, FilterIcon, ShoppingBagIcon, HeartIcon } from '../assets/icons';
+import { GlobalSearchIcon, FilterIcon, GlobalCartIcon, HeartIcon } from '../assets/icons';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -306,10 +306,10 @@ const CollectionScreen = ({ navigation }) => {
           style={styles.heartButton}
           onPress={() => toggleWishlist(item.id)}
         >
-          <HeartIcon size={16} filled={item.isWishlisted} />
+          <HeartIcon size={19} filled={item.isWishlisted} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.cartButton}>
-          <ShoppingBagIcon size={16} />
+          <GlobalCartIcon size={16} />
         </TouchableOpacity>
       </View>
       <View style={styles.productInfo}>

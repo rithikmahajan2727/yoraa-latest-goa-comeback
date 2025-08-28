@@ -1,4 +1,7 @@
 export { default as HomeScreen } from './HomeScreen';
+export { default as FavouritesScreen } from './favourites';
+export { default as FavouritesContent } from './favouritescontent';
+export { default as FavouritesContentEditView } from './favouritescontentediteview';
 export { default as ShopScreen } from './ShopScreen';
 export { default as CollectionScreen } from './CollectionScreen';
 export { default as FiltersScreen } from './filters';

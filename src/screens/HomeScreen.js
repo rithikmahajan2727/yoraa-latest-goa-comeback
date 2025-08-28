@@ -61,7 +61,10 @@ const HomeScreen = ({ navigation }) => {
           >
             <GlobalSearchIcon size={24} color="#000000" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton}>
+          <TouchableOpacity 
+            style={styles.iconButton}
+            onPress={() => navigation?.navigate('favourites')}
+          >
             <NewIcon size={24} color="#000000" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton}>

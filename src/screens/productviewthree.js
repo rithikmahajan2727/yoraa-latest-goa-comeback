@@ -14,6 +14,7 @@ import HeartFilledIcon from '../assets/icons/HeartFilledIcon';
 import { FontSizes, FontWeights, Spacing, BorderRadius } from '../constants';
 import GlobalSearchIcon from '../assets/icons/GlobalSearchIcon';
 import FilterIcon from '../assets/icons/FilterIcon';
+import { GlobalCartIcon } from '../assets/icons';
 import BottomNavigationBar from '../components/bottomnavigationbar';
 
 const ProductViewThree = ({ navigation }) => {
@@ -93,15 +94,6 @@ const ProductViewThree = ({ navigation }) => {
 
   // Removed custom FilterIcon, using imported SVG FilterIcon instead
 
-
-
-  const ShoppingBagIcon = () => (
-    <View style={styles.bagIcon}>
-      <View style={styles.bagBody} />
-      <View style={styles.bagHandle} />
-    </View>
-  );
-
   const renderProduct = (product, index) => {
     const isLiked = likedProducts.has(product.id);
     
@@ -133,7 +125,7 @@ const ProductViewThree = ({ navigation }) => {
           {/* Shopping Bag Icon */}
           <TouchableOpacity style={styles.bagButton}>
             <View style={styles.bagIconContainer}>
-              <ShoppingBagIcon />
+              <GlobalCartIcon size={16} />
             </View>
           </TouchableOpacity>
         </TouchableOpacity>

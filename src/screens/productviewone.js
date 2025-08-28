@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -13,10 +13,12 @@ import HeartFilledIcon from '../assets/icons/HeartFilledIcon';
 import { FontSizes, FontWeights, Spacing, BorderRadius } from '../constants';
 import GlobalSearchIcon from '../assets/icons/GlobalSearchIcon';
 import FilterIcon from '../assets/icons/FilterIcon';
+import { GlobalCartIcon } from '../assets/icons';
 import BottomNavigationBar from '../components/bottomnavigationbar';
+import { useFavorites } from '../contexts/FavoritesContext';
 
 const ProductViewOne = ({ navigation }) => {
-  const [likedProducts, setLikedProducts] = useState(new Set(['3', '4'])); // Some products pre-liked
+  const { toggleFavorite, isFavorite } = useFavorites();
 
   const handleFilterPress = () => {
     if (navigation && navigation.navigate) {
@@ -63,13 +65,7 @@ const ProductViewOne = ({ navigation }) => {
   ];
 
   const toggleLike = (productId) => {
-    const newLikedProducts = new Set(likedProducts);
-    if (newLikedProducts.has(productId)) {
-      newLikedProducts.delete(productId);
-    } else {
-      newLikedProducts.add(productId);
-    }
-    setLikedProducts(newLikedProducts);
+    toggleFavorite(productId);
   };
 
   const BackIcon = () => (
@@ -91,15 +87,6 @@ const ProductViewOne = ({ navigation }) => {
 
   // Removed custom FilterIcon, using imported SVG FilterIcon instead
 
-
-
-  const ShoppingBagIcon = () => (
-    <View style={styles.bagIcon}>
-      <View style={styles.bagBody} />
-      <View style={styles.bagHandle} />
-    </View>
-  );
-
   const ColorDots = ({ colors }) => (
     <View style={styles.colorDotsContainer}>
       {colors.map((color, index) => (
@@ -112,7 +99,7 @@ const ProductViewOne = ({ navigation }) => {
   );
 
   const renderProduct = (product, index) => {
-    const isLiked = likedProducts.has(product.id);
+    const isLiked = isFavorite(product.id);
     const isFirstInRow = index % 2 === 0;
     
     return (
@@ -133,14 +120,14 @@ const ProductViewOne = ({ navigation }) => {
             onPress={() => toggleLike(product.id)}
           >
             <View style={styles.heartIconContainer}>
-              <HeartFilledIcon />
+              <HeartFilledIcon color={isLiked ? "#FF0000" : "#000000"} />
             </View>
           </TouchableOpacity>
 
           {/* Shopping Bag Icon */}
           <TouchableOpacity style={styles.bagButton}>
             <View style={styles.bagIconContainer}>
-              <ShoppingBagIcon />
+              <GlobalCartIcon size={16} />
             </View>
           </TouchableOpacity>
         </TouchableOpacity>
