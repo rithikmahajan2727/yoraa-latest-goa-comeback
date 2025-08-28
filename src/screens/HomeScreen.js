@@ -6,10 +6,11 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import { FontSizes, FontWeights, Spacing, BorderRadius } from '../constants';
 import GlobalSearchIcon from '../assets/icons/GlobalSearchIcon';
 import NewIcon from '../assets/icons/NewIcon';
 import LockIcon from '../assets/icons/LockIcon';
+import EYXIcon from '../assets/icons/EYXIcon';
+import RightArrowIcon from '../assets/icons/RightArrowIcon';
 
 const HomeScreen = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('My');
@@ -23,13 +24,7 @@ const HomeScreen = ({ navigation }) => {
     { id: '6', name: 'Golf', isSale: false },
   ];
 
-  const tabs = ['My', 'Men', 'Women', 'Kids', 'E⚡X'];
-
-  const ArrowIcon = () => (
-    <View style={styles.arrowIcon}>
-      <View style={styles.arrowShape} />
-    </View>
-  );
+  const tabs = ['My', 'Men', 'Women', 'Kids'];
 
   const renderCategoryItem = (item) => (
     <TouchableOpacity 
@@ -45,7 +40,7 @@ const HomeScreen = ({ navigation }) => {
           {item.name}
         </Text>
       </View>
-      <ArrowIcon />
+      <RightArrowIcon size={24} color="#292526" />
     </TouchableOpacity>
   );
 
@@ -96,6 +91,28 @@ const HomeScreen = ({ navigation }) => {
             </TouchableOpacity>
           ))}
         </View>
+        
+        {/* Separate E⚡X Tab positioned to the right */}
+        <TouchableOpacity
+          style={[
+            styles.eyxTab,
+            activeTab === 'E⚡X' && styles.activeTab
+          ]}
+          onPress={() => setActiveTab('E⚡X')}
+        >
+          <View style={styles.eyxTabContent}>
+            <Text style={[
+              styles.tabText,
+              activeTab === 'E⚡X' && styles.activeTabText
+            ]}>
+              E
+            </Text>
+            <View style={styles.eyxIconContainer}>
+              <EYXIcon size={16} color={activeTab === 'E⚡X' ? '#000000' : '#767676'} />
+            </View>
+          </View>
+          {activeTab === 'E⚡X' && <View style={styles.tabIndicator} />}
+        </TouchableOpacity>
       </View>
 
       {/* Content */}
@@ -120,8 +137,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingTop: 16, // 15mm ≈ 56.7px
-    paddingBottom: 16,
+    paddingTop: 54, // Match Figma spacing
+    paddingBottom: 12,
     backgroundColor: '#FFFFFF',
   },
   shopTitle: {
@@ -129,15 +146,16 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#000000',
     letterSpacing: -0.168,
+    lineHeight: 33.6, // 1.2 line height as in Figma
     fontFamily: 'Montserrat-Medium',
   },
   headerIcons: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 20, // Increased gap for better distancing between icons
+    gap: 23, // Match Figma spacing between icons
   },
   iconButton: {
-    padding: 8,
+    padding: 4, // Reduce padding for better visual spacing
   },
 
   // Tab Navigation Styles
@@ -145,19 +163,44 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#CDCDCD',
+    paddingTop: 12, // Add top padding to match Figma
+    flexDirection: 'row',
+    position: 'relative',
   },
   tabWrapper: {
     flexDirection: 'row',
     paddingHorizontal: 16,
+    paddingBottom: 4,
+    flex: 1,
   },
   tab: {
     paddingHorizontal: 16,
-    paddingTop: 12,
+    paddingTop: 0,
     paddingBottom: 16,
     position: 'relative',
   },
   firstTab: {
     paddingLeft: 0,
+  },
+  eyxTab: {
+    position: 'absolute',
+    right: 16, // Position to the right edge
+    top: 12,
+    paddingHorizontal: 16,
+    paddingTop: 0,
+    paddingBottom: 16,
+  },
+  tabContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  eyxTabContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  eyxIconContainer: {
+    marginLeft: 2,
+    marginTop: -2, // Slight adjustment for better visual alignment
   },
   activeTab: {
     // Active tab styling handled by indicator
@@ -184,9 +227,10 @@ const styles = StyleSheet.create({
   // Content Styles
   content: {
     flex: 1,
+    marginTop: 6, // Small gap after tabs to match Figma content positioning
   },
   categoriesContainer: {
-    paddingTop: 6,
+    paddingTop: 0, // Remove extra top padding
   },
 
   // Category Item Styles
@@ -215,26 +259,13 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: '#000000',
     letterSpacing: -0.14,
+    lineHeight: 16.8, // 1.2 line height as in Figma
     fontFamily: 'Montserrat-Regular',
   },
   saleText: {
     color: '#CA3327',
     fontWeight: '600',
     fontFamily: 'Montserrat-SemiBold',
-  },
-  arrowIcon: {
-    width: 24,
-    height: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  arrowShape: {
-    width: 8,
-    height: 8,
-    borderTopWidth: 2,
-    borderRightWidth: 2,
-    borderColor: '#292526',
-    transform: [{ rotate: '45deg' }],
   },
 });
 

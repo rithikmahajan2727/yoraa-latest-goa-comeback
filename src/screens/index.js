@@ -13,6 +13,7 @@ export { default as ScanBarcodeFlow } from './scanbarcode';
 export { default as RewardsScreen } from './RewardsScreen';
 export { default as ProfileScreen } from './ProfileScreen';
 export { default as BagScreen } from './bag';
+export { default as BagSizeSelectorSizeChart } from './bagsizeselectorsizechart';
 export { default as CreateAccountMobileNumber } from './createaccountmobilenumber';
 export { default as CreateAccountEmail } from './createaccountemail';
 export { default as CreateAccountEmailSuccessModal } from './createaccountemailsuccessmodal';

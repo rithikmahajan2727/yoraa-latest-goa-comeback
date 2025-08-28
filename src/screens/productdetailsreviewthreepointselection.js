@@ -6,12 +6,8 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-  Dimensions,
-  Image,
 } from 'react-native';
-import { FontSizes, FontWeights, Spacing, BorderRadius } from '../constants';
-
-const { width } = Dimensions.get('window');
+import GlobalBackButton from '../components/GlobalBackButton';
 
 const ProductDetailsReviewThreePointSelection = ({ navigation, route }) => {
   const [sizeRating, setSizeRating] = useState(null); // 0-4 scale (Perfect = 2)
@@ -20,18 +16,6 @@ const ProductDetailsReviewThreePointSelection = ({ navigation, route }) => {
 
   // Check if all ratings are selected
   const isAllSelected = sizeRating !== null && comfortRating !== null && durabilityRating !== null;
-
-  const BackIcon = () => (
-    <View style={styles.backIcon}>
-      <View style={styles.backArrow} />
-    </View>
-  );
-
-  const handleBackPress = () => {
-    if (navigation) {
-      navigation.goBack();
-    }
-  };
 
   const handleNext = () => {
     // Only proceed if all ratings are selected
@@ -54,25 +38,21 @@ const ProductDetailsReviewThreePointSelection = ({ navigation, route }) => {
 
   const renderRatingScale = (rating, setRating, labels) => (
     <View style={styles.ratingScale}>
-      <View style={styles.ratingDots}>
+      {/* Rating dots and lines combined */}
+      <View style={styles.ratingRow}>
         {[0, 1, 2, 3, 4].map((index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.ratingDotContainer}
-            onPress={() => setRating(index)}
-          >
-            <View style={[
-              styles.ratingDot,
-              rating === index && styles.ratingDotSelected
-            ]} />
-          </TouchableOpacity>
-        ))}
-      </View>
-      
-      {/* Rating lines */}
-      <View style={styles.ratingLines}>
-        {[0, 1, 2, 3].map((index) => (
-          <View key={index} style={styles.ratingLine} />
+          <React.Fragment key={index}>
+            <TouchableOpacity
+              style={styles.ratingDotContainer}
+              onPress={() => setRating(index)}
+            >
+              <View style={[
+                styles.ratingDot,
+                rating === index && styles.ratingDotSelected
+              ]} />
+            </TouchableOpacity>
+            {index < 4 && <View style={styles.ratingLine} />}
+          </React.Fragment>
         ))}
       </View>
       
@@ -87,23 +67,15 @@ const ProductDetailsReviewThreePointSelection = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F8F8F8" />
+      <StatusBar barStyle="dark-content" backgroundColor="#F5F5F5" />
       
-      {/* System Bar */}
-      <View style={styles.systemBar}>
-        <Text style={styles.systemTime}>9:41</Text>
-        <View style={styles.systemIcons}>
-          <View style={styles.signalIcon} />
-          <View style={styles.wifiIcon} />
-          <View style={styles.batteryIcon} />
-        </View>
-      </View>
-
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.headerButton} onPress={handleBackPress}>
-          <BackIcon />
-        </TouchableOpacity>
+        <GlobalBackButton 
+          navigation={navigation}
+          style={styles.headerButton}
+          iconSize={20}
+        />
         
         <Text style={styles.headerTitle}>How was your product</Text>
         
@@ -113,7 +85,6 @@ const ProductDetailsReviewThreePointSelection = ({ navigation, route }) => {
       {/* Product Image */}
       <View style={styles.productImageContainer}>
         <View style={styles.productImage}>
-          {/* Nike shoe placeholder with the Nike swoosh symbol */}
           <View style={styles.imagePlaceholder}>
             <View style={styles.nikeSwoosh} />
           </View>
@@ -163,11 +134,6 @@ const ProductDetailsReviewThreePointSelection = ({ navigation, route }) => {
           !isAllSelected && styles.nextButtonTextDisabled
         ]}>Next</Text>
       </TouchableOpacity>
-
-      {/* Bottom Indicator */}
-      <View style={styles.bottomIndicator}>
-        <View style={styles.indicatorLine} />
-      </View>
     </SafeAreaView>
   );
 };
@@ -175,48 +141,7 @@ const ProductDetailsReviewThreePointSelection = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F8F8',
-  },
-
-  // System Bar
-  systemBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 21,
-    paddingTop: 17,
-    height: 39,
-    backgroundColor: '#FFFFFF',
-  },
-  systemTime: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#000000',
-    fontFamily: 'SF Pro Display',
-    letterSpacing: -0.28,
-  },
-  systemIcons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  signalIcon: {
-    width: 17,
-    height: 11,
-    backgroundColor: '#000000',
-    borderRadius: 2,
-  },
-  wifiIcon: {
-    width: 15,
-    height: 11,
-    backgroundColor: '#000000',
-    borderRadius: 2,
-  },
-  batteryIcon: {
-    width: 24,
-    height: 11,
-    backgroundColor: '#000000',
-    borderRadius: 2,
+    backgroundColor: '#F5F5F5',
   },
 
   // Header
@@ -224,97 +149,81 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
-    gap: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    backgroundColor: '#F5F5F5',
   },
   headerButton: {
-    width: 68,
-    height: 24,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-  },
-  headerTitle: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#000000',
-    fontFamily: 'Montserrat',
-    letterSpacing: -0.4,
-    textAlign: 'center',
-    flex: 1,
-  },
-  backIcon: {
     width: 24,
     height: 24,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  backArrow: {
-    width: 8,
-    height: 14,
-    borderTopWidth: 2,
-    borderLeftWidth: 2,
-    borderColor: '#000000',
-    transform: [{ rotate: '-45deg' }],
-    marginRight: 2,
+  headerTitle: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#000000',
+    textAlign: 'center',
+    flex: 1,
+    letterSpacing: -0.4,
   },
 
   // Product Image
   productImageContainer: {
     alignItems: 'center',
-    marginTop: 24,
+    marginTop: 20,
     marginBottom: 40,
   },
   productImage: {
-    width: 122,
-    height: 123,
+    width: 120,
+    height: 120,
     borderRadius: 8,
-    overflow: 'hidden',
+    backgroundColor: '#E0E0E0',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   imagePlaceholder: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#EEEEEE',
     justifyContent: 'center',
     alignItems: 'center',
   },
   nikeSwoosh: {
-    width: 40,
-    height: 20,
+    width: 36,
+    height: 16,
     backgroundColor: '#000000',
-    borderRadius: 10,
+    borderRadius: 8,
     transform: [{ skewX: '-20deg' }],
   },
 
   // Rating Container
   ratingContainer: {
-    paddingHorizontal: 31,
+    paddingHorizontal: 40,
     marginBottom: 40,
   },
   ratingTitle: {
     fontSize: 16,
     fontWeight: '600',
     color: '#121420',
-    fontFamily: 'Montserrat',
-    letterSpacing: -0.08,
     textAlign: 'center',
-    marginBottom: 22,
+    marginBottom: 30,
+    letterSpacing: -0.08,
   },
 
   // Rating Scale
   ratingScale: {
-    position: 'relative',
-  },
-  ratingDots: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 0,
-    marginBottom: 8,
+  },
+  ratingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    paddingHorizontal: 10,
   },
   ratingDotContainer: {
-    padding: 8, // Increase touch area
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   ratingDot: {
     width: 17,
@@ -327,46 +236,38 @@ const styles = StyleSheet.create({
   ratingDotSelected: {
     backgroundColor: '#1A1A1A',
   },
-  ratingLines: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    marginBottom: 16,
-  },
   ratingLine: {
-    width: 51,
+    flex: 1,
     height: 1,
     backgroundColor: '#000000',
+    marginHorizontal: 0,
   },
   ratingLabels: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 0,
+    width: '100%',
+    paddingHorizontal: 10,
   },
   ratingLabelLeft: {
     fontSize: 12,
     fontWeight: '400',
     color: '#000000',
-    fontFamily: 'Montserrat',
     letterSpacing: -0.06,
   },
   ratingLabelCenter: {
     fontSize: 12,
     fontWeight: '400',
     color: '#000000',
-    fontFamily: 'Montserrat',
-    letterSpacing: -0.06,
     position: 'absolute',
     left: '50%',
-    transform: [{ translateX: -20 }],
+    transform: [{ translateX: -25 }],
+    letterSpacing: -0.06,
   },
   ratingLabelRight: {
     fontSize: 12,
     fontWeight: '400',
     color: '#000000',
-    fontFamily: 'Montserrat',
     letterSpacing: -0.06,
   },
 
@@ -374,9 +275,9 @@ const styles = StyleSheet.create({
   nextButton: {
     marginHorizontal: 30,
     marginTop: 'auto',
-    marginBottom: 20,
-    paddingVertical: 16,
-    borderRadius: 24,
+    marginBottom: 40,
+    paddingVertical: 18,
+    borderRadius: 25,
     backgroundColor: '#000000',
     alignItems: 'center',
   },
@@ -387,25 +288,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#FFFFFF',
-    fontFamily: 'Montserrat',
   },
   nextButtonTextDisabled: {
     color: '#999999',
-  },
-
-  // Bottom Indicator
-  bottomIndicator: {
-    height: 30,
-    backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  indicatorLine: {
-    width: 135,
-    height: 5,
-    backgroundColor: '#000000',
-    borderRadius: 100,
-    marginBottom: 8,
   },
 });
 

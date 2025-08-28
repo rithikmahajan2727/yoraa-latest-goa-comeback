@@ -1,26 +1,116 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Image,
   SafeAreaView,
   StatusBar,
+  Alert,
+  InteractionManager,
+  LayoutAnimation,
 } from 'react-native';
-import { Colors } from '../constants/colors';
 import BottomNavigationBar from '../components/bottomnavigationbar';
+import GlobalBackButton from '../components/GlobalBackButton';
 import BagQuantitySelectorModalOverlay from './bagquantityselectormodaloverlay';
+import BagSizeSelectorModalOverlay from './bagsizeselectormodaloverlay';
+import BagSizeSelectorSizeChart from './bagsizeselectorsizechart';
+import DeliveryOptionsStepTwoModal from './deliveryoptionsteptwo';
 
-const BagScreen = ({ navigation }) => {
-  const [promoCodeExpanded, setPromoCodeExpanded] = useState(false);
-  const [pointsApplied, setPointsApplied] = useState(false);
-  const [quantityModalVisible, setQuantityModalVisible] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
+// BagItem Component - optimized with React.memo for better performance
+const BagItem = React.memo(({ item, index, onOpenQuantityModal, onOpenSizeModal, onRemoveItem }) => {
+  const handleQuantityPress = useCallback(() => {
+    onOpenQuantityModal(item, index);
+  }, [item, index, onOpenQuantityModal]);
 
-  // Sample bag items data
-  const bagItems = [
+  const handleSizePress = useCallback(() => {
+    onOpenSizeModal(item, index);
+  }, [item, index, onOpenSizeModal]);
+
+  const handleRemovePress = useCallback(() => {
+    onRemoveItem(item.id, index);
+  }, [item.id, index, onRemoveItem]);
+
+  return (
+    <View style={styles.productContainer}>
+      <View style={styles.productRow}>
+        <View style={styles.productImageContainer}>
+          <View style={styles.productImagePlaceholder}>
+            {/* Add your product image here */}
+            <Text style={styles.imagePlaceholderText}>IMG</Text>
+          </View>
+        </View>
+        <View style={styles.productDetailsContainer}>
+          <View style={styles.productInfo}>
+            <Text style={styles.productName}>{item.name}</Text>
+            <Text style={styles.productDescription}>{item.description}</Text>
+            <TouchableOpacity 
+              style={styles.removeButton}
+              onPress={handleRemovePress}
+              accessibilityLabel={`Remove ${item.name} from bag`}
+            >
+              <Text style={styles.removeButtonText}>Remove</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+      <View style={styles.productActionsContainer}>
+        <TouchableOpacity 
+          style={styles.quantityContainer}
+          onPress={handleQuantityPress}
+          accessibilityLabel={`Change quantity for ${item.name}`}
+        >
+          <Text style={styles.quantityText}>Qty {item.quantity}</Text>
+          <Text style={styles.dropdownIcon}>▼</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.sizeContainer}
+          onPress={handleSizePress}
+          accessibilityLabel={`Change size for ${item.name}`}
+        >
+          <Text style={styles.sizeText}>{item.size}</Text>
+          <Text style={styles.dropdownIcon}>▼</Text>
+        </TouchableOpacity>
+        <Text style={styles.price}>{item.price}</Text>
+      </View>
+    </View>
+  );
+});
+
+// PromoCodeSection Component - optimized with React.memo
+const PromoCodeSection = React.memo(({ onApplyPromo }) => {
+  const handleApplyPress = useCallback(() => {
+    onApplyPromo?.('COUPON30');
+  }, [onApplyPromo]);
+
+  return (
+    <View style={styles.voucherContainer}>
+      <View style={styles.voucherCard}>
+        <View style={styles.voucherContent}>
+          <Text style={styles.voucherTitle}>30% OFF</Text>
+          <Text style={styles.voucherCode}>COUPON30</Text>
+          <Text style={styles.voucherDate}>08/08/2023 - 12/08/2023</Text>
+          <View style={styles.voucherDivider} />
+          <TouchableOpacity 
+            style={styles.voucherApplyButton}
+            onPress={handleApplyPress}
+            accessibilityLabel="Apply 30% off coupon"
+          >
+            <Text style={styles.voucherApplyText}>Apply</Text>
+          </TouchableOpacity>
+        </View>
+        {/* Voucher perforated edges - simplified for React Native */}
+        <View style={styles.voucherLeftEdge} />
+        <View style={styles.voucherRightEdge} />
+      </View>
+    </View>
+  );
+});
+
+const BagScreen = ({ navigation, route }) => {
+  // State management with better organization
+  const [bagItems, setBagItems] = useState([
     {
       id: 1,
       name: 'Nike Everyday Plus Cushioned',
@@ -28,7 +118,7 @@ const BagScreen = ({ navigation }) => {
       price: 'US$10.00',
       quantity: 1,
       size: 'M',
-      image: null, // Placeholder - you can add actual product images later
+      image: null,
     },
     {
       id: 2,
@@ -57,118 +147,158 @@ const BagScreen = ({ navigation }) => {
       size: 'M',
       image: null,
     },
-  ];
+  ]);
 
-  const deliveryInfo = {
+  const [modalStates, setModalStates] = useState({
+    promoCodeExpanded: false,
+    pointsApplied: false,
+    quantityModalVisible: false,
+    sizeModalVisible: false,
+    sizeChartModalVisible: false,
+    deliveryModalVisible: false,
+  });
+
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  // Memoized calculations for performance
+  const totalItems = useMemo(() => {
+    return bagItems.reduce((total, item) => total + item.quantity, 0);
+  }, [bagItems]);
+
+  const subtotal = useMemo(() => {
+    return bagItems.reduce((total, item) => {
+      const price = parseFloat(item.price.replace('US$', ''));
+      return total + (price * item.quantity);
+    }, 0);
+  }, [bagItems]);
+
+  const deliveryInfo = useMemo(() => ({
     dateRange: 'Wed, 11 May to Fri, 13 May',
     location: 'Edit Location',
-  };
+  }), []);
 
-  const priceBreakdown = {
+  const priceBreakdown = useMemo(() => ({
     delivery: 'Standard - Free',
     internationalDelivery: 'Standard - $200',
     promo: 'US$1.0',
-    pointsDiscount: 'US$1.0',
-    total: 'US$10.00',
-  };
+    pointsDiscount: modalStates.pointsApplied ? 'US$1.0' : 'US$0.0',
+    total: `US$${subtotal.toFixed(2)}`,
+  }), [subtotal, modalStates.pointsApplied]);
 
-  const handleGoBack = () => {
-    navigation.goBack();
-  };
-
-  const handleQuantityChange = (itemId, newQuantity) => {
-    // Handle quantity change logic
-    if (newQuantity === 0) {
-      // Remove item from bag
-      console.log(`Removing item ${itemId} from bag`);
-      // Here you would typically update your state to remove the item
-    } else {
-      console.log(`Changing quantity for item ${itemId} to ${newQuantity}`);
-      // Here you would typically update your state with the new quantity
+  // Effect for handling navigation params
+  useEffect(() => {
+    if (route?.params?.updatedItem) {
+      const { updatedItem } = route.params;
+      setBagItems(prevItems => 
+        prevItems.map(item => 
+          item.id === updatedItem.id ? updatedItem : item
+        )
+      );
     }
-  };
+  }, [route?.params]);
 
-  const handleOpenQuantityModal = (item) => {
+  // Enhanced navigation handlers
+  const handleGoBack = useCallback(() => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.navigate('Home');
+    }
+  }, [navigation]);
+
+  const handleNavigateToDelivery = useCallback(() => {
+    setModalStates(prev => ({ ...prev, deliveryModalVisible: true }));
+  }, []);
+
+  const handleCloseDeliveryModal = useCallback(() => {
+    setModalStates(prev => ({ ...prev, deliveryModalVisible: false }));
+  }, []);
+
+  const handleCheckout = useCallback(() => {
+    if (bagItems.length === 0) {
+      Alert.alert('Empty Bag', 'Please add items to your bag before checking out.');
+      return;
+    }
+    
+    InteractionManager.runAfterInteractions(() => {
+      navigation.navigate('DeliveryOptionsStepOneScreen', {
+        bagItems,
+        totalAmount: subtotal,
+        deliveryInfo,
+      });
+    });
+  }, [navigation, bagItems, subtotal, deliveryInfo]);
+
+  // Optimized handler functions with better state management
+  const handleQuantityChange = useCallback((itemId, newQuantity) => {
+    if (newQuantity === 0) {
+      setBagItems(prevItems => prevItems.filter(item => item.id !== itemId));
+      console.log(`Removing item ${itemId} from bag`);
+    } else {
+      setBagItems(prevItems => 
+        prevItems.map(item => 
+          item.id === itemId ? { ...item, quantity: newQuantity } : item
+        )
+      );
+      console.log(`Changing quantity for item ${itemId} to ${newQuantity}`);
+    }
+  }, []);
+
+  const handleRemoveItem = useCallback((itemId, index) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setBagItems(prevItems => prevItems.filter(item => item.id !== itemId));
+  }, []);
+
+  const handleOpenQuantityModal = useCallback((item, index) => {
     setSelectedItem(item);
-    setQuantityModalVisible(true);
-  };
+    setModalStates(prev => ({ ...prev, quantityModalVisible: true }));
+  }, []);
 
-  const handleCloseQuantityModal = () => {
-    setQuantityModalVisible(false);
+  const handleCloseQuantityModal = useCallback(() => {
+    setModalStates(prev => ({ ...prev, quantityModalVisible: false }));
     setSelectedItem(null);
-  };
+  }, []);
 
-  const handleSizeChange = (itemId, newSize) => {
-    // Handle size change logic
+  const handleSizeChange = useCallback((itemId, newSize) => {
+    setBagItems(prevItems => 
+      prevItems.map(item => 
+        item.id === itemId ? { ...item, size: newSize } : item
+      )
+    );
     console.log(`Changing size for item ${itemId} to ${newSize}`);
-  };
+  }, []);
 
-  const handleCheckout = () => {
-    // Navigate to delivery options
-    navigation.navigate('DeliveryOptionsStepOneScreen');
-  };
+  const handleOpenSizeModal = useCallback((item, index) => {
+    setSelectedItem(item);
+    setModalStates(prev => ({ ...prev, sizeModalVisible: true }));
+  }, []);
 
-  const togglePromoCode = () => {
-    setPromoCodeExpanded(!promoCodeExpanded);
-  };
+  const handleCloseSizeModal = useCallback(() => {
+    setModalStates(prev => ({ ...prev, sizeModalVisible: false }));
+    setSelectedItem(null);
+  }, []);
 
-  const togglePoints = () => {
-    setPointsApplied(!pointsApplied);
-  };
+  const handleOpenSizeChart = useCallback(() => {
+    console.log('Opening size chart modal');
+    setModalStates(prev => ({ ...prev, sizeChartModalVisible: true }));
+  }, []);
 
-  const BagItem = ({ item }) => (
-    <View style={styles.productContainer}>
-      <View style={styles.productRow}>
-        <View style={styles.productImageContainer}>
-          <View style={styles.productImagePlaceholder}>
-            {/* Add your product image here */}
-            <Text style={styles.imagePlaceholderText}>IMG</Text>
-          </View>
-        </View>
-        <View style={styles.productDetailsContainer}>
-          <View style={styles.productInfo}>
-            <Text style={styles.productName}>{item.name}</Text>
-            <Text style={styles.productDescription}>{item.description}</Text>
-          </View>
-        </View>
-      </View>
-      <View style={styles.productActionsContainer}>
-        <TouchableOpacity 
-          style={styles.quantityContainer}
-          onPress={() => handleOpenQuantityModal(item)}
-        >
-          <Text style={styles.quantityText}>Qty {item.quantity}</Text>
-          <Text style={styles.dropdownIcon}>▼</Text>
-        </TouchableOpacity>
-        <View style={styles.sizeContainer}>
-          <Text style={styles.sizeText}>{item.size}</Text>
-          <TouchableOpacity style={styles.dropdownButton}>
-            <Text style={styles.dropdownIcon}>▼</Text>
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.price}>{item.price}</Text>
-      </View>
-    </View>
-  );
+  const handleCloseSizeChart = useCallback(() => {
+    setModalStates(prev => ({ ...prev, sizeChartModalVisible: false }));
+  }, []);
 
-  const PromoCodeSection = () => (
-    <View style={styles.voucherContainer}>
-      <View style={styles.voucherCard}>
-        <View style={styles.voucherContent}>
-          <Text style={styles.voucherTitle}>30% OFF</Text>
-          <Text style={styles.voucherCode}>COUPON30</Text>
-          <Text style={styles.voucherDate}>08/08/2023 - 12/08/2023</Text>
-          <View style={styles.voucherDivider} />
-          <TouchableOpacity style={styles.voucherApplyButton}>
-            <Text style={styles.voucherApplyText}>Apply</Text>
-          </TouchableOpacity>
-        </View>
-        {/* Voucher perforated edges - simplified for React Native */}
-        <View style={styles.voucherLeftEdge} />
-        <View style={styles.voucherRightEdge} />
-      </View>
-    </View>
-  );
+  const togglePromoCode = useCallback(() => {
+    setModalStates(prev => ({ ...prev, promoCodeExpanded: !prev.promoCodeExpanded }));
+  }, []);
+
+  const togglePoints = useCallback(() => {
+    setModalStates(prev => ({ ...prev, pointsApplied: !prev.pointsApplied }));
+  }, []);
+
+  const handleApplyPromo = useCallback((promoCode) => {
+    console.log('Applying promo code:', promoCode);
+    Alert.alert('Promo Applied', `${promoCode} has been applied to your order.`);
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -184,53 +314,84 @@ const BagScreen = ({ navigation }) => {
       </View>
 
       <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-        {/* Bag Items */}
-        {bagItems.map((item, index) => (
-          <BagItem key={item.id} item={item} />
-        ))}
-
-        {/* Delivery Information */}
-        <View style={styles.deliveryContainer}>
-          <Text style={styles.deliveryTitle}>Delivery</Text>
-          <Text style={styles.deliveryDate}>Arrives {deliveryInfo.dateRange}</Text>
-          <View style={styles.deliveryLocationContainer}>
-            <Text style={styles.deliveryLocationText}>to Fri, 13 May</Text>
-            <TouchableOpacity>
-              <Text style={styles.editLocationText}>{deliveryInfo.location}</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Apply Points Section */}
-        <View style={styles.applyPointsContainer}>
-          <View style={styles.pointsRow}>
+        {/* Empty Bag State */}
+        {bagItems.length === 0 ? (
+          <View style={styles.emptyBagContainer}>
+            <Text style={styles.emptyBagTitle}>Your bag is empty</Text>
+            <Text style={styles.emptyBagSubtitle}>Add some items to get started</Text>
             <TouchableOpacity 
-              style={styles.pointsCheckbox}
-              onPress={togglePoints}
+              style={styles.continueShoppingButton}
+              onPress={() => navigation.navigate('Home')}
             >
-              {pointsApplied && <Text style={styles.checkmark}>✓</Text>}
+              <Text style={styles.continueShoppingText}>Continue Shopping</Text>
             </TouchableOpacity>
-            <View style={styles.pointsIcon}>
-              <Text style={styles.pointsIconText}>⚡</Text>
-            </View>
-            <Text style={styles.pointsText}>Apply Points</Text>
           </View>
-          <Text style={styles.availablePoints}>Available Points: 100</Text>
-        </View>
+        ) : (
+          <>
+            {/* Bag Items Count */}
+            <View style={styles.bagHeaderContainer}>
+              <Text style={styles.bagItemsCount}>
+                {totalItems} {totalItems === 1 ? 'item' : 'items'} in your bag
+              </Text>
+            </View>
 
-        {/* Promo Code Section */}
-        <TouchableOpacity 
-          style={styles.promoToggleContainer}
-          onPress={togglePromoCode}
-        >
-          <Text style={styles.promoToggleText}>Have a Promo Code?</Text>
-          <Text style={styles.promoToggleIcon}>+</Text>
-        </TouchableOpacity>
+            {/* Bag Items - Optimized rendering */}
+            {bagItems.map((item, index) => (
+              <BagItem 
+                key={`bag-item-${item.id}`}
+                item={item} 
+                index={index}
+                onOpenQuantityModal={handleOpenQuantityModal}
+                onOpenSizeModal={handleOpenSizeModal}
+                onRemoveItem={handleRemoveItem}
+              />
+            ))}
 
-        {promoCodeExpanded && <PromoCodeSection />}
+            {/* Delivery Information */}
+            <View style={styles.deliveryContainer}>
+              <Text style={styles.deliveryTitle}>Delivery</Text>
+              <Text style={styles.deliveryDate}>Arrives {deliveryInfo.dateRange}</Text>
+              <View style={styles.deliveryLocationContainer}>
+                <Text style={styles.deliveryLocationText}>to Fri, 13 May</Text>
+                <TouchableOpacity 
+                  onPress={handleNavigateToDelivery}
+                  accessibilityLabel="Edit delivery location"
+                >
+                  <Text style={styles.editLocationText}>{deliveryInfo.location}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
 
-        {/* Price Breakdown */}
-        <View style={styles.priceBreakdownContainer}>
+            {/* Apply Points Section */}
+            <View style={styles.applyPointsContainer}>
+              <View style={styles.pointsRow}>
+                <TouchableOpacity 
+                  style={styles.pointsCheckbox}
+                  onPress={togglePoints}
+                >
+                  {modalStates.pointsApplied && <Text style={styles.checkmark}>✓</Text>}
+                </TouchableOpacity>
+                <View style={styles.pointsIcon}>
+                  <Text style={styles.pointsIconText}>⚡</Text>
+                </View>
+                <Text style={styles.pointsText}>Apply Points</Text>
+              </View>
+              <Text style={styles.availablePoints}>Available Points: 100</Text>
+            </View>
+
+            {/* Promo Code Section */}
+            <TouchableOpacity 
+              style={styles.promoToggleContainer}
+              onPress={togglePromoCode}
+            >
+              <Text style={styles.promoToggleText}>Have a Promo Code?</Text>
+              <Text style={styles.promoToggleIcon}>+</Text>
+            </TouchableOpacity>
+
+            {modalStates.promoCodeExpanded && <PromoCodeSection onApplyPromo={handleApplyPromo} />}
+
+            {/* Price Breakdown */}
+            <View style={styles.priceBreakdownContainer}>
           <View style={styles.priceRow}>
             <Text style={styles.priceLabel}>Delivery</Text>
             <Text style={styles.priceValue}>{priceBreakdown.delivery}</Text>
@@ -273,6 +434,8 @@ const BagScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.bottomSpacing} />
+          </>
+        )}
       </ScrollView>
 
       {/* Checkout Button */}
@@ -287,10 +450,37 @@ const BagScreen = ({ navigation }) => {
 
       {/* Quantity Selector Modal */}
       <BagQuantitySelectorModalOverlay
-        visible={quantityModalVisible}
+        visible={modalStates.quantityModalVisible}
         onClose={handleCloseQuantityModal}
         item={selectedItem}
         onQuantityChange={handleQuantityChange}
+      />
+
+      {/* Size Selector Modal */}
+      <BagSizeSelectorModalOverlay
+        visible={modalStates.sizeModalVisible}
+        onClose={handleCloseSizeModal}
+        item={selectedItem}
+        onSizeChange={handleSizeChange}
+        onSizeChartPress={() => {
+          Alert.alert('Test', 'Inline onSizeChartPress called!');
+          handleOpenSizeChart();
+        }}
+      />
+
+      {/* Size Chart Modal */}
+      <BagSizeSelectorSizeChart
+        key={`size-chart-${modalStates.sizeChartModalVisible}`}
+        visible={modalStates.sizeChartModalVisible}
+        onClose={handleCloseSizeChart}
+      />
+
+      {/* Delivery Options Modal */}
+      <DeliveryOptionsStepTwoModal
+        visible={modalStates.deliveryModalVisible}
+        onClose={handleCloseDeliveryModal}
+        navigation={navigation}
+        selectedDeliveryOption="standard"
       />
     </SafeAreaView>
   );
@@ -376,6 +566,18 @@ const styles = StyleSheet.create({
     color: '#767676',
     letterSpacing: -0.14,
     lineHeight: 16.8,
+  },
+  removeButton: {
+    marginTop: 8,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    alignSelf: 'flex-start',
+  },
+  removeButtonText: {
+    fontSize: 12,
+    fontWeight: '400',
+    color: '#FF3B30',
+    textDecorationLine: 'underline',
   },
   productActionsContainer: {
     flexDirection: 'row',
@@ -689,6 +891,55 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#FFFFFF',
     lineHeight: 19.2,
+  },
+  // Empty bag styles
+  emptyBagContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 80,
+    paddingHorizontal: 24,
+  },
+  emptyBagTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#000000',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  emptyBagSubtitle: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#767676',
+    marginBottom: 32,
+    textAlign: 'center',
+  },
+  continueShoppingButton: {
+    backgroundColor: '#000000',
+    borderRadius: 100,
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  continueShoppingText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#FFFFFF',
+    lineHeight: 19.2,
+  },
+  // Bag header styles
+  bagHeaderContainer: {
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#EEEEEE',
+  },
+  bagItemsCount: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#767676',
+    textAlign: 'center',
   },
 });
 
