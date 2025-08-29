@@ -9,7 +9,6 @@ import {
   TextInput,
   Modal,
 } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import GlobalBackButton from '../components/GlobalBackButton';
 
 const EditProfile = ({ navigation }) => {
@@ -34,20 +33,13 @@ const EditProfile = ({ navigation }) => {
     countryCode: '+91',
   });
 
-  const [passwordVisible, setPasswordVisible] = useState({
-    changePassword: false,
-    confirmPassword: false,
-  });
-
   const [otherDetailsExpanded, setOtherDetailsExpanded] = useState(false);
-  const [showGenderDropdown, setShowGenderDropdown] = useState(false);
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [showStateDropdown, setShowStateDropdown] = useState(false);
   const [showCountryCodeDropdown, setShowCountryCodeDropdown] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [addressAdded, setAddressAdded] = useState(false);
 
-  const genderOptions = ['Male', 'Female'];
   const stateOptions = ['Delhi', 'Mumbai', 'Bangalore', 'Chennai', 'Kolkata', 'Hyderabad', 'Pune', 'Ahmedabad'];
   const countryCodeOptions = [
     { code: '+1', country: 'US', flag: '🇺🇸' },
@@ -64,23 +56,11 @@ const EditProfile = ({ navigation }) => {
     }));
   };
 
-  const togglePasswordVisibility = (field) => {
-    setPasswordVisible(prev => ({
-      ...prev,
-      [field]: !prev[field]
-    }));
-  };
-
-  const getPasswordPlaceholder = (field) => {
-    return field === 'changePassword' ? 'Enter new password' : 'Confirm new password';
-  };
-
   const getPasswordDisplayValue = (field) => {
-    return formData[field];
-  };
-
-  const shouldSecureEntry = (field) => {
-    return !passwordVisible[field];
+    if (formData[field]) {
+      return '•'.repeat(formData[field].length);
+    }
+    return '';
   };
 
   const handleSave = () => {
@@ -91,23 +71,6 @@ const EditProfile = ({ navigation }) => {
 
   const handleAddOtherDetails = () => {
     setOtherDetailsExpanded(!otherDetailsExpanded);
-  };
-
-  const handleDateChange = (event, selectedDate) => {
-    if (selectedDate) {
-      setFormData(prev => ({
-        ...prev,
-        dateOfBirth: selectedDate
-      }));
-    }
-  };
-
-  const handleGenderSelect = (gender) => {
-    setFormData(prev => ({
-      ...prev,
-      gender: gender
-    }));
-    setShowGenderDropdown(false);
   };
 
   const handleAddAddress = () => {
@@ -178,146 +141,86 @@ const EditProfile = ({ navigation }) => {
         <View style={styles.formContainer}>
           {/* Name Field */}
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Name</Text>
-            <TextInput
-              style={styles.textInput}
-              value={formData.name}
-              onChangeText={(value) => handleInputChange('name', value)}
-              placeholder="Enter your name"
-            />
+            <View style={styles.inputWrapper}>
+              <Text style={styles.floatingLabel}>Name</Text>
+              <TextInput
+                style={styles.textInput}
+                value={formData.name}
+                onChangeText={(value) => handleInputChange('name', value)}
+                placeholder=""
+              />
+            </View>
           </View>
 
           {/* Email Field */}
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Email</Text>
-            <TextInput
-              style={styles.textInput}
-              value={formData.email}
-              onChangeText={(value) => handleInputChange('email', value)}
-              placeholder="Enter your email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
+            <View style={styles.inputWrapper}>
+              <Text style={styles.floatingLabel}>Email</Text>
+              <TextInput
+                style={styles.textInput}
+                value={formData.email}
+                onChangeText={(value) => handleInputChange('email', value)}
+                placeholder=""
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            </View>
           </View>
 
           {/* Change Password Field */}
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Change Password</Text>
-            <View style={styles.passwordContainer}>
+            <View style={styles.inputWrapper}>
+              <Text style={styles.floatingLabel}>Change Password</Text>
               <TextInput
-                style={[styles.textInput, styles.passwordInput]}
+                style={styles.textInput}
                 value={getPasswordDisplayValue('changePassword')}
                 onChangeText={(value) => handleInputChange('changePassword', value)}
-                placeholder={getPasswordPlaceholder('changePassword')}
-                secureTextEntry={shouldSecureEntry('changePassword')}
+                placeholder=""
+                secureTextEntry={false}
               />
-              <TouchableOpacity 
-                style={styles.eyeButton}
-                onPress={() => togglePasswordVisibility('changePassword')}
-              >
-                <Text style={styles.eyeText}>
-                  {passwordVisible.changePassword ? '👁️' : '👁️‍🗨️'}
-                </Text>
-              </TouchableOpacity>
             </View>
           </View>
 
           {/* Confirm Password Field */}
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Confirm Password</Text>
-            <View style={styles.passwordContainer}>
+            <View style={styles.inputWrapper}>
+              <Text style={styles.floatingLabel}>Confirm Password</Text>
               <TextInput
-                style={[styles.textInput, styles.passwordInput]}
+                style={styles.textInput}
                 value={getPasswordDisplayValue('confirmPassword')}
                 onChangeText={(value) => handleInputChange('confirmPassword', value)}
-                placeholder={getPasswordPlaceholder('confirmPassword')}
-                secureTextEntry={shouldSecureEntry('confirmPassword')}
+                placeholder=""
+                secureTextEntry={false}
               />
-              <TouchableOpacity 
-                style={styles.eyeButton}
-                onPress={() => togglePasswordVisibility('confirmPassword')}
-              >
-                <Text style={styles.eyeText}>
-                  {passwordVisible.confirmPassword ? '👁️' : '👁️‍🗨️'}
-                </Text>
-              </TouchableOpacity>
             </View>
           </View>
 
           {/* Phone Field */}
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Phone</Text>
-            <TextInput
-              style={styles.textInput}
-              value={formData.phone}
-              onChangeText={(value) => handleInputChange('phone', value)}
-              placeholder="Enter your phone number"
-              keyboardType="phone-pad"
-            />
+            <View style={styles.inputWrapper}>
+              <Text style={styles.floatingLabel}>Phone</Text>
+              <TextInput
+                style={styles.textInput}
+                value={formData.phone}
+                onChangeText={(value) => handleInputChange('phone', value)}
+                placeholder=""
+                keyboardType="phone-pad"
+              />
+            </View>
           </View>
         </View>
 
         {/* Additional Sections */}
         <View style={styles.additionalContainer}>
-          {/* Other Details */}
-          <View style={styles.additionalSection}>
+          {/* Other Details and Address in Container */}
+          <View style={styles.detailsContainer}>
+            {/* Other Details */}
             <TouchableOpacity style={styles.additionalItem} onPress={handleAddOtherDetails}>
               <Text style={styles.additionalTitle}>Other Details</Text>
               <Text style={styles.addButton}>+ Add</Text>
             </TouchableOpacity>
             
-            {otherDetailsExpanded && (
-              <View style={styles.expandedContent}>
-                {/* Date of Birth */}
-                <View style={styles.inputContainer}>
-                  <Text style={styles.inputLabel}>Date of Birth</Text>
-                  <View style={styles.datePickerContainer}>
-                    <DateTimePicker
-                      value={formData.dateOfBirth}
-                      mode="date"
-                      display="compact"
-                      onChange={handleDateChange}
-                      style={styles.datePickerStyle}
-                    />
-                  </View>
-                </View>
-
-                {/* Gender */}
-                <View style={styles.inputContainer}>
-                  <Text style={styles.inputLabel}>Gender</Text>
-                  <TouchableOpacity 
-                    style={styles.dropdownContainer}
-                    onPress={() => setShowGenderDropdown(!showGenderDropdown)}
-                  >
-                    <Text style={styles.dropdownText}>{formData.gender}</Text>
-                    <Text style={styles.dropdownArrow}>▼</Text>
-                  </TouchableOpacity>
-                  
-                  {showGenderDropdown && (
-                    <View style={styles.dropdownOptions}>
-                      {genderOptions.map((option) => (
-                        <TouchableOpacity
-                          key={option}
-                          style={styles.dropdownOption}
-                          onPress={() => handleGenderSelect(option)}
-                        >
-                          <Text style={[
-                            styles.dropdownOptionText,
-                            formData.gender === option && styles.selectedOption
-                          ]}>
-                            {option}
-                          </Text>
-                        </TouchableOpacity>
-                      ))}
-                    </View>
-                  )}
-                </View>
-              </View>
-            )}
-          </View>
-
-          {/* Address */}
-          <View style={styles.additionalSection}>
+            {/* Address */}
             <TouchableOpacity style={styles.additionalItem} onPress={handleAddAddress}>
               <Text style={styles.additionalTitle}>Address</Text>
               <Text style={styles.addButton}>+ Add</Text>
@@ -599,9 +502,10 @@ const styles = StyleSheet.create({
     transformOrigin: 'left center',
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 20,
+    fontWeight: '500',
     color: '#000000',
+    fontFamily: 'Montserrat-Medium',
   },
   placeholder: {
     width: 30,
@@ -616,43 +520,49 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginBottom: 20,
   },
-  inputLabel: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#000000',
-    marginBottom: 8,
-    marginLeft: 5,
-  },
-  textInput: {
-    borderWidth: 2,
-    borderColor: '#000000',
-    borderRadius: 25,
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    fontSize: 16,
-    color: '#000000',
-    backgroundColor: '#FFFFFF',
-  },
-  passwordContainer: {
+  inputWrapper: {
     position: 'relative',
   },
-  passwordInput: {
-    paddingRight: 60,
-  },
-  eyeButton: {
+  floatingLabel: {
     position: 'absolute',
-    right: 20,
-    top: 15,
-    paddingVertical: 5,
-    paddingHorizontal: 5,
+    top: -8,
+    left: 16,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 4,
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#000000',
+    zIndex: 1,
+    fontFamily: 'Montserrat-Medium',
   },
-  eyeText: {
-    fontSize: 16,
-    color: '#666666',
+  textInput: {
+    borderWidth: 1.5,
+    borderColor: '#000000',
+    borderRadius: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    fontSize: 14,
+    color: '#000000',
+    backgroundColor: '#FFFFFF',
+    fontFamily: 'Montserrat-Regular',
   },
   additionalContainer: {
     paddingHorizontal: 20,
     marginTop: 20,
+  },
+  detailsContainer: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 22,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   additionalSection: {
     marginBottom: 15,
@@ -662,18 +572,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
   },
   additionalTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: 'bold',
     color: '#000000',
+    fontFamily: 'Montserrat-Bold',
   },
   addButton: {
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: 14,
+    fontWeight: '800',
     color: '#000000',
+    fontFamily: 'Montserrat-ExtraBold',
   },
   addressDisplayContainer: {
     paddingTop: 15,
@@ -919,15 +829,16 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     backgroundColor: '#000000',
-    borderRadius: 25,
-    paddingVertical: 18,
+    borderRadius: 100,
+    paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
   saveButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '500',
+    fontFamily: 'Montserrat-Medium',
   },
 });
 
