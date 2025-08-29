@@ -13,7 +13,6 @@ import { Colors } from '../constants/colors';
 const OrderConfirmationPhone = ({ navigation }) => {
   const handleViewOrder = () => {
     // Navigate to order management screen
-    console.log('View or Manage Order pressed');
     if (navigation) {
       navigation.navigate('Orders', { previousScreen: 'OrderConfirmationPhone' });
     }
@@ -21,7 +20,6 @@ const OrderConfirmationPhone = ({ navigation }) => {
 
   const handlePlaceOrder = () => {
     // Navigate to the final Figma design (node 4003:5758)
-    console.log('Place Order pressed');
     if (navigation) {
       navigation.navigate('FinalOrderScreen'); // This will be implemented next
     }

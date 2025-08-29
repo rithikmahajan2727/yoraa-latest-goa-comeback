@@ -74,7 +74,6 @@ const Region = ({ navigation }) => {
 
   const handleCountrySelect = (country) => {
     // Handle country selection - you can add logic here to store selected region
-    console.log('Selected country:', country);
     // Navigate back to rewards tab
     navigation.goBack();
   };

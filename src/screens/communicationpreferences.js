@@ -47,7 +47,6 @@ const CommunicationPreferences = ({ navigation }) => {
 
   const handleSave = () => {
     // Save preferences
-    console.log('Saving communication preferences:', {
       sendEmails: sendEmails
     });
     

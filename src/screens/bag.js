@@ -325,14 +325,12 @@ const BagScreen = ({ navigation, route }) => {
   const handleQuantityChange = useCallback((itemId, newQuantity) => {
     if (newQuantity === 0) {
       setBagItems(prevItems => prevItems.filter(item => item.id !== itemId));
-      console.log(`Removing item ${itemId} from bag`);
     } else {
       setBagItems(prevItems => 
         prevItems.map(item => 
           item.id === itemId ? { ...item, quantity: newQuantity } : item
         )
       );
-      console.log(`Changing quantity for item ${itemId} to ${newQuantity}`);
     }
   }, []);
 
@@ -357,7 +355,6 @@ const BagScreen = ({ navigation, route }) => {
         item.id === itemId ? { ...item, size: newSize } : item
       )
     );
-    console.log(`Changing size for item ${itemId} to ${newSize}`);
   }, []);
 
   const handleOpenSizeModal = useCallback((item, index) => {
@@ -371,7 +368,6 @@ const BagScreen = ({ navigation, route }) => {
   }, []);
 
   const handleOpenSizeChart = useCallback(() => {
-    console.log('Opening size chart modal');
     setModalStates(prev => ({ ...prev, sizeChartModalVisible: true }));
   }, []);
 
@@ -388,7 +384,6 @@ const BagScreen = ({ navigation, route }) => {
   }, []);
 
   const handleApplyPromo = useCallback((promoCode) => {
-    console.log('Applying promo code:', promoCode);
     Alert.alert('Promo Applied', `${promoCode} has been applied to your order.`);
   }, []);
 

@@ -236,7 +236,6 @@ const InvoiceScreen = ({ navigation, route }) => {
         `Invoice ${invoice.orderNumber} is being downloaded to your device.`,
         [{ text: 'OK' }]
       );
-      console.log('Downloading invoice:', invoice.orderNumber);
     } catch (error) {
       Alert.alert(
         'Download Failed',
@@ -257,7 +256,6 @@ const InvoiceScreen = ({ navigation, route }) => {
       });
 
       if (result.action === Share.sharedAction) {
-        console.log('Invoice shared successfully');
       }
     } catch (error) {
       Alert.alert(

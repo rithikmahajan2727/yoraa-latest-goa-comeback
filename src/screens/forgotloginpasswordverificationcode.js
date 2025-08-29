@@ -57,14 +57,12 @@ const ForgotLoginPasswordVerificationCode = ({ navigation, route }) => {
     // Reset timer and resend code logic
     setTimer(10);
     setCode(['', '', '', '', '', '']);
-    console.log('Resend code to:', email);
   };
 
   const handleVerifyNow = () => {
     const verificationCode = code.join('');
     if (verificationCode.length === 6) {
       // Here you would typically validate the code with your backend
-      console.log('Verifying code:', verificationCode);
       // Navigate to the create new password screen
       if (navigation && navigation.navigate) {
         navigation.navigate('forgotloginpqasswordcreatenewpasword', { 
@@ -74,7 +72,6 @@ const ForgotLoginPasswordVerificationCode = ({ navigation, route }) => {
       }
     } else {
       // Handle incomplete code
-      console.log('Please enter complete verification code');
     }
   };
 

@@ -33,7 +33,6 @@ const TermsAndConditions = ({ navigation }) => {
   const handleYes = () => {
     if (isAccepted) {
       // Handle acceptance and proceed to preference selector
-      console.log('Terms and conditions accepted');
       
       // Navigate to Preference Selector modal after accepting terms
       if (navigation) {

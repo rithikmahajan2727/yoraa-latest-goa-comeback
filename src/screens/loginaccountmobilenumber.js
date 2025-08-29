@@ -16,7 +16,6 @@ const LoginAccountMobileNumber = ({ navigation }) => {
 
   const handleLogin = () => {
     // Handle login logic
-    console.log('Login with:', loginMethod === 'phone' ? mobileNumber : mobileNumber);
     
     // Navigate to verification code screen
     if (navigation) {
@@ -33,7 +32,6 @@ const LoginAccountMobileNumber = ({ navigation }) => {
 
   const handleSocialLogin = (provider) => {
     // Handle social login
-    console.log('Social login with:', provider);
   };
 
   return (

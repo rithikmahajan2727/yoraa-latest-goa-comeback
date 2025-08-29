@@ -37,7 +37,6 @@ const DeleteAccountConfirmation = ({ navigation, route }) => {
     }
 
     // Handle final account deletion logic here
-    console.log('Account deletion confirmed and submitted');
     // Add your account deletion API call here
     
     // Show the confirmation modal directly

@@ -113,7 +113,6 @@ const OrderCard = ({ order, onTrack, onCancelOrder, navigation }) => (
           } else if (action.id === 'buy_again') {
             navigation?.navigate('ProductDetailsMain', { order });
           } else {
-            console.log(`${action.title} pressed for order ${order.id}`);
           }
         }}
         activeOpacity={0.8}

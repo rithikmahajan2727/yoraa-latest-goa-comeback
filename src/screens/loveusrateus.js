@@ -19,7 +19,6 @@ let ImagePicker;
 try {
   ImagePicker = require('react-native-image-picker');
 } catch (e) {
-  console.warn('react-native-image-picker not available');
 }
 
 // Back Arrow Icon Component
@@ -155,7 +154,6 @@ const LoveUsRateUs = ({ navigation, route }) => {
     }
 
     // Here you would typically send the data to your backend
-    console.log('Submitting feedback:', {
       rating,
       feedback,
       images: uploadedImages.length

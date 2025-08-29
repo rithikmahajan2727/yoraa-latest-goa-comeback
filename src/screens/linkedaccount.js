@@ -32,8 +32,7 @@ const LinkedAccountScreen = ({ navigation }) => {
   }, [slideAnim]);
 
   const handleUpdate = () => {
-    console.log('Update pressed');
-    // Add update functionality here
+    // Handle update logic here
   };
 
   const handleBack = () => {

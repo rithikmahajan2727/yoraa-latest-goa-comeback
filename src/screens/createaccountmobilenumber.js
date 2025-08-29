@@ -263,7 +263,6 @@ const CreateAccountMobileNumber = ({ navigation }) => {
 
   const handleSignUp = () => {
     // Handle sign up logic
-    console.log('Sign up with mobile:', countryCode + mobileNumber);
     // You can add validation and API call here
     
     // Navigate to verification screen
@@ -290,17 +289,14 @@ const CreateAccountMobileNumber = ({ navigation }) => {
 
   const handleSignUpLink = () => {
     // Handle "Sign Up" link in the footer
-    console.log('Navigate to sign up');
   };
 
   const handleAppleLogin = () => {
     // Handle Apple login
-    console.log('Apple login');
   };
 
   const handleGoogleLogin = () => {
     // Handle Google login
-    console.log('Google login');
   };
 
   return (

@@ -73,15 +73,12 @@ const SizeSelectionModal = ({
   };
 
   const handleGoToBag = () => {
-    console.log('Go to Bag button pressed');
     // Navigate to bag/cart screen
     handleClose();
     // Navigate to the Bag screen
     if (navigation && navigation.navigate) {
-      console.log('Navigating to Bag screen...');
       navigation.navigate('Bag');
     } else {
-      console.warn('Navigation prop is not available or does not have navigate method');
     }
   };
 

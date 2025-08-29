@@ -77,7 +77,6 @@ const BagSizeSelectorModalOverlay = ({
 
   const handleSizeChart = () => {
     // Handle size chart navigation or modal
-    console.log('Size Chart button pressed, onSizeChartPress:', typeof onSizeChartPress);
     Alert.alert('Test', `Size Chart button pressed! onSizeChartPress is: ${typeof onSizeChartPress}`);
     
     // Show size chart within this modal

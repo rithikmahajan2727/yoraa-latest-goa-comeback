@@ -48,7 +48,6 @@ const FavouritesModalOverlayForSizeSelection = ({ route, navigation }) => {
 
   const handleAddToBag = () => {
     // Handle add to bag functionality
-    console.log('Adding to bag:', { product, selectedSize, selectedSizeType });
     navigation.navigate('FavouritesAddedToBagConfirmationModal', { 
       product, 
       selectedSize, 

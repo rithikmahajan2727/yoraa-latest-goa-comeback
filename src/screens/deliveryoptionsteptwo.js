@@ -20,10 +20,8 @@ const DeliveryOptionsStepTwoModal = ({ visible, onClose, selectedDeliveryOption,
   const [selectedAddress, setSelectedAddress] = useState('john-smith');
   const [showAddAddressModal, setShowAddAddressModal] = useState(false);
 
-  console.log('Modal visibility changed:', visible); // Debug log
 
   useEffect(() => {
-    console.log('Modal useEffect triggered, visible:', visible); // Debug log
     if (visible) {
       // Slide up animation with 250ms duration and ease-in timing
       Animated.timing(slideAnim, {
@@ -54,7 +52,6 @@ const DeliveryOptionsStepTwoModal = ({ visible, onClose, selectedDeliveryOption,
 
   const handleContinue = () => {
     // Handle continue action based on selected delivery option
-    console.log('Continue with delivery options:', selectedDeliveryOption);
     
     // Close current modal first
     Animated.timing(slideAnim, {
@@ -81,13 +78,11 @@ const DeliveryOptionsStepTwoModal = ({ visible, onClose, selectedDeliveryOption,
 
   const handleAddAddress = () => {
     // Handle add address action
-    console.log('Add new address');
     setShowAddAddressModal(true);
   };
 
   const handleEditAddress = () => {
     // Handle edit address action
-    console.log('Edit address');
     setShowAddAddressModal(true);
   };
 

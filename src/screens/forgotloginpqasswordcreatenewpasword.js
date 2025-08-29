@@ -27,19 +27,14 @@ const ForgotLoginPasswordCreateNewPassword = ({ navigation, route }) => {
 
   const handleSubmit = () => {
     if (password.length < 6) {
-      console.log('Password must be at least 6 characters');
       return;
     }
     
     if (password !== confirmPassword) {
-      console.log('Passwords do not match');
       return;
     }
 
     // Here you would typically call your API to reset the password
-    console.log('Resetting password for:', email);
-    console.log('Verification code:', verificationCode);
-    console.log('New password:', password);
     
     // Navigate to password confirmation modal
     if (navigation) {

@@ -18,7 +18,6 @@ const LoginAccountMobileNumberVerificationCode = ({ navigation }) => {
   const handleVerification = () => {
     // Handle verification logic
     const code = verificationCode.join('');
-    console.log('Login verification code:', code);
     
     // Navigate to Terms and Conditions screen after successful login verification
     if (navigation) {
@@ -47,7 +46,6 @@ const LoginAccountMobileNumberVerificationCode = ({ navigation }) => {
 
   const handleResendCode = () => {
     // Handle resend code logic
-    console.log('Resend login verification code');
     setResendTimer(30);
     // Reset timer countdown logic would go here
   };

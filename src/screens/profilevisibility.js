@@ -57,8 +57,6 @@ const ProfileVisibilityScreen = ({ navigation }) => {
 
   const handleSave = () => {
     // Handle save logic here
-    console.log('Profile Visibility:', profileVisibility);
-    console.log('Location Sharing:', locationSharing);
     // Navigate back after saving
     handleBack();
   };
