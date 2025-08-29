@@ -9,7 +9,7 @@ import {
   TextInput,
   Modal,
 } from 'react-native';
-import DatePicker from 'react-native-date-picker';
+// import DatePicker from 'react-native-date-picker';
 import GlobalBackButton from '../components/GlobalBackButton';
 
 const EditProfile = ({ navigation }) => {
@@ -41,7 +41,7 @@ const EditProfile = ({ navigation }) => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [addressAdded, setAddressAdded] = useState(true); // Set to true to show saved address
   const [showGenderDropdown, setShowGenderDropdown] = useState(false);
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  // const [showDatePicker, setShowDatePicker] = useState(false);
 
   const stateOptions = ['Delhi', 'Mumbai', 'Bangalore', 'Chennai', 'Kolkata', 'Hyderabad', 'Pune', 'Ahmedabad'];
   const genderOptions = ['Male', 'Female', 'Other'];
@@ -122,17 +122,17 @@ const EditProfile = ({ navigation }) => {
     setShowGenderDropdown(false);
   };
 
-  const handleDatePickerPress = () => {
-    setShowDatePicker(true);
-  };
+  // const handleDatePickerPress = () => {
+  //   setShowDatePicker(true);
+  // };
 
-  const handleDateChange = (date) => {
-    setFormData(prev => ({
-      ...prev,
-      dateOfBirth: date
-    }));
-    setShowDatePicker(false);
-  };
+  // const handleDateChange = (date) => {
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     dateOfBirth: date
+  //   }));
+  //   setShowDatePicker(false);
+  // };
 
   const getFormattedAddress = () => {
     const { address, apartment, city, state, pin, country } = formData;
@@ -249,7 +249,7 @@ const EditProfile = ({ navigation }) => {
             <View style={styles.figmaInputContainer}>
               <View style={styles.figmaInputWrapper}>
                 <Text style={styles.figmaFloatingLabel}>Date of Birth</Text>
-                <TouchableOpacity style={styles.figmaDatePickerContainer} onPress={handleDatePickerPress}>
+                <TouchableOpacity style={styles.figmaDatePickerContainer}>
                   <Text style={styles.figmaDateText}>
                     {formData.dateOfBirth.toLocaleDateString('en-US', {
                       month: '2-digit',
@@ -522,17 +522,7 @@ const EditProfile = ({ navigation }) => {
         </View>
       </Modal>
 
-      {/* Date Picker Modal */}
-      <DatePicker
-        modal
-        open={showDatePicker}
-        date={formData.dateOfBirth}
-        mode="date"
-        onConfirm={handleDateChange}
-        onCancel={() => setShowDatePicker(false)}
-        maximumDate={new Date()}
-        title="Select Date of Birth"
-      />
+  {/* Date Picker Modal removed for stable build */}
 
       {/* Save Button */}
       <View style={styles.saveButtonContainer}>
