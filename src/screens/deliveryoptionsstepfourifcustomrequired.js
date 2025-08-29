@@ -198,7 +198,7 @@ const CustomClearance = ({ navigation }) => {
           {/*  for indian national  */}
           {(docOption.value === "indianResident" ||
             docOption.value === "foreignNational") && (
-            <View style={{ marginBottom: 16, position: 'relative', zIndex: 100 }}>
+            <View style={styles.dropdownItemContainer}>
               <TouchableOpacity
                 style={{
                   borderWidth: 1,
@@ -273,7 +273,7 @@ const CustomClearance = ({ navigation }) => {
                         {item.label}
                       </Text>
                       {docType.value === item.value && (
-                        <Text style={{ color: "#000", fontSize: 16, fontWeight: "bold" }}>✓</Text>
+                        <Text style={styles.dropdownItemCheckmark}>✓</Text>
                       )}
                     </TouchableOpacity>
                   ))}
@@ -284,7 +284,7 @@ const CustomClearance = ({ navigation }) => {
           {/*  for adhaar card  */}
           {docOption.value === "indianResident" &&
             docType.label === "Aadhar Card" && (
-              <View style={{ marginBottom: 16 }}>
+              <View style={styles.marginBottom16}>
                 <TextInput
                   placeholder="Adhaar number"
                   style={{
@@ -306,7 +306,7 @@ const CustomClearance = ({ navigation }) => {
           {/*  for voter card  */}
           {docOption.value === "indianResident" &&
             docType.label === "Election/Voter ID Card" && (
-              <View style={{ marginBottom: 16 }}>
+              <View style={styles.marginBottom16}>
                 <TextInput
                   placeholder="Voter id number"
                   style={{
@@ -329,7 +329,7 @@ const CustomClearance = ({ navigation }) => {
           {(docOption.value === "indianResident" ||
             docOption.value === "foreignNational") &&
             docType.label === "Passport Number" && (
-              <View style={{ marginBottom: 16 }}>
+              <View style={styles.marginBottom16}>
                 <TextInput
                   placeholder="Passport number"
                   style={{
@@ -352,7 +352,7 @@ const CustomClearance = ({ navigation }) => {
           {(docOption.value === "indianResident" ||
             docOption.value === "foreignNational") &&
             docType.label === "Passport Number" && (
-              <View style={{ marginBottom: 16 }}>
+              <View style={styles.marginBottom16}>
                 <TextInput
                   placeholder="Passport Expiry Date"
                   style={{
@@ -396,7 +396,7 @@ const CustomClearance = ({ navigation }) => {
               }}
             >
               {checked1 && (
-                <Text style={{ fontSize: 10, color: 'white' }}>✓</Text>
+                <Text style={styles.checkmarkIcon}>✓</Text>
               )}
             </View>
 
@@ -438,7 +438,7 @@ const CustomClearance = ({ navigation }) => {
               }}
             >
               {checked2 && (
-                <Text style={{ fontSize: 10, color: 'white' }}>✓</Text>
+                <Text style={styles.checkmarkIcon}>✓</Text>
               )}
             </View>
 
@@ -459,7 +459,7 @@ const CustomClearance = ({ navigation }) => {
           {/* Upload id part */}
           {/* HEADING */}
           {docOption.value === "indianResident" && (
-            <View style={{ marginTop: 32, marginBottom: 12 }}>
+            <View style={[styles.marginTop32, styles.marginBottom12]}>
               <Text
                 style={{
                   fontFamily: FONT_FAMILY.BOLD,
@@ -474,7 +474,7 @@ const CustomClearance = ({ navigation }) => {
           )}
           {/* sub heading */}
           {docOption.value === "indianResident" && (
-            <View style={{ marginBottom: 24 }}>
+            <View style={styles.marginBottom24}>
               <Text
                 style={{
                   fontFamily: FONT_FAMILY.MEDIUM,
@@ -489,7 +489,7 @@ const CustomClearance = ({ navigation }) => {
           )}
           {/* front side  */}
           {docOption.value === "indianResident" && (
-            <View style={{ marginBottom: 16 }}>
+            <View style={styles.marginBottom16}>
               <TouchableOpacity
                 style={{
                   borderWidth: 1,
@@ -526,7 +526,7 @@ const CustomClearance = ({ navigation }) => {
           )}
           {/* back side */}
           {docOption.value === "indianResident" && (
-            <View style={{ marginBottom: 32 }}>
+            <View style={styles.marginBottom32}>
               <TouchableOpacity
                 style={{
                   borderWidth: 1,
@@ -564,7 +564,7 @@ const CustomClearance = ({ navigation }) => {
 
           {/*  for foreign residents */}
           {docOption.value === "foreignNational" && (
-            <View style={{ paddingTop: 10 }}>
+            <View style={styles.paddingTop10}>
               <Text
                 style={{
                   fontFamily: FONT_FAMILY.BOLD,
@@ -577,7 +577,7 @@ const CustomClearance = ({ navigation }) => {
           )}
           {/* sub heading */}
           {docOption.value === "foreignNational" && (
-            <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+            <View style={styles.rowDirectionWrap}>
               <Text
                 style={{
                   fontFamily: FONT_FAMILY.BOLD,
@@ -593,7 +593,7 @@ const CustomClearance = ({ navigation }) => {
           )}
           {/* front side  */}
           {docOption.value === "foreignNational" && (
-            <View style={{ gap: 2 }}>
+            <View style={styles.gapTwo}>
               <TouchableOpacity
                 style={{
                   borderWidth: 1,
@@ -629,7 +629,7 @@ const CustomClearance = ({ navigation }) => {
           )}
           {/* back side */}
           {docOption.value === "foreignNational" && (
-            <View style={{ gap: 2 }}>
+            <View style={styles.gapTwo}>
               <TouchableOpacity
                 style={{
                   borderWidth: 1,
@@ -665,7 +665,7 @@ const CustomClearance = ({ navigation }) => {
           )}
           {/*  visa / pio  */}
           {docOption.value === "foreignNational" && (
-            <View style={{ paddingTop: 10 }}>
+            <View style={styles.paddingTop10}>
               <Text
                 style={{
                   fontFamily: FONT_FAMILY.BOLD,
@@ -697,7 +697,7 @@ const CustomClearance = ({ navigation }) => {
           )}
           {/* visa / pio upload side  */}
           {docOption.value === "foreignNational" && (
-            <View style={{ gap: 2 }}>
+            <View style={styles.gapTwo}>
               <TouchableOpacity
                 style={{
                   borderWidth: 1,
@@ -732,7 +732,7 @@ const CustomClearance = ({ navigation }) => {
             </View>
           )}
           {/* Address options heading */}
-          <View style={{ marginTop: 32, marginBottom: 12 }}>
+          <View style={[styles.marginTop32, styles.marginBottom12]}>
             <Text
               style={{
                 fontFamily: FONT_FAMILY.BOLD,
@@ -777,7 +777,7 @@ const CustomClearance = ({ navigation }) => {
           </View>
           {/*  proof of residence */}
           {docOption.value === "foreignNational" && (
-            <View style={{ marginTop: 32, marginBottom: 12 }}>
+            <View style={[styles.marginTop32, styles.marginBottom12]}>
               <Text
                 style={{
                   fontFamily: FONT_FAMILY.BOLD,
@@ -970,7 +970,7 @@ const CustomClearance = ({ navigation }) => {
           {/*  alert for proof of residence */}
           {/* sub heading */}
           {docOption.value === "foreignNational" && (
-            <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+            <View style={styles.rowDirectionWrap}>
               <Text
                 style={{
                   fontFamily: FONT_FAMILY.BOLD,
@@ -1007,7 +1007,7 @@ const CustomClearance = ({ navigation }) => {
                 }}
               >
                 {checked4 && (
-                  <Text style={{ fontSize: 10, color: 'white' }}>✓</Text>
+                  <Text style={styles.checkmarkIcon}>✓</Text>
                 )}
               </View>
 
@@ -1029,7 +1029,7 @@ const CustomClearance = ({ navigation }) => {
           {/*  Address proof info  */}
           {/* proof of residence */}
           {docOption.value === "foreignNational" && (
-            <View style={{ paddingTop: 10 }}>
+            <View style={styles.paddingTop10}>
               <Text
                 style={{
                   fontFamily: FONT_FAMILY.BOLD,
@@ -1095,7 +1095,7 @@ const CustomClearance = ({ navigation }) => {
               }}
             >
               {checked3 && (
-                <Text style={{ fontSize: 10, color: 'white' }}>✓</Text>
+                <Text style={styles.checkmarkIcon}>✓</Text>
               )}
             </View>
 
@@ -1245,6 +1245,68 @@ const styles = StyleSheet.create({
   },
   marginBottom24: {
     marginBottom: 24,
+  },
+  marginBottom32: {
+    marginBottom: 32,
+  },
+  marginTop32: {
+    marginTop: 32,
+  },
+  paddingTop10: {
+    paddingTop: 10,
+  },
+  rowDirection: {
+    flexDirection: 'row',
+  },
+  rowDirectionWrap: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  flexOne: {
+    flex: 1,
+  },
+  gapTwo: {
+    gap: 2,
+  },
+  gapTen: {
+    gap: 10,
+  },
+  centerAlignStart: {
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+  },
+  uploadButtonBorder: {
+    borderWidth: 1,
+    borderColor: 'lightgray',
+    borderRadius: 12,
+    alignSelf: 'flex-start',
+    padding: 5,
+  },
+  uploadButtonText: {
+    fontFamily: FONT_FAMILY.BOLD,
+    fontSize: FONT_SIZE.S,
+    color: 'darkgray',
+    flexWrap: 'wrap',
+    paddingLeft: 5,
+  },
+  fileFormatText: {
+    fontFamily: FONT_FAMILY.BOLD,
+    fontSize: FONT_SIZE.XS,
+    color: 'darkgray',
+  },
+  checkmarkIcon: {
+    fontSize: 10,
+    color: 'white',
+  },
+  dropdownItemCheckmark: {
+    color: '#000',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  dropdownItemContainer: {
+    marginBottom: 16,
+    position: 'relative',
+    zIndex: 100,
   },
 });
 

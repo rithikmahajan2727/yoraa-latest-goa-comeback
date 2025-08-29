@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -13,17 +13,19 @@ const { width: screenWidth } = Dimensions.get('window');
 const PreferenceSelector = ({ navigation }) => {
   const [selectedPreference, setSelectedPreference] = useState(null);
 
-  const preferences = [
+  // Memoize static preferences data
+  const preferences = useMemo(() => [
     { id: 'male', icon: '♂', label: 'Male' },
     { id: 'female', icon: '♀', label: 'Female' },
     { id: 'unisex', icon: '⚥', label: 'Unisex' },
-  ];
+  ], []);
 
-  const handlePreferenceSelect = (preferenceId) => {
+  // Memoize callback functions to prevent re-renders
+  const handlePreferenceSelect = useCallback((preferenceId) => {
     setSelectedPreference(preferenceId);
-  };
+  }, []);
 
-  const handleLetsYoraa = () => {
+  const handleLetsYoraa = useCallback(() => {
     if (selectedPreference) {
       // Selected preference logged - removed for production
       
@@ -32,7 +34,7 @@ const PreferenceSelector = ({ navigation }) => {
         navigation.navigate('Home');
       }
     }
-  };
+  }, [selectedPreference, navigation]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -233,4 +235,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PreferenceSelector;
+export default React.memo(PreferenceSelector);
