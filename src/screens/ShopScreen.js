@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   FlatList,
+  Image,
 } from 'react-native';
 import { Spacing, BorderRadius, Shadows } from '../constants';
 import Svg, { Path } from 'react-native-svg';
@@ -40,23 +41,26 @@ import { GlobalCartIcon } from '../assets/icons';
 
 // Sample data for new arrivals and trending now
 const NEW_ARRIVALS = [
-  {
-    id: '1',
-    name: 'Nike Dunk Low Premium',
-    price: 'US$125',
-    image: null, // Placeholder for product image
+    { 
+    id: '1', 
+    name: 'Product One', 
+    price: '$99', 
+    isNewArrival: true, 
+    image: 'https://via.placeholder.com/150x200/CCCCCC/000000?text=Product+1'
   },
-  {
-    id: '2',
-    name: 'Nike Air Huarache Runner',
-    price: 'US$140',
-    image: null,
+  { 
+    id: '2', 
+    name: 'Product Two', 
+    price: '$149', 
+    isNewArrival: true, 
+    image: 'https://via.placeholder.com/150x200/CCCCCC/000000?text=Product+2'
   },
-  {
-    id: '3',
-    name: 'Adidas Ultraboost',
-    price: 'US$180',
-    image: null,
+  { 
+    id: '3', 
+    name: 'Product Three', 
+    price: '$199', 
+    isNewArrival: true, 
+    image: 'https://via.placeholder.com/150x200/CCCCCC/000000?text=Product+3'
   },
 ];
 
@@ -136,7 +140,11 @@ const ShopScreen = React.memo(({ navigation }) => {
       accessibilityHint="View product details"
     >
       <View style={styles.productImageContainer}>
-        <View style={styles.productImagePlaceholder} />
+        <Image
+          source={{ uri: item.image }}
+          style={styles.productImagePlaceholder}
+          resizeMode="cover"
+        />
         <TouchableOpacity
           style={styles.favoriteButton}
           onPress={() => toggleFavorite(item.id)}
