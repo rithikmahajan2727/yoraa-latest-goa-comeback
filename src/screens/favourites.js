@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -11,23 +11,27 @@ import HeartIcon from '../assets/icons/HeartIcon';
 import GlobalBackButton from '../components/GlobalBackButton';
 import { useFavorites } from '../contexts/FavoritesContext';
 
-const FavouritesScreen = ({ navigation }) => {
+const FavouritesScreen = React.memo(({ navigation }) => {
   const { getFavoritesCount } = useFavorites();
 
+  // Memoize the favorites count to prevent unnecessary recalculations
+  const favoritesCount = useMemo(() => getFavoritesCount(), [getFavoritesCount]);
+  
   // Check if we should show content or empty state
-  const hasFavorites = getFavoritesCount() > 0;
+  const hasFavorites = favoritesCount > 0;
 
-  const handleBackPress = () => {
+  // Optimized handlers with useCallback
+  const handleBackPress = useCallback(() => {
     navigation.goBack();
-  };
+  }, [navigation]);
 
-  const handleAddFavouritesNow = () => {
+  const handleAddFavouritesNow = useCallback(() => {
     navigation.navigate('Home');
-  };
+  }, [navigation]);
 
-  const handleViewFavorites = () => {
+  const handleViewFavorites = useCallback(() => {
     navigation.navigate('FavouritesContent');
-  };
+  }, [navigation]);
 
   // If there are favorites, show a different UI that leads to content
   if (hasFavorites) {
@@ -38,10 +42,13 @@ const FavouritesScreen = ({ navigation }) => {
           <TouchableOpacity 
             style={styles.backButton}
             onPress={handleBackPress}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+            accessibilityHint="Navigate to previous screen"
           >
             <GlobalBackButton />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Favourites</Text>
+          <Text style={styles.headerTitle} accessibilityRole="header">Favourites</Text>
           <View style={styles.headerRight} />
         </View>
 
@@ -55,7 +62,7 @@ const FavouritesScreen = ({ navigation }) => {
 
           <View style={styles.textContainer}>
             <Text style={styles.emptyText}>
-              You have {getFavoritesCount()} <Text style={styles.boldText}>favourite{getFavoritesCount() > 1 ? 's' : ''}</Text>!
+              You have {favoritesCount} <Text style={styles.boldText}>favourite{favoritesCount > 1 ? 's' : ''}</Text>!
             </Text>
             <Text style={styles.descriptionText}>
               Tap below to view your favourites.
@@ -68,6 +75,9 @@ const FavouritesScreen = ({ navigation }) => {
           <TouchableOpacity 
             style={styles.addFavouritesButton}
             onPress={handleViewFavorites}
+            accessibilityRole="button"
+            accessibilityLabel="View Favourites"
+            accessibilityHint="Navigate to favourites list"
           >
             <Text style={styles.buttonText}>View Favourites</Text>
           </TouchableOpacity>
@@ -84,10 +94,13 @@ const FavouritesScreen = ({ navigation }) => {
         <TouchableOpacity 
           style={styles.backButton}
           onPress={handleBackPress}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+          accessibilityHint="Navigate to previous screen"
         >
           <GlobalBackButton />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Favourites</Text>
+        <Text style={styles.headerTitle} accessibilityRole="header">Favourites</Text>
         <View style={styles.headerRight} />
       </View>
 
@@ -119,13 +132,16 @@ const FavouritesScreen = ({ navigation }) => {
         <TouchableOpacity 
           style={styles.addFavouritesButton}
           onPress={handleAddFavouritesNow}
+          accessibilityRole="button"
+          accessibilityLabel="Add Favourites Now"
+          accessibilityHint="Navigate to home to browse products"
         >
           <Text style={styles.buttonText}>Add Favourites Now</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

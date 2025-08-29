@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -120,7 +120,7 @@ const SEARCH_PRODUCTS = [
   // Add more products as needed
 ];
 
-const SearchScreen = ({ navigation, onClose, route }) => {
+const SearchScreen = React.memo(({ navigation, onClose, route }) => {
   const [searchText, setSearchText] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [searchSuggestions, setSearchSuggestions] = useState([]);
@@ -524,7 +524,7 @@ const SearchScreen = ({ navigation, onClose, route }) => {
       </Modal>
     </SafeAreaView>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
