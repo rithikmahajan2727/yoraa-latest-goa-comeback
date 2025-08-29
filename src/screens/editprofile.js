@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -43,84 +43,90 @@ const EditProfile = ({ navigation }) => {
   const [showGenderDropdown, setShowGenderDropdown] = useState(false);
   // const [showDatePicker, setShowDatePicker] = useState(false);
 
-  const stateOptions = ['Delhi', 'Mumbai', 'Bangalore', 'Chennai', 'Kolkata', 'Hyderabad', 'Pune', 'Ahmedabad'];
-  const genderOptions = ['Male', 'Female', 'Other'];
-  const countryCodeOptions = [
+  // Memoized static options to prevent recreation on each render
+  const stateOptions = useMemo(() => [
+    'Delhi', 'Mumbai', 'Bangalore', 'Chennai', 'Kolkata', 'Hyderabad', 'Pune', 'Ahmedabad'
+  ], []);
+  
+  const genderOptions = useMemo(() => ['Male', 'Female', 'Other'], []);
+  
+  const countryCodeOptions = useMemo(() => [
     { code: '+1', country: 'US', flag: '🇺🇸' },
     { code: '+44', country: 'UK', flag: '🇬🇧' },
     { code: '+91', country: 'IN', flag: '🇮🇳' },
     { code: '+86', country: 'CN', flag: '🇨🇳' },
     { code: '+81', country: 'JP', flag: '🇯🇵' },
-  ];
+  ], []);
 
-  const handleInputChange = (field, value) => {
+  // Memoized callback functions to prevent unnecessary re-renders
+  const handleInputChange = useCallback((field, value) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
-  };
+  }, []);
 
-  const getPasswordDisplayValue = (field) => {
+  const getPasswordDisplayValue = useCallback((field) => {
     if (formData[field]) {
       return '•'.repeat(formData[field].length);
     }
     return '';
-  };
+  }, [formData]);
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     // Profile save logging removed for production
     // Add save logic here
     // You can add validation and API calls here
-  };
+  }, []);
 
-  const handleAddOtherDetails = () => {
+  const handleAddOtherDetails = useCallback(() => {
     setOtherDetailsExpanded(!otherDetailsExpanded);
-  };
+  }, [otherDetailsExpanded]);
 
-  const handleAddAddress = () => {
+  const handleAddAddress = useCallback(() => {
     setShowAddressModal(true);
-  };
+  }, []);
 
-  const handleCloseAddressModal = () => {
+  const handleCloseAddressModal = useCallback(() => {
     // 300ms ease-out animation
     setTimeout(() => {
       setShowAddressModal(false);
     }, 300);
-  };
+  }, []);
 
-  const handleAddressDone = () => {
+  const handleAddressDone = useCallback(() => {
     setShowAddressModal(false);
     setShowSuccessModal(true);
-  };
+  }, []);
 
-  const handleSuccessModalDone = () => {
+  const handleSuccessModalDone = useCallback(() => {
     setShowSuccessModal(false);
     setAddressAdded(true);
-  };
+  }, []);
 
-  const handleStateSelect = (state) => {
+  const handleStateSelect = useCallback((state) => {
     setFormData(prev => ({
       ...prev,
       state: state
     }));
     setShowStateDropdown(false);
-  };
+  }, []);
 
-  const handleCountryCodeSelect = (countryCode) => {
+  const handleCountryCodeSelect = useCallback((countryCode) => {
     setFormData(prev => ({
       ...prev,
       countryCode: countryCode.code
     }));
     setShowCountryCodeDropdown(false);
-  };
+  }, []);
 
-  const handleGenderSelect = (gender) => {
+  const handleGenderSelect = useCallback((gender) => {
     setFormData(prev => ({
       ...prev,
       gender: gender
     }));
     setShowGenderDropdown(false);
-  };
+  }, []);
 
   // const handleDatePickerPress = () => {
   //   setShowDatePicker(true);
@@ -134,7 +140,8 @@ const EditProfile = ({ navigation }) => {
   //   setShowDatePicker(false);
   // };
 
-  const getFormattedAddress = () => {
+  // Memoized computed value
+  const getFormattedAddress = useMemo(() => {
     const { address, apartment, city, state, pin, country } = formData;
     let addressParts = [];
     
@@ -146,7 +153,7 @@ const EditProfile = ({ navigation }) => {
     if (country) addressParts.push(country);
     
     return addressParts.length > 0 ? addressParts.join(', ') : 'XYZ Street';
-  };
+  }, [formData]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -313,7 +320,7 @@ const EditProfile = ({ navigation }) => {
                 <View style={styles.figmaAddressWrapper}>
                   <Text style={styles.figmaAddressLabel}>Address</Text>
                   <View style={styles.figmaAddressInputContainer}>
-                    <Text style={styles.figmaAddressText}>XYZ Street</Text>
+                    <Text style={styles.figmaAddressText}>{getFormattedAddress}</Text>
                   </View>
                 </View>
               </View>
@@ -1135,4 +1142,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditProfile;
+export default React.memo(EditProfile);

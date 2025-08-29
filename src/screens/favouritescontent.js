@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import { Colors, FontFamilies } from '../constants';
 import HeartFilledIcon from '../assets/icons/HeartFilledIcon';
 import GlobalBackButton from '../components/GlobalBackButton';
 import { useFavorites } from '../contexts/FavoritesContext';
+import { useOptimizedList } from '../hooks/usePerformanceOptimization';
 
 const FavouritesContent = ({ navigation }) => {
   const { favorites, getFavoritesCount } = useFavorites();
@@ -22,59 +23,57 @@ const FavouritesContent = ({ navigation }) => {
     }
   }, [getFavoritesCount, navigation]);
 
-  // Mock product data - in a real app, you would fetch full product details based on IDs
-  const allProducts = [
+    // Memoized product data - in a real app, this would come from API/context
+  const allProducts = useMemo(() => [
     {
       id: '1',
       name: 'Air Jordan 1 Mid',
       price: 'US$125',
-      colors: ['#FFFFFF', '#F5F5F5'],
-      image: null,
+      image: 'https://example.com/image1.jpg',
     },
     {
       id: '2', 
-      name: 'Air Jordan 1 Mid',
-      price: 'US$125',
-      colors: ['#FFFFFF', '#F5F5F5'],
-      image: null,
+      name: 'Nike Dunk Low',
+      price: 'US$110',
+      image: 'https://example.com/image2.jpg',
     },
     {
       id: '3',
-      name: 'Air Jordan 1 Mid', 
-      price: 'US$125',
-      colors: ['#FFFFFF', '#F5F5F5'],
-      image: null,
+      name: 'Adidas Stan Smith',
+      price: 'US$80',
+      image: 'https://example.com/image3.jpg',
     },
-    {
-      id: '4',
-      name: 'Air Jordan 1 Mid',
-      price: 'US$125', 
-      colors: ['#FFFFFF', '#F5F5F5'],
-      image: null,
-    },
-  ];
+  ], []);
 
-  // Filter products to show only favorited ones
-  const favouritedProducts = allProducts.filter(product => 
-    favorites.has(product.id)
+  // Memoized filtered products to prevent unnecessary recalculations
+  const favouritedProducts = useMemo(() => 
+    allProducts.filter(product => favorites.has(product.id)),
+    [allProducts, favorites]
   );
 
-  const handleBackPress = () => {
+  // Optimized list props using performance hook
+  const optimizedListProps = useOptimizedList(
+    favouritedProducts,
+    useCallback((item) => item.id, [])
+  );
+
+  const handleBackPress = useCallback(() => {
     navigation.navigate('Home');
-  };
+  }, [navigation]);
 
-  const handleEditPress = () => {
+  const handleEditPress = useCallback(() => {
     navigation.navigate('FavouritesContentEditView');
-  };
+  }, [navigation]);
 
-  const handleProductPress = (product) => {
+  const handleProductPress = useCallback((product) => {
     navigation.navigate('FavouritesModalOverlayForSizeSelection', { 
       product, 
       previousScreen: 'FavouritesContent' 
     });
-  };
+  }, [navigation]);
 
-  const renderProductItem = ({ item, index }) => {
+  // Memoized render function to prevent unnecessary re-renders
+  const renderProductItem = useCallback(({ item, index }) => {
     const isLeftColumn = index % 2 === 0;
     
     return (
@@ -97,7 +96,7 @@ const FavouritesContent = ({ navigation }) => {
         </View>
       </View>
     );
-  };
+  }, [handleProductPress]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -122,10 +121,9 @@ const FavouritesContent = ({ navigation }) => {
       <View style={styles.content}>
         {favouritedProducts.length > 0 ? (
           <FlatList
-            data={favouritedProducts}
+            {...optimizedListProps}
             renderItem={renderProductItem}
             numColumns={2}
-            keyExtractor={(item) => item.id}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.gridContainer}
             columnWrapperStyle={styles.row}
@@ -305,4 +303,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FavouritesContent;
+export default React.memo(FavouritesContent);

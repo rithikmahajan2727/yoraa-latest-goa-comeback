@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -13,9 +13,10 @@ import {
 } from 'react-native';
 import { Colors } from '../constants/colors';
 
-const { height: screenHeight } = Dimensions.get('window');
-
 const DeliveryAddressModal = ({ visible, onClose, selectedOption }) => {
+  // Memoized screen height to prevent recalculation
+  const screenHeight = useMemo(() => Dimensions.get('window').height, []);
+
   const translateY = useRef(new Animated.Value(screenHeight)).current;
 
   useEffect(() => {
@@ -34,9 +35,10 @@ const DeliveryAddressModal = ({ visible, onClose, selectedOption }) => {
         useNativeDriver: true,
       }).start();
     }
-  }, [visible, translateY]);
+  }, [visible, translateY, screenHeight]);
 
-  const handleClose = () => {
+  // Memoized close handler
+  const handleClose = useCallback(() => {
     Animated.timing(translateY, {
       toValue: screenHeight,
       duration: 250,
@@ -44,7 +46,7 @@ const DeliveryAddressModal = ({ visible, onClose, selectedOption }) => {
     }).start(() => {
       onClose();
     });
-  };
+  }, [translateY, screenHeight, onClose]);
 
   // Pan responder for swipe to dismiss
   const panResponder = useRef(
@@ -71,7 +73,8 @@ const DeliveryAddressModal = ({ visible, onClose, selectedOption }) => {
     }),
   ).current;
 
-  const [formData, setFormData] = React.useState({
+  // Optimized state using useState hook
+  const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     address: '',
@@ -83,20 +86,30 @@ const DeliveryAddressModal = ({ visible, onClose, selectedOption }) => {
     phone: '+91'
   });
 
-  const handleInputChange = (field, value) => {
+  // Memoized input change handler
+  const handleInputChange = useCallback((field, value) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
-  };
+  }, []);
 
-  const handleSaveAddress = () => {
+  // Memoized save address handler
+  const handleSaveAddress = useCallback(() => {
     // Address validation and save logic
     // Address saving logging removed for production
     
     // TODO: Submit address to backend
     onClose(); // Close modal after saving
-  };  if (!visible) {
+  }, [onClose]);
+
+  // Memoized modal container style
+  const modalContainerStyle = useMemo(() => [
+    styles.modalContainer,
+    { maxHeight: screenHeight * 0.9 }
+  ], [screenHeight]);
+
+  if (!visible) {
     return null;
   }
 
@@ -116,7 +129,7 @@ const DeliveryAddressModal = ({ visible, onClose, selectedOption }) => {
 
         <Animated.View
           style={[
-            styles.modalContainer,
+            modalContainerStyle,
             {
               transform: [{ translateY }],
             },
@@ -286,7 +299,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingBottom: 34,
-    maxHeight: screenHeight * 0.9,
   },
   handleBar: {
     width: 40,
@@ -399,4 +411,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DeliveryAddressModal;
+export default React.memo(DeliveryAddressModal);

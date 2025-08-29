@@ -2,12 +2,13 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { FontFamilies, FontSizes } from "../constants";
 import GlobalBackButton from "../components/GlobalBackButton";
 
@@ -127,58 +128,43 @@ const CustomClearance = ({ navigation }) => {
   };
   return (
     <View
-      style={{
-        flex: 1,
-        backgroundColor: "#fff",
-        paddingTop: "15%",
-        paddingHorizontal: 16,
-      }}
+      style={styles.container}
     >
       {/* Back button */}
       <GlobalBackButton 
         navigation={navigation}
-        style={{ marginBottom: 20 }}
+        style={styles.headerContainer}
         animationDuration={0}
       />
 
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
+        style={styles.scrollContainer}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <ScrollView
-          contentContainerStyle={{ flexGrow: 1, gap: 16 }}
+          contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
           onScrollBeginDrag={closeDropdowns}
         >
           {/* HEADING */}
-          <View style={{ marginBottom: 12 }}>
+          <View style={styles.titleContainer}>
             <Text
-              style={{
-                fontFamily: FONT_FAMILY.BOLD,
-                fontSize: 20,
-                color: "black",
-                lineHeight: 24,
-              }}
+              style={styles.titleText}
             >
               ID for Customs Clearance
             </Text>
           </View>
           {/* sub heading */}
-          <View style={{ marginBottom: 24 }}>
+          <View style={styles.subtitleContainer}>
             <Text
-              style={{
-                fontFamily: FONT_FAMILY.MEDIUM,
-                fontSize: 14,
-                color: "#666",
-                lineHeight: 20,
-              }}
+              style={styles.subtitleText}
             >
               Provide your National ID information to expedite the customs clearance process. If you don't provide this information at Checkout, you will be asked to provide it once your order has been processed. Please ensure the address on your KYC document matches your shipping address.
             </Text>
           </View>
           {/* Choice of ids */}
-          <View style={{ gap: 12, marginBottom: 24 }}>
+          <View style={styles.optionsContainer}>
             {DOCUMENT_OPTIONS.map((option, index) => (
               <TouchableOpacity
                 key={`document-option-${option.value}`}
@@ -1152,11 +1138,114 @@ const CustomClearance = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
           
-          <View style={{ height: 50 }} />
+          <View style={styles.spacerBottom} />
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
   );
 };
 
-export default CustomClearance;
+// Optimized styles to replace inline styles
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    paddingTop: "15%",
+    paddingHorizontal: 16,
+  },
+  headerContainer: {
+    marginBottom: 20,
+  },
+  scrollContainer: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    gap: 16,
+  },
+  titleContainer: {
+    marginBottom: 12,
+  },
+  titleText: {
+    fontFamily: FONT_FAMILY.BOLD,
+    fontSize: 20,
+    color: "black",
+    lineHeight: 24,
+  },
+  subtitleContainer: {
+    marginBottom: 24,
+  },
+  subtitleText: {
+    fontFamily: FONT_FAMILY.MEDIUM,
+    fontSize: 14,
+    color: "#666",
+    lineHeight: 20,
+  },
+  optionsContainer: {
+    gap: 12,
+    marginBottom: 24,
+  },
+  optionButton: {
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderRadius: 8,
+    backgroundColor: "white",
+  },
+  optionButtonSelected: {
+    borderColor: "#000",
+  },
+  optionButtonUnselected: {
+    borderColor: "#E0E0E0",
+  },
+  optionText: {
+    fontFamily: FONT_FAMILY.MEDIUM,
+    fontSize: 14,
+    color: "#000",
+  },
+  dropdownContainer: {
+    marginBottom: 16,
+    position: 'relative',
+    zIndex: 100,
+  },
+  dropdownButton: {
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+    borderRadius: 8,
+    width: "100%",
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  dropdownText: {
+    fontFamily: FONT_FAMILY.MEDIUM,
+    fontSize: 14,
+  },
+  dropdownTextSelected: {
+    color: "#000",
+  },
+  dropdownTextPlaceholder: {
+    color: "#999",
+  },
+  dropdownArrow: {
+    color: "#999",
+    fontSize: 12,
+  },
+  spacerBottom: {
+    height: 50,
+  },
+  marginBottom12: {
+    marginBottom: 12,
+  },
+  marginBottom16: {
+    marginBottom: 16,
+  },
+  marginBottom24: {
+    marginBottom: 24,
+  },
+});
+
+export default React.memo(CustomClearance);
