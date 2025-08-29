@@ -36,6 +36,9 @@ local.properties
 !debug.keystore
 .kotlin/
 
+# Android signing
+keystore.properties
+
 # node.js
 #
 node_modules/

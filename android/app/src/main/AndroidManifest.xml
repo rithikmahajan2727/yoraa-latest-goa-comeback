@@ -1,7 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    
+    <!-- Required for Play Store targeting API 34+ -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    
     <application
       android:name=".MainApplication"
       android:label="@string/app_name"
@@ -9,7 +12,9 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
       android:theme="@style/AppTheme"
-      android:supportsRtl="true">
+      android:supportsRtl="true"
+      android:dataExtractionRules="@xml/data_extraction_rules"
+      android:fullBackupContent="@xml/backup_rules">
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
