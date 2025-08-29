@@ -220,6 +220,41 @@ const EditProfile = ({ navigation }) => {
               <Text style={styles.addButton}>+ Add</Text>
             </TouchableOpacity>
             
+            {/* Expanded Other Details Section */}
+            {otherDetailsExpanded && (
+              <View style={styles.expandedDetailsContainer}>
+                {/* Date of Birth Field */}
+                <View style={styles.inputContainer}>
+                  <View style={styles.inputWrapper}>
+                    <Text style={styles.floatingLabel}>Date of Birth</Text>
+                    <TouchableOpacity style={styles.datePickerContainer}>
+                      <Text style={styles.dateText}>
+                        {formData.dateOfBirth.toLocaleDateString('en-US', {
+                          month: '2-digit',
+                          day: '2-digit',
+                          year: 'numeric'
+                        })}
+                      </Text>
+                      <View style={styles.calendarIconContainer}>
+                        <Text style={styles.calendarIcon}>📅</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+
+                {/* Gender Field */}
+                <View style={styles.inputContainer}>
+                  <View style={styles.inputWrapper}>
+                    <Text style={styles.floatingLabel}>Gender</Text>
+                    <TouchableOpacity style={styles.genderPickerContainer}>
+                      <Text style={styles.genderText}>{formData.gender}</Text>
+                      <Text style={styles.dropdownArrow}>▼</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            )}
+            
             {/* Address */}
             <TouchableOpacity style={styles.additionalItem} onPress={handleAddAddress}>
               <Text style={styles.additionalTitle}>Address</Text>
@@ -819,6 +854,39 @@ const styles = StyleSheet.create({
   },
   spacer: {
     height: 100,
+  },
+  // Expanded Details Styles
+  expandedDetailsContainer: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 22,
+    padding: 20,
+    marginTop: 10,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#F0F0F0',
+  },
+  genderPickerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    borderWidth: 1,
+    borderColor: '#000000',
+    borderRadius: 12,
+    backgroundColor: '#FFFFFF',
+  },
+  genderText: {
+    fontSize: 14,
+    color: '#000000',
+    fontFamily: 'Montserrat-Regular',
+  },
+  calendarIconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  calendarIcon: {
+    fontSize: 18,
   },
   saveButtonContainer: {
     paddingHorizontal: 20,
