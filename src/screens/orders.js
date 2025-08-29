@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -12,8 +12,9 @@ import TrackingModal from './orderstrackmodeloverlay';
 import CancelOrderRequest from './orderscancelordermodal';
 import CancelledOrderConfirm from './orderscancelorderconfirmationmodal';
 
-// Mock order data based on Figma design
-const mockOrders = [
+const OrdersScreen = ({ navigation, route }) => {
+  // Memoized order data to prevent recreation on each render
+  const mockOrders = useMemo(() => [
   {
     id: '1',
     status: 'delivered',
@@ -62,10 +63,10 @@ const mockOrders = [
       { id: 'cancel_order', title: 'Cancel Order', style: 'secondary' }
     ]
   }
-];
+  ], []); // End of useMemo
 
-const getStatusText = (status) => {
-  switch (status) {
+  const getStatusText = useCallback((status) => {
+    switch (status) {
     case 'delivered':
       return 'Order delivered';
     case 'confirmed':
@@ -77,9 +78,9 @@ const getStatusText = (status) => {
     default:
       return status;
   }
-};
+  }, []); // End of useCallback
 
-const OrderCard = ({ order, onTrack, onCancelOrder, navigation }) => (
+  const OrderCard = useCallback(({ order, onTrack, onCancelOrder, navigation: nav }) => (
   <View style={styles.orderContainer}>
     <View style={styles.productContainer}>
       <Image source={{ uri: order.image }} style={styles.productImage} />
@@ -126,9 +127,8 @@ const OrderCard = ({ order, onTrack, onCancelOrder, navigation }) => (
       </TouchableOpacity>
     ))}
   </View>
-);
+  ), [getStatusText, navigation]); // End of OrderCard useCallback
 
-const OrdersScreen = ({ navigation, route }) => {
   const trackingModalRef = useRef(null);
   const cancelOrderModalRef = useRef(null);
   const cancelConfirmationModalRef = useRef(null);
@@ -137,16 +137,16 @@ const OrdersScreen = ({ navigation, route }) => {
   const previousScreen = route?.params?.previousScreen;
 
   // Custom back handler
-  const handleBackPress = () => {
+  const handleBackPress = useCallback(() => {
     if (previousScreen === 'OrderConfirmationPhone') {
       navigation.navigate('OrderConfirmationPhone');
     } else {
       navigation?.goBack();
     }
-  };
+  }, [previousScreen, navigation]);
 
   // Mock tracking data - you can replace this with actual API data
-  const getTrackingData = (order) => {
+  const getTrackingData = useCallback((order) => {
     // Mock tracking data based on order status
     if (order.status === 'confirmed') {
       return [
@@ -162,12 +162,12 @@ const OrdersScreen = ({ navigation, route }) => {
       ];
     }
     return [];
-  };
+  }, []); // End of getTrackingData useCallback
 
-  const handleTrackOrder = (order) => {
+  const handleTrackOrder = useCallback((order) => {
     const trackingData = getTrackingData(order);
     trackingModalRef.current?.openModal(trackingData);
-  };
+  }, [getTrackingData]);
 
   const handleCancelOrder = (order) => {
     cancelOrderModalRef.current?.open();
@@ -357,4 +357,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OrdersScreen;
+export default React.memo(OrdersScreen);
