@@ -138,7 +138,7 @@ const ProfileScreen = ({ navigation }) => {
   const handleSignOut = () => {
     setShowLogoutModal(false);
     // Add your sign out logic here
-    console.log('User signed out');
+    // User signed out - navigation removed for production
     // For example: navigation.navigate('Login') or clear user session
   };
 

@@ -19,7 +19,7 @@ const LoginAccountEmailVerificationCode = ({ navigation, route }) => {
   const handleVerification = () => {
     // Handle verification logic
     const code = verificationCode.join('');
-    console.log('Email login verification code:', code);
+    // Email verification logging removed for production
     
     // Navigate to Terms and Conditions screen after successful email login verification
     if (navigation) {
@@ -48,7 +48,7 @@ const LoginAccountEmailVerificationCode = ({ navigation, route }) => {
 
   const handleResendCode = () => {
     // Handle resend code logic
-    console.log('Resend email verification code to:', email);
+    // Resend email verification logging removed for production
     setResendTimer(30);
     // Reset timer countdown logic would go here
   };
@@ -78,7 +78,7 @@ const LoginAccountEmailVerificationCode = ({ navigation, route }) => {
         <View style={styles.codeContainer}>
           {verificationCode.map((digit, index) => (
             <TextInput
-              key={index}
+              key={`email-verification-code-${index}`}
               ref={ref => {
                 inputRefs.current[index] = ref;
               }}

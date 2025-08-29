@@ -143,7 +143,7 @@ const CustomClearance = ({ navigation }) => {
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : null}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <ScrollView
           contentContainerStyle={{ flexGrow: 1, gap: 16 }}
@@ -577,7 +577,7 @@ const CustomClearance = ({ navigation }) => {
           )}
 
           {/*  for foreign residents */}
-          {docOption.value == "foreignNational" && (
+          {docOption.value === "foreignNational" && (
             <View style={{ paddingTop: 10 }}>
               <Text
                 style={{
@@ -590,7 +590,7 @@ const CustomClearance = ({ navigation }) => {
             </View>
           )}
           {/* sub heading */}
-          {docOption.value == "foreignNational" && (
+          {docOption.value === "foreignNational" && (
             <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
               <Text
                 style={{
@@ -606,7 +606,7 @@ const CustomClearance = ({ navigation }) => {
             </View>
           )}
           {/* front side  */}
-          {docOption.value == "foreignNational" && (
+          {docOption.value === "foreignNational" && (
             <View style={{ gap: 2 }}>
               <TouchableOpacity
                 style={{
@@ -642,7 +642,7 @@ const CustomClearance = ({ navigation }) => {
             </View>
           )}
           {/* back side */}
-          {docOption.value == "foreignNational" && (
+          {docOption.value === "foreignNational" && (
             <View style={{ gap: 2 }}>
               <TouchableOpacity
                 style={{
@@ -678,7 +678,7 @@ const CustomClearance = ({ navigation }) => {
             </View>
           )}
           {/*  visa / pio  */}
-          {docOption.value == "foreignNational" && (
+          {docOption.value === "foreignNational" && (
             <View style={{ paddingTop: 10 }}>
               <Text
                 style={{
@@ -691,7 +691,7 @@ const CustomClearance = ({ navigation }) => {
             </View>
           )}
           {/*  for passport number  */}
-          {docOption.value == "foreignNational" && (
+          {docOption.value === "foreignNational" && (
             <TextInput
               placeholder="Document number"
               style={{
@@ -710,7 +710,7 @@ const CustomClearance = ({ navigation }) => {
             />
           )}
           {/* visa / pio upload side  */}
-          {docOption.value == "foreignNational" && (
+          {docOption.value === "foreignNational" && (
             <View style={{ gap: 2 }}>
               <TouchableOpacity
                 style={{
@@ -805,7 +805,7 @@ const CustomClearance = ({ navigation }) => {
             </View>
           )}
           {/* sub heading */}
-          {docOption.value == "foreignNational" && (
+          {docOption.value === "foreignNational" && (
             <View
               style={{ flexDirection: "row", flexWrap: "wrap", paddingTop: 10 }}
             >
@@ -926,7 +926,7 @@ const CustomClearance = ({ navigation }) => {
           {/* proof of address upload */}
 
           {/*  for proof of residence dcoument number  */}
-          {docOption.value == "foreignNational" && (
+          {docOption.value === "foreignNational" && (
             <TextInput
               placeholder="Document number"
               style={{
@@ -945,7 +945,7 @@ const CustomClearance = ({ navigation }) => {
             />
           )}
           {/* visa / pio upload side  */}
-          {docOption.value == "foreignNational" && (
+          {docOption.value === "foreignNational" && (
             <View style={{ gap: 2, paddingBottom: 10 }}>
               <TouchableOpacity
                 style={{
@@ -983,7 +983,7 @@ const CustomClearance = ({ navigation }) => {
 
           {/*  alert for proof of residence */}
           {/* sub heading */}
-          {docOption.value == "foreignNational" && (
+          {docOption.value === "foreignNational" && (
             <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
               <Text
                 style={{
@@ -999,7 +999,7 @@ const CustomClearance = ({ navigation }) => {
             </View>
           )}
           {/* checkbox 4 */}
-          {docOption.value == "foreignNational" && (
+          {docOption.value === "foreignNational" && (
             <TouchableOpacity
               onPress={toggleCheckbox4}
               style={{
@@ -1042,7 +1042,7 @@ const CustomClearance = ({ navigation }) => {
 
           {/*  Address proof info  */}
           {/* proof of residence */}
-          {docOption.value == "foreignNational" && (
+          {docOption.value === "foreignNational" && (
             <View style={{ paddingTop: 10 }}>
               <Text
                 style={{
@@ -1055,7 +1055,7 @@ const CustomClearance = ({ navigation }) => {
             </View>
           )}
 
-          {docOption.value == "foreignNational" && (
+          {docOption.value === "foreignNational" && (
             <View style={{ gap: 5 }}>
               <Text
                 style={{

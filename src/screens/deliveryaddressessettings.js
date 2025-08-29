@@ -124,8 +124,8 @@ const DeliveryAddressesSettings = ({ navigation }) => {
 
   const handleSave = () => {
     // Save the address data
-    console.log('Saving address:', formData);
-    console.log('Set as default:', isDefaultAddress);
+    // Saving address logged - removed for production
+    // Set as default logged - removed for production
     
     // Animate back to list view
     Animated.timing(formSlideAnim, {

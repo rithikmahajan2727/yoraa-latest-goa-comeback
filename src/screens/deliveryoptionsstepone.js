@@ -18,8 +18,7 @@ const DeliveryOptionsStepOneScreen = ({ navigation }) => {
   const [selectedOption, setSelectedOption] = useState('free'); // 'free' or 'international'
   const [showModal, setShowModal] = useState(false);
 
-  // Debug: Log when component mounts
-  console.log('DeliveryOptionsStepOneScreen rendered, showModal:', showModal);
+  // Component state logging removed for production
 
   const handleBackPress = () => {
     navigation.goBack();
@@ -27,11 +26,10 @@ const DeliveryOptionsStepOneScreen = ({ navigation }) => {
 
   const handleUpdatePress = () => {
     // Handle update postcode and refresh delivery options
-    console.log('Update button pressed!'); // Debug log
+    // Update button logging removed for production
     if (postcode.trim()) {
-      console.log('Updating delivery options for postcode:', postcode);
-      console.log('Selected delivery option:', selectedOption);
-      console.log('Setting modal to true'); // Debug log
+      // Update delivery options logging removed for production
+      // Setting modal logging removed for production
       // Show the modal with animation
       setShowModal(true);
     } else {

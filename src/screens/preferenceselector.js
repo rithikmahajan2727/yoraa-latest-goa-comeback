@@ -25,7 +25,7 @@ const PreferenceSelector = ({ navigation }) => {
 
   const handleLetsYoraa = () => {
     if (selectedPreference) {
-      console.log('Selected preference:', selectedPreference);
+      // Selected preference logged - removed for production
       
       // Navigate to Home screen after preference selection
       if (navigation) {

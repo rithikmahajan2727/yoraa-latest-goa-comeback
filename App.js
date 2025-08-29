@@ -18,6 +18,7 @@ import { EnhancedLayout } from './src/components/layout';
 import SplashScreen from './src/components/SplashScreen';
 import { Colors } from './src/constants';
 import { FavoritesProvider } from './src/contexts/FavoritesContext';
+import ErrorBoundary from './src/components/ErrorBoundary';
 
 // Main App Component with Routing
 function App() {
@@ -33,16 +34,18 @@ function App() {
   }
 
   return (
-    <FavoritesProvider>
-      <View style={styles.container}>
-        <StatusBar 
-          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-          backgroundColor={Colors.background}
-          translucent={false}
-        />
-        <EnhancedLayout />
-      </View>
-    </FavoritesProvider>
+    <ErrorBoundary>
+      <FavoritesProvider>
+        <View style={styles.container}>
+          <StatusBar
+            barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+            backgroundColor={Colors.background}
+            translucent={false}
+          />
+          <EnhancedLayout />
+        </View>
+      </FavoritesProvider>
+    </ErrorBoundary>
   );
 }
 
@@ -53,7 +56,7 @@ const AppWithManualRouting = () => {
 
   const handleRouteChange = (route) => {
     setCurrentRoute(route);
-    console.log(`Navigated to: ${route}`);
+    // Navigation logging removed for production
   };
 
   return (
@@ -88,7 +91,7 @@ const Router = ({ children, initialRoute = 'Home' }) => {
     if (route !== currentRoute) {
       setCurrentRoute(route);
       setRouteHistory(prev => [...prev, route]);
-      console.log(`Routing: ${currentRoute} → ${route}`);
+      // Navigation logging removed for production
     }
   };
 
@@ -98,7 +101,7 @@ const Router = ({ children, initialRoute = 'Home' }) => {
       const previousRoute = newHistory[newHistory.length - 1];
       setRouteHistory(newHistory);
       setCurrentRoute(previousRoute);
-      console.log(`Going back to: ${previousRoute}`);
+      // Navigation logging removed for production
     }
   };
 
@@ -118,16 +121,18 @@ const AppWithRouter = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
-    <View style={styles.container}>
-      <StatusBar 
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor="#FFFFFF"
-      />
-      
-      <Router initialRoute="Home">
-        <EnhancedLayout />
-      </Router>
-    </View>
+    <ErrorBoundary>
+      <View style={styles.container}>
+        <StatusBar 
+          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+          backgroundColor="#FFFFFF"
+        />
+        
+        <Router initialRoute="Home">
+          <EnhancedLayout />
+        </Router>
+      </View>
+    </ErrorBoundary>
   );
 };
 

@@ -16,12 +16,11 @@ const LoginAccountEmail = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = () => {
-    // Handle login logic
-    console.log('Login with email:', { email, password });
-    // You can add validation and API call here
-    // Navigate to email verification screen for login
-    if (navigation) {
+  const handleEmailLogin = () => {
+    // TODO: Implement actual email login logic
+    // Login logic removed for production logging
+    
+    if (navigation && navigation.navigate) {
       navigation.navigate('LoginAccountEmailVerificationCode', { email });
     }
   };
@@ -45,7 +44,7 @@ const LoginAccountEmail = ({ navigation }) => {
 
   const handleForgotPassword = () => {
     // Handle forgot password
-    console.log('Forgot password');
+    // Forgot password logging removed for production
     // Navigate to forgot password screen
     if (navigation) {
       navigation.navigate('ForgotLoginPassword');
@@ -54,12 +53,12 @@ const LoginAccountEmail = ({ navigation }) => {
 
   const handleAppleLogin = () => {
     // Handle Apple login
-    console.log('Apple login');
+    // Apple login logging removed for production
   };
 
   const handleGoogleLogin = () => {
     // Handle Google login
-    console.log('Google login');
+    // Google login logging removed for production
   };
 
   return (
@@ -163,7 +162,7 @@ const LoginAccountEmail = ({ navigation }) => {
         </View>
 
         {/* Login Button */}
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+        <TouchableOpacity style={styles.loginButton} onPress={handleEmailLogin}>
           <Text style={styles.loginButtonText}>LOGIN</Text>
         </TouchableOpacity>
 

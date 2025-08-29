@@ -12,7 +12,9 @@ const DeleteAccountConfirmationModal = ({ navigation, visible, onClose }) => {
   const handleDone = () => {
     onClose && onClose();
     // Navigate to Home screen after confirming deletion
-    navigation.navigate('Home');
+    if (navigation && navigation.navigate) {
+      navigation.navigate('Home');
+    }
   };
 
   return (

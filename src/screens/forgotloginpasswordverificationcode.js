@@ -66,10 +66,12 @@ const ForgotLoginPasswordVerificationCode = ({ navigation, route }) => {
       // Here you would typically validate the code with your backend
       console.log('Verifying code:', verificationCode);
       // Navigate to the create new password screen
-      navigation.navigate('forgotloginpqasswordcreatenewpasword', { 
-        email, 
-        code: verificationCode 
-      });
+      if (navigation && navigation.navigate) {
+        navigation.navigate('forgotloginpqasswordcreatenewpasword', { 
+          email, 
+          code: verificationCode 
+        });
+      }
     } else {
       // Handle incomplete code
       console.log('Please enter complete verification code');
@@ -109,7 +111,7 @@ const ForgotLoginPasswordVerificationCode = ({ navigation, route }) => {
         <View style={styles.codeContainer}>
           {code.map((digit, index) => (
             <TextInput
-              key={index}
+              key={`forgot-password-code-${index}`}
               ref={(ref) => (inputRefs.current[index] = ref)}
               style={[
                 styles.codeInput,

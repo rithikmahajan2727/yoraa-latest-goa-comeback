@@ -89,10 +89,10 @@ const AddAddressModal = ({ visible, onClose }) => {
     })
   ).current;
 
-  console.log('AddAddressModal visibility changed:', visible);
+  // AddAddressModal visibility changed - logging removed for production
 
   useEffect(() => {
-    console.log('AddAddressModal useEffect triggered, visible:', visible);
+    // AddAddressModal useEffect triggered - logging removed for production
     if (visible) {
       // Reset pan animation
       panY.setValue(0);
@@ -127,7 +127,7 @@ const AddAddressModal = ({ visible, onClose }) => {
 
   const handleDone = () => {
     // Handle form submission
-    console.log('Form data:', formData);
+    // Form data logged - removed for production
     handleClose();
   };
 

@@ -238,8 +238,8 @@ const ContactUsScreen = ({ navigation, visible = true }) => {
       'Upload Photo',
       'Choose an option',
       [
-        { text: 'Camera', onPress: () => console.log('Open Camera') },
-        { text: 'Gallery', onPress: () => console.log('Open Gallery') },
+        { text: 'Camera', onPress: () => { /* Open Camera functionality */ } },
+        { text: 'Gallery', onPress: () => { /* Open Gallery functionality */ } },
         { text: 'Cancel', style: 'cancel' }
       ]
     );
@@ -249,11 +249,11 @@ const ContactUsScreen = ({ navigation, visible = true }) => {
     if (isRecording) {
       setIsRecording(false);
       // Stop recording and convert to text
-      console.log('Stop recording');
+      // Stop recording and convert to text
     } else {
       setIsRecording(true);
       // Start recording
-      console.log('Start recording');
+      // Start recording
     }
   };
 

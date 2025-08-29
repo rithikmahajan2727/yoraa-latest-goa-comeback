@@ -28,7 +28,7 @@ const CreateAccountMobileNumberVerification = ({ navigation }) => {
   const handleVerification = () => {
     // Handle verification logic
     const code = verificationCode.join('');
-    console.log('Verification code:', code);
+    // Verification code logged - removed for production
     
     // Navigate to account created confirmation modal
     if (navigation) {
@@ -57,7 +57,7 @@ const CreateAccountMobileNumberVerification = ({ navigation }) => {
 
   const handleResendCode = () => {
     // Handle resend code logic
-    console.log('Resend verification code');
+    // Resend verification code logged - removed for production
     setResendTimer(30);
     // Reset timer countdown logic would go here
   };
@@ -86,8 +86,10 @@ const CreateAccountMobileNumberVerification = ({ navigation }) => {
         <View style={styles.codeContainer}>
           {verificationCode.map((digit, index) => (
             <TextInput
-              key={index}
-              ref={ref => inputRefs.current[index] = ref}
+              key={`create-verification-code-${index}`}
+              ref={ref => {
+                inputRefs.current[index] = ref;
+              }}
               style={[
                 styles.codeInput,
                 digit ? styles.codeInputFilled : null,

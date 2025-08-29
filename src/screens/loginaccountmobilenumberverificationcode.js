@@ -77,7 +77,7 @@ const LoginAccountMobileNumberVerificationCode = ({ navigation }) => {
         <View style={styles.codeContainer}>
           {verificationCode.map((digit, index) => (
             <TextInput
-              key={index}
+              key={`verification-code-${index}`}
               ref={ref => {
                 inputRefs.current[index] = ref;
               }}

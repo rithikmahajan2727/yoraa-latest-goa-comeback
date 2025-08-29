@@ -37,7 +37,7 @@ const Language = ({ navigation }) => {
 
   const handleLanguageSelect = (language) => {
     // Handle language selection logic here
-    console.log('Selected language:', language);
+    // Language selection logging removed for production
     // You can implement language change logic here
     // For now, just go back to previous screen
     navigation.goBack();
@@ -66,7 +66,7 @@ const Language = ({ navigation }) => {
 
       <KeyboardAvoidingView
         style={styles.keyboardAvoidingView}
-        behavior={Platform.OS === "ios" ? "padding" : null}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <ScrollView
           contentContainerStyle={styles.scrollViewContent}

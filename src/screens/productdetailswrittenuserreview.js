@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -6,75 +6,90 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-  Dimensions,
   TextInput,
-  Image,
+  Alert,
 } from 'react-native';
-import { FontSizes, FontWeights, Spacing, BorderRadius } from '../constants';
 import ProductDetailsMainReviewUserThanksForReviewModal from './productdetailsmainreviewuserthanksforreviewmodal';
 
-const { width } = Dimensions.get('window');
+// BackIcon component moved outside to avoid re-renders
+const BackIcon = () => (
+  <View style={styles.backIcon}>
+    <View style={styles.backArrow} />
+  </View>
+);
 
 const ProductDetailsWrittenUserReview = ({ navigation, route }) => {
-  const [starRating, setStarRating] = useState(4); // Default to 4 stars as shown in Figma
+  const [starRating, setStarRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
-  const [imageAttachments, setImageAttachments] = useState([]);
   const [showThanksModal, setShowThanksModal] = useState(false);
 
   // Get review data from previous screen
   const { reviewData } = route.params || {};
 
-  const BackIcon = () => (
-    <View style={styles.backIcon}>
-      <View style={styles.backArrow} />
-    </View>
-  );
-
-  const handleBackPress = () => {
+  const handleBackPress = useCallback(() => {
     if (navigation) {
       navigation.goBack();
     }
-  };
+  }, [navigation]);
 
-  const handleStarPress = (rating) => {
+  const handleStarPress = useCallback((rating) => {
     setStarRating(rating);
-  };
+  }, []);
 
-  const handlePostReview = () => {
+  const handlePostReview = useCallback(async () => {
     const fullReviewData = {
       ...reviewData,
       starRating,
       reviewText,
-      images: imageAttachments,
+      images: [], // No image upload functionality in current version
     };
-
-    console.log('Complete Review Data:', fullReviewData);
     
-    // TODO: Submit review to backend
-    // Show thanks modal after successful submission
-    setShowThanksModal(true);
-  };
+    try {
+      // TODO: Submit review to backend
+      // const response = await submitReview(fullReviewData);
+      
+      // For now, validate the review data
+      if (!fullReviewData.starRating || fullReviewData.starRating < 1) {
+        Alert.alert('Invalid Review', 'Please select a star rating before submitting.');
+        return;
+      }
+      
+      // Show thanks modal after successful validation
+      setShowThanksModal(true);
+    } catch (error) {
+      // Handle error appropriately
+      Alert.alert('Error', 'Failed to submit review. Please try again.');
+    }
+  }, [reviewData, starRating, reviewText]);
 
-  const handleContinueShopping = () => {
+  const handleContinueShopping = useCallback(() => {
     setShowThanksModal(false);
     
     // Check if user came from orders.js (via rate product flow)
     if (route.params?.order) {
       // Navigate back to orders if user came from orders.js
-      navigation.navigate('Orders');
+      if (navigation && navigation.navigate) {
+        navigation.navigate('Orders');
+      }
     } else {
       // Navigate to productdetailsmain.js if came from regular product details flow
-      navigation.navigate('ProductDetailsMain');
+      if (navigation && navigation.navigate) {
+        navigation.navigate('ProductDetailsMain');
+      }
     }
-  };
+  }, [navigation, route.params?.order]);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setShowThanksModal(false);
     // Navigate back to previous screen
-    navigation.goBack();
-  };
+    if (navigation && navigation.goBack) {
+      navigation.goBack();
+    }
+  }, [navigation]);
 
-  const renderStars = () => {
+  const isFormValid = useMemo(() => starRating > 0, [starRating]);
+
+  const renderStars = useCallback(() => {
     return (
       <View style={styles.starsContainer}>
         {[1, 2, 3, 4, 5].map((index) => (
@@ -82,6 +97,9 @@ const ProductDetailsWrittenUserReview = ({ navigation, route }) => {
             key={index}
             onPress={() => handleStarPress(index)}
             style={styles.starButton}
+            accessibilityRole="button"
+            accessibilityLabel={`Rate ${index} star${index > 1 ? 's' : ''} out of 5`}
+            accessibilityHint="Double tap to rate this product"
           >
             <Text style={[
               styles.star,
@@ -93,7 +111,7 @@ const ProductDetailsWrittenUserReview = ({ navigation, route }) => {
         ))}
       </View>
     );
-  };
+  }, [starRating, handleStarPress]);
 
   const renderImageUpload = () => (
     <View style={styles.imageUploadContainer}>
@@ -121,7 +139,7 @@ const ProductDetailsWrittenUserReview = ({ navigation, route }) => {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.headerButton} onPress={handleBackPress}>
+        <TouchableOpacity style={styles.headerButton} onPress={handleBackPress} accessibilityRole="button" accessibilityLabel="Go back to previous screen">
           <BackIcon />
         </TouchableOpacity>
         
@@ -158,14 +176,17 @@ const ProductDetailsWrittenUserReview = ({ navigation, route }) => {
         <TouchableOpacity 
           style={[
             styles.postButton,
-            starRating === 0 && styles.postButtonDisabled
+            !isFormValid && styles.postButtonDisabled
           ]} 
           onPress={handlePostReview}
-          disabled={starRating === 0}
+          disabled={!isFormValid}
+          accessibilityRole="button"
+          accessibilityLabel="Post your review"
+          accessibilityHint={!isFormValid ? "Please select a star rating first" : "Submit your review"}
         >
           <Text style={[
             styles.postButtonText,
-            starRating === 0 && styles.postButtonTextDisabled
+            !isFormValid && styles.postButtonTextDisabled
           ]}>Post Review</Text>
         </TouchableOpacity>
       </View>

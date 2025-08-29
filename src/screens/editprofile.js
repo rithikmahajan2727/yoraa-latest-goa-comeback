@@ -68,7 +68,7 @@ const EditProfile = ({ navigation }) => {
   };
 
   const handleSave = () => {
-    console.log('Save profile:', formData);
+    // Profile save logging removed for production
     // Add save logic here
     // You can add validation and API calls here
   };

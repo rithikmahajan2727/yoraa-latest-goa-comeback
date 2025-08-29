@@ -26,12 +26,10 @@ const CreateAccountEmail = ({ navigation }) => {
   };
 
   const handleSignUp = () => {
-    // Handle sign up logic
-    console.log('Sign up with email:', { name, email, password, confirmPassword });
-    // You can add validation and API call here
+    // TODO: Implement actual sign up logic
+    // Sign up logging removed for production
     
-    // Navigate to success modal
-    if (navigation) {
+    if (navigation && navigation.navigate) {
       navigation.navigate('CreateAccountEmailSuccessModal');
     }
   };
@@ -49,17 +47,25 @@ const CreateAccountEmail = ({ navigation }) => {
 
   const handleLogInLink = () => {
     // Handle "Log In" link in the footer
-    console.log('Navigate to log in');
+    // Navigate to log in - logging removed for production
+  };
+
+  const handleLogInNavigation = () => {
+    // Navigate to log in screen  
+    // Navigation logging removed for production
+    if (navigation) {
+      navigation.navigate('LoginAccountEmail');
+    }
   };
 
   const handleAppleLogin = () => {
     // Handle Apple login
-    console.log('Apple login');
+    // Apple login logging removed for production
   };
 
   const handleGoogleLogin = () => {
     // Handle Google login
-    console.log('Google login');
+    // Google login logging removed for production
   };
 
   return (

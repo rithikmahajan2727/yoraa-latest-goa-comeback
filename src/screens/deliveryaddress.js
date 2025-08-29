@@ -91,12 +91,12 @@ const DeliveryAddressModal = ({ visible, onClose, selectedOption }) => {
   };
 
   const handleSaveAddress = () => {
-    // Handle save address logic here
-    console.log('Saving address:', formData);
-    handleClose();
-  };
-
-  if (!visible) {
+    // Address validation and save logic
+    // Address saving logging removed for production
+    
+    // TODO: Submit address to backend
+    onClose(); // Close modal after saving
+  };  if (!visible) {
     return null;
   }
 
@@ -399,5 +399,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DeliveryAddressModal;</content>
-<parameter name="filePath">/Users/rithikmahajan/yoraa-latest-goa/src/screens/deliveryaddress.js
+export default DeliveryAddressModal;

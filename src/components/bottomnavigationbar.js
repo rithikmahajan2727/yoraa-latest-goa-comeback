@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
-  Platform,
 } from 'react-native';
-import { Colors, FontSizes, FontWeights, FontFamilies, Spacing, Shadows } from '../constants';
+import { FontWeights, FontFamilies } from '../constants';
 import {
   HomeIcon,
   ShopIcon,
@@ -21,6 +20,20 @@ const BottomNavigationBar = ({ activeTab = 'Home', onTabChange }) => {
   
   // Use external activeTab if provided, otherwise use internal state
   const currentActiveTab = activeTab || internalActiveTab;
+
+  const handleTabPress = useCallback((tabName) => {
+    // Update internal state if no external activeTab provided
+    if (!activeTab) {
+      setInternalActiveTab(tabName);
+    }
+    
+    // Call external handler if provided
+    if (onTabChange) {
+      onTabChange(tabName);
+    }
+    
+    // Tab selection logging removed for production
+  }, [activeTab, onTabChange]);
 
   const tabs = [
     {
@@ -50,19 +63,7 @@ const BottomNavigationBar = ({ activeTab = 'Home', onTabChange }) => {
     },
   ];
 
-  const handleTabPress = (tabName) => {
-    // Update internal state if no external handler provided
-    if (!onTabChange) {
-      setInternalActiveTab(tabName);
-    } else {
-      // Use external handler
-      onTabChange(tabName);
-    }
-    // Log the tab change but stay on the same page as requested
-    console.log(`Tab selected: ${tabName} - staying on the same page`);
-  };
-
-      return (
+  return (
         <SafeAreaView style={styles.container}>
           <View style={styles.navigationBar}>
             {tabs.map((tab) => {

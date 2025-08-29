@@ -242,13 +242,27 @@ const BagScreen = ({ navigation, route }) => {
 
   const [selectedItem, setSelectedItem] = useState(null);
 
-  // Memoized calculations for performance
-  const subtotal = useMemo(() => {
-    return bagItems.reduce((total, item) => {
+  // Memoized calculations for performance - optimized for better performance
+  const bagCalculations = useMemo(() => {
+    const subtotal = bagItems.reduce((total, item) => {
       const price = parseFloat(item.price.replace('US$', ''));
       return total + (price * item.quantity);
     }, 0);
-  }, [bagItems]);
+    
+    const shipping = subtotal > 0 ? 5.00 : 0;
+    const tax = subtotal * 0.1; // 10% tax
+    const discount = modalStates.pointsApplied ? subtotal * 0.1 : 0; // 10% discount if points applied
+    const total = subtotal + shipping + tax - discount;
+    
+    return {
+      subtotal: subtotal.toFixed(2),
+      shipping: shipping.toFixed(2),
+      tax: tax.toFixed(2),
+      discount: discount.toFixed(2),
+      total: total.toFixed(2),
+      itemCount: bagItems.length,
+    };
+  }, [bagItems, modalStates.pointsApplied]);
 
   const deliveryInfo = useMemo(() => ({
     dateRange: 'Wed, 11 May to Fri, 13 May',
@@ -260,8 +274,8 @@ const BagScreen = ({ navigation, route }) => {
     internationalDelivery: 'Standard - $200',
     promo: 'US$1.0',
     pointsDiscount: modalStates.pointsApplied ? 'US$1.0' : 'US$0.0',
-    total: `US$${subtotal.toFixed(2)}`,
-  }), [subtotal, modalStates.pointsApplied]);
+    total: `US$${bagCalculations.total}`,
+  }), [bagCalculations.total, modalStates.pointsApplied]);
 
   // Effect for handling navigation params
   useEffect(() => {
@@ -301,11 +315,11 @@ const BagScreen = ({ navigation, route }) => {
     InteractionManager.runAfterInteractions(() => {
       navigation.navigate('DeliveryOptionsStepOneScreen', {
         bagItems,
-        totalAmount: subtotal,
+        totalAmount: bagCalculations.subtotal,
         deliveryInfo,
       });
     });
-  }, [navigation, bagItems, subtotal, deliveryInfo]);
+  }, [navigation, bagItems, bagCalculations.subtotal, deliveryInfo]);
 
   // Optimized handler functions with better state management
   const handleQuantityChange = useCallback((itemId, newQuantity) => {
