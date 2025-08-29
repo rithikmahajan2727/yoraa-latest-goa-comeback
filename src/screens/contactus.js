@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { PanResponder } from 'react-native';
 import {
   View,
@@ -10,14 +10,11 @@ import {
   Linking,
   Alert,
   Modal,
-  Dimensions,
   ScrollView,
   TextInput,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-
-const { height: screenHeight } = Dimensions.get('window');
 
 // Back Arrow Icon Component
 const BackArrowIcon = () => (
@@ -121,10 +118,14 @@ const ContactUsScreen = ({ navigation, visible = true }) => {
   const thankYouModalAnim = useRef(new Animated.Value(0)).current;
   
   const [currentView, setCurrentView] = useState('modal'); // 'modal', 'chat', or 'rating'
-  const [messages, setMessages] = useState([
+  
+  // Memoized initial messages to prevent recreation on every render
+  const initialMessages = useMemo(() => [
     { id: 1, text: 'Hello, good morning.', sender: 'support', time: 'Today' },
     { id: 2, text: 'I am a Customer Service, is there anything I can help you with?', sender: 'support', time: '10:41 pm' },
-  ]);
+  ], []);
+  
+  const [messages, setMessages] = useState(initialMessages);
   const [messageText, setMessageText] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [selectedRating, setSelectedRating] = useState(0);
@@ -151,7 +152,7 @@ const ContactUsScreen = ({ navigation, visible = true }) => {
     }
   }, [slideAnim, opacityAnim, visible, currentView]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     if (currentView === 'chat') {
       // Animate chat out to the right with 300ms ease in
       Animated.timing(chatSlideAnim, {
@@ -182,13 +183,13 @@ const ContactUsScreen = ({ navigation, visible = true }) => {
         navigation.goBack();
       });
     }
-  };
+  }, [currentView, chatSlideAnim, slideAnim, opacityAnim, navigation]);
 
-  const handleBackdropPress = () => {
+  const handleBackdropPress = useCallback(() => {
     handleClose();
-  };
+  }, [handleClose]);
 
-  const handleEmailPress = () => {
+  const handleEmailPress = useCallback(() => {
     const email = 'contact@yoraa.in';
     const subject = 'Contact Inquiry';
     const body = 'Hello Yoraa Team,\n\nI would like to inquire about...\n\nBest regards,';
@@ -206,9 +207,9 @@ const ContactUsScreen = ({ navigation, visible = true }) => {
         );
       }
     });
-  };
+  }, []);
 
-  const handleCustomerSupport = () => {
+  const handleCustomerSupport = useCallback(() => {
     // Navigate to chat screen with slide in from right animation
     setCurrentView('chat');
     chatSlideAnim.setValue(300);
@@ -218,7 +219,7 @@ const ContactUsScreen = ({ navigation, visible = true }) => {
       easing: Easing.in(Easing.ease),
       useNativeDriver: true,
     }).start();
-  };
+  }, [chatSlideAnim]);
 
   const handleSendMessage = () => {
     if (messageText.trim()) {
@@ -1067,4 +1068,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ContactUsScreen;
+export default React.memo(ContactUsScreen);
