@@ -387,6 +387,16 @@ const CollectionScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={renderSeparator}
           columnWrapperStyle={styles.productRow}
+          removeClippedSubviews={true}
+          maxToRenderPerBatch={10}
+          updateCellsBatchingPeriod={50}
+          initialNumToRender={10}
+          windowSize={10}
+          getItemLayout={(data, index) => ({
+            length: 240, // Estimated item height (2 columns)
+            offset: 240 * Math.floor(index / 2),
+            index,
+          })}
         />
 
         <FilterModal 

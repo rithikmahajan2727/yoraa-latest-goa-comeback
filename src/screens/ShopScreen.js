@@ -219,6 +219,15 @@ const ShopScreen = React.memo(({ navigation }) => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.horizontalList}
             accessibilityLabel="New arrivals product list"
+            removeClippedSubviews={true}
+            maxToRenderPerBatch={5}
+            initialNumToRender={5}
+            windowSize={7}
+            getItemLayout={(data, index) => ({
+              length: 180, // Estimated item width for horizontal list
+              offset: 180 * index,
+              index,
+            })}
           />
         </View>
 
@@ -233,6 +242,15 @@ const ShopScreen = React.memo(({ navigation }) => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.horizontalList}
             accessibilityLabel="Trending products list"
+            removeClippedSubviews={true}
+            maxToRenderPerBatch={5}
+            initialNumToRender={5}
+            windowSize={7}
+            getItemLayout={(data, index) => ({
+              length: 180,
+              offset: 180 * index,
+              index,
+            })}
           />
         </View>
 
@@ -254,6 +272,15 @@ const ShopScreen = React.memo(({ navigation }) => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.horizontalList}
             accessibilityLabel="Sale categories list"
+            removeClippedSubviews={true}
+            maxToRenderPerBatch={4}
+            initialNumToRender={4}
+            windowSize={6}
+            getItemLayout={(data, index) => ({
+              length: 120,
+              offset: 120 * index,
+              index,
+            })}
           />
         </View>
       </ScrollView>

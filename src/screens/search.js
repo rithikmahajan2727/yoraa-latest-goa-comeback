@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import { Colors, FontSizes, FontWeights, Spacing, BorderRadius } from '../constants';
 import { MicrophoneIcon, CameraIcon, ScanBarcodeIcon, SearchIcon } from '../assets/icons';
+import { useAccessibility } from '../hooks/useAccessibility';
 
 // Sample search suggestions
 const ALL_SUGGESTIONS = [
@@ -371,6 +372,16 @@ const SearchScreen = React.memo(({ navigation, onClose, route }) => {
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.resultsList}
+        removeClippedSubviews={true}
+        maxToRenderPerBatch={10}
+        updateCellsBatchingPeriod={50}
+        initialNumToRender={10}
+        windowSize={10}
+        getItemLayout={(data, index) => ({
+          length: 120, // Estimated item height
+          offset: 120 * index,
+          index,
+        })}
       />
     </View>
   );
@@ -470,6 +481,10 @@ const SearchScreen = React.memo(({ navigation, onClose, route }) => {
             keyExtractor={(item, index) => index.toString()}
             style={styles.suggestionsList}
             showsVerticalScrollIndicator={false}
+            removeClippedSubviews={true}
+            maxToRenderPerBatch={8}
+            initialNumToRender={8}
+            windowSize={5}
           />
         )}
 

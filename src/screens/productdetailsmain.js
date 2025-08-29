@@ -401,6 +401,10 @@ const ProductDetailsMain = ({ navigation, route }) => {
             onScroll={onImageScroll}
             scrollEventThrottle={16}
             style={styles.imageSlider}
+            removeClippedSubviews={true}
+            maxToRenderPerBatch={3}
+            initialNumToRender={3}
+            windowSize={5}
             getItemLayout={(data, index) => ({
               length: width,
               offset: width * index,
@@ -666,6 +670,15 @@ const ProductDetailsMain = ({ navigation, route }) => {
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.horizontalList}
+        removeClippedSubviews={true}
+        maxToRenderPerBatch={4}
+        initialNumToRender={4}
+        windowSize={6}
+        getItemLayout={(listData, index) => ({
+          length: 160,
+          offset: 160 * index,
+          index,
+        })}
       />
     </View>
   );
