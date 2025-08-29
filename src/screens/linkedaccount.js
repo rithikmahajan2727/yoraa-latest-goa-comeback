@@ -64,19 +64,34 @@ const LinkedAccountScreen = ({ navigation }) => {
             onPress={handleBack}
             animationDuration={300}
             customEasing={Easing.in(Easing.back(1.7))}
+            accessibilityRole="button"
+            accessibilityLabel="Go back to settings"
+            accessibilityHint="Returns to the previous screen"
           />
-          <Text style={styles.headerTitle}>Linked Accounts</Text>
+          <Text 
+            style={styles.headerTitle}
+            accessibilityRole="header"
+          >
+            Linked Accounts
+          </Text>
           <View style={styles.headerSpacer} />
         </View>
 
         {/* Content */}
         <View style={styles.mainContent}>
-          <Text style={styles.subtitle}>
+          <Text 
+            style={styles.subtitle}
+            accessibilityRole="text"
+          >
             Manage account and services linked{'\n'}to your Yoraa account
           </Text>
 
           {/* No Connected Accounts Container */}
-          <View style={styles.noAccountsContainer}>
+          <View 
+            style={styles.noAccountsContainer}
+            accessibilityRole="text"
+            accessibilityLabel="No connected accounts. You don't have any connected app or services"
+          >
             <ChainLinkIcon />
             <Text style={styles.noAccountsText}>
               You dont have any connected{'\n'}app or services
@@ -88,6 +103,9 @@ const LinkedAccountScreen = ({ navigation }) => {
             style={styles.updateButton}
             onPress={handleUpdate}
             activeOpacity={0.8}
+            accessibilityRole="button"
+            accessibilityLabel="Update linked accounts"
+            accessibilityHint="Check for and update connected accounts and services"
           >
             <Text style={styles.updateButtonText}>Update</Text>
           </TouchableOpacity>

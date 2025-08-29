@@ -47,8 +47,7 @@ const CommunicationPreferences = ({ navigation }) => {
 
   const handleSave = () => {
     // Save preferences
-      sendEmails: sendEmails
-    });
+    // Data includes: sendEmails preference
     
     // Navigate back with animation
     handleBack();

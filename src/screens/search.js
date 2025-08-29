@@ -244,6 +244,9 @@ const SearchScreen = ({ navigation, onClose, route }) => {
     <TouchableOpacity
       style={styles.suggestionItem}
       onPress={() => handleSuggestionPress(item)}
+      accessibilityRole="button"
+      accessibilityLabel={`Search for ${item}`}
+      accessibilityHint="Tap to search for this item"
     >
       <Text style={styles.suggestionText}>{item}</Text>
     </TouchableOpacity>
@@ -267,6 +270,13 @@ const SearchScreen = ({ navigation, onClose, route }) => {
             setSelectedProductIndex(productIndex);
             setSelectedVariantIndex(index);
           }}
+          accessibilityRole="button"
+          accessibilityLabel={`Select ${variant.color} color variant`}
+          accessibilityState={{ 
+            selected: selectedProductIndex === productIndex && selectedVariantIndex === index,
+            disabled: !variant.inStock 
+          }}
+          accessibilityHint={variant.inStock ? "Tap to select this color variant" : "This variant is out of stock"}
         >
           <View
             style={[
@@ -288,6 +298,9 @@ const SearchScreen = ({ navigation, onClose, route }) => {
     <TouchableOpacity
       style={styles.productItem}
       onPress={() => handleProductPress(item)}
+      accessibilityRole="button"
+      accessibilityLabel={`${item.brand} ${item.name}, ${item.price}`}
+      accessibilityHint="Tap to view product details"
     >
       {/* Main Product Image */}
       <View style={styles.productImageContainer}>
@@ -387,9 +400,18 @@ const SearchScreen = ({ navigation, onClose, route }) => {
               onChangeText={setSearchText}
               autoFocus={true}
               returnKeyType="search"
+              accessibilityRole="searchbox"
+              accessibilityLabel="Search products"
+              accessibilityHint="Type to search for products"
             />
             
-            <TouchableOpacity style={styles.cancelButton} onPress={handleClose}>
+            <TouchableOpacity 
+              style={styles.cancelButton} 
+              onPress={handleClose}
+              accessibilityRole="button"
+              accessibilityLabel="Cancel search"
+              accessibilityHint="Close the search screen"
+            >
               <Text style={styles.cancelText}>Cancel</Text>
             </TouchableOpacity>
           </View>
@@ -398,6 +420,9 @@ const SearchScreen = ({ navigation, onClose, route }) => {
           <TouchableOpacity 
             style={styles.micButtonAbsolute}
             onPress={handleVoiceSearch}
+            accessibilityRole="button"
+            accessibilityLabel={isRecording ? "Stop voice recording" : "Start voice search"}
+            accessibilityHint="Use voice to search for products"
           >
             <MicrophoneIcon 
               color={isRecording ? Colors.primary : "#000000"} 
@@ -410,12 +435,24 @@ const SearchScreen = ({ navigation, onClose, route }) => {
         {/* Action Buttons - only show when no search results */}
         {!searchResults.length && (
           <>
-            <TouchableOpacity style={[styles.actionButton, styles.cameraButton]} onPress={handleCameraPress}>
+            <TouchableOpacity 
+              style={[styles.actionButton, styles.cameraButton]} 
+              onPress={handleCameraPress}
+              accessibilityRole="button"
+              accessibilityLabel="Search using camera"
+              accessibilityHint="Take a photo to search for similar products"
+            >
               <CameraIcon color="#000000" width={19} height={19} />
               <Text style={styles.actionButtonText}>Camera</Text>
             </TouchableOpacity>
             
-            <TouchableOpacity style={[styles.actionButton, styles.scanBarcodeButton]} onPress={handleScanBarcode}>
+            <TouchableOpacity 
+              style={[styles.actionButton, styles.scanBarcodeButton]} 
+              onPress={handleScanBarcode}
+              accessibilityRole="button"
+              accessibilityLabel="Scan product barcode"
+              accessibilityHint="Use camera to scan a product barcode for search"
+            >
               <ScanBarcodeIcon color="#000000" width={19} height={19} />
               <Text style={styles.actionButtonText}> Scan Barcode</Text>
             </TouchableOpacity>
