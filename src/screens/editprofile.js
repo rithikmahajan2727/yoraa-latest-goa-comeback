@@ -9,6 +9,7 @@ import {
   TextInput,
   Modal,
 } from 'react-native';
+import DatePicker from 'react-native-date-picker';
 import GlobalBackButton from '../components/GlobalBackButton';
 
 const EditProfile = ({ navigation }) => {
@@ -38,9 +39,12 @@ const EditProfile = ({ navigation }) => {
   const [showStateDropdown, setShowStateDropdown] = useState(false);
   const [showCountryCodeDropdown, setShowCountryCodeDropdown] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [addressAdded, setAddressAdded] = useState(false);
+  const [addressAdded, setAddressAdded] = useState(true); // Set to true to show saved address
+  const [showGenderDropdown, setShowGenderDropdown] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const stateOptions = ['Delhi', 'Mumbai', 'Bangalore', 'Chennai', 'Kolkata', 'Hyderabad', 'Pune', 'Ahmedabad'];
+  const genderOptions = ['Male', 'Female', 'Other'];
   const countryCodeOptions = [
     { code: '+1', country: 'US', flag: '🇺🇸' },
     { code: '+44', country: 'UK', flag: '🇬🇧' },
@@ -108,6 +112,26 @@ const EditProfile = ({ navigation }) => {
       countryCode: countryCode.code
     }));
     setShowCountryCodeDropdown(false);
+  };
+
+  const handleGenderSelect = (gender) => {
+    setFormData(prev => ({
+      ...prev,
+      gender: gender
+    }));
+    setShowGenderDropdown(false);
+  };
+
+  const handleDatePickerPress = () => {
+    setShowDatePicker(true);
+  };
+
+  const handleDateChange = (date) => {
+    setFormData(prev => ({
+      ...prev,
+      dateOfBirth: date
+    }));
+    setShowDatePicker(false);
   };
 
   const getFormattedAddress = () => {
@@ -212,60 +236,85 @@ const EditProfile = ({ navigation }) => {
 
         {/* Additional Sections */}
         <View style={styles.additionalContainer}>
-          {/* Other Details and Address in Container */}
-          <View style={styles.detailsContainer}>
-            {/* Other Details */}
-            <TouchableOpacity style={styles.additionalItem} onPress={handleAddOtherDetails}>
-              <Text style={styles.additionalTitle}>Other Details</Text>
-              <Text style={styles.addButton}>+ Add</Text>
-            </TouchableOpacity>
+          {/* Other Details Container - Always visible as per Figma */}
+          <View style={styles.otherDetailsMainContainer}>
+            <View style={styles.otherDetailsHeader}>
+              <Text style={styles.otherDetailsTitle}>Other Details</Text>
+              <TouchableOpacity onPress={handleAddOtherDetails}>
+                <Text style={styles.addButton}>+ Add</Text>
+              </TouchableOpacity>
+            </View>
             
-            {/* Expanded Other Details Section */}
-            {otherDetailsExpanded && (
-              <View style={styles.expandedDetailsContainer}>
-                {/* Date of Birth Field */}
-                <View style={styles.inputContainer}>
-                  <View style={styles.inputWrapper}>
-                    <Text style={styles.floatingLabel}>Date of Birth</Text>
-                    <TouchableOpacity style={styles.datePickerContainer}>
-                      <Text style={styles.dateText}>
-                        {formData.dateOfBirth.toLocaleDateString('en-US', {
-                          month: '2-digit',
-                          day: '2-digit',
-                          year: 'numeric'
-                        })}
-                      </Text>
-                      <View style={styles.calendarIconContainer}>
-                        <Text style={styles.calendarIcon}>📅</Text>
-                      </View>
-                    </TouchableOpacity>
+            {/* Date of Birth Field */}
+            <View style={styles.figmaInputContainer}>
+              <View style={styles.figmaInputWrapper}>
+                <Text style={styles.figmaFloatingLabel}>Date of Birth</Text>
+                <TouchableOpacity style={styles.figmaDatePickerContainer} onPress={handleDatePickerPress}>
+                  <Text style={styles.figmaDateText}>
+                    {formData.dateOfBirth.toLocaleDateString('en-US', {
+                      month: '2-digit',
+                      day: '2-digit',
+                      year: 'numeric'
+                    })}
+                  </Text>
+                  <View style={styles.figmaCalendarIconContainer}>
+                    <Text style={styles.figmaCalendarIcon}>📅</Text>
                   </View>
-                </View>
-
-                {/* Gender Field */}
-                <View style={styles.inputContainer}>
-                  <View style={styles.inputWrapper}>
-                    <Text style={styles.floatingLabel}>Gender</Text>
-                    <TouchableOpacity style={styles.genderPickerContainer}>
-                      <Text style={styles.genderText}>{formData.gender}</Text>
-                      <Text style={styles.dropdownArrow}>▼</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
+                </TouchableOpacity>
               </View>
-            )}
+            </View>
+
+            {/* Gender Field */}
+            <View style={styles.figmaInputContainer}>
+              <View style={styles.figmaInputWrapper}>
+                <Text style={styles.figmaFloatingLabel}>Gender</Text>
+                <TouchableOpacity 
+                  style={styles.figmaGenderPickerContainer} 
+                  onPress={() => setShowGenderDropdown(!showGenderDropdown)}
+                >
+                  <Text style={styles.figmaGenderText}>{formData.gender}</Text>
+                  <Text style={styles.figmaDropdownArrow}>▼</Text>
+                </TouchableOpacity>
+                
+                {showGenderDropdown && (
+                  <View style={styles.figmaGenderDropdown}>
+                    {genderOptions.map((option) => (
+                      <TouchableOpacity
+                        key={option}
+                        style={styles.figmaDropdownOption}
+                        onPress={() => handleGenderSelect(option)}
+                      >
+                        <Text style={[
+                          styles.figmaDropdownOptionText,
+                          formData.gender === option && styles.selectedOption
+                        ]}>
+                          {option}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                )}
+              </View>
+            </View>
+          </View>
+
+          {/* Address Section */}
+          <View style={styles.addressMainContainer}>
+            <View style={styles.addressHeader}>
+              <Text style={styles.addressTitle}>Address</Text>
+              <TouchableOpacity onPress={handleAddAddress}>
+                <Text style={styles.addButton}>+ Add</Text>
+              </TouchableOpacity>
+            </View>
             
-            {/* Address */}
-            <TouchableOpacity style={styles.additionalItem} onPress={handleAddAddress}>
-              <Text style={styles.additionalTitle}>Address</Text>
-              <Text style={styles.addButton}>+ Add</Text>
-            </TouchableOpacity>
-            
+            {/* Saved Address Display */}
             {addressAdded && (
-              <View style={styles.addressDisplayContainer}>
-                <Text style={styles.addressLabel}>Address</Text>
-                <View style={styles.addressContentContainer}>
-                  <Text style={styles.addressContent}>{getFormattedAddress()}</Text>
+              <View style={styles.figmaAddressContainer}>
+                <View style={styles.figmaAddressWrapper}>
+                  <Text style={styles.figmaAddressLabel}>Address</Text>
+                  <View style={styles.figmaAddressInputContainer}>
+                    <Text style={styles.figmaAddressText}>XYZ Street</Text>
+                  </View>
                 </View>
               </View>
             )}
@@ -472,6 +521,18 @@ const EditProfile = ({ navigation }) => {
           </View>
         </View>
       </Modal>
+
+      {/* Date Picker Modal */}
+      <DatePicker
+        modal
+        open={showDatePicker}
+        date={formData.dateOfBirth}
+        mode="date"
+        onConfirm={handleDateChange}
+        onCancel={() => setShowDatePicker(false)}
+        maximumDate={new Date()}
+        title="Select Date of Birth"
+      />
 
       {/* Save Button */}
       <View style={styles.saveButtonContainer}>
@@ -907,6 +968,180 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     fontFamily: 'Montserrat-Medium',
+  },
+  
+  // Figma-specific styles for Other Details section
+  otherDetailsMainContainer: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 22,
+    padding: 17,
+    marginHorizontal: 22,
+    marginTop: 20,
+    marginBottom: 10,
+    // No border as per Figma design
+  },
+  otherDetailsHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  otherDetailsTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000000',
+    fontFamily: 'Montserrat-Bold',
+  },
+  
+  // Figma Input Styles
+  figmaInputContainer: {
+    marginBottom: 15,
+  },
+  figmaInputWrapper: {
+    position: 'relative',
+  },
+  figmaFloatingLabel: {
+    position: 'absolute',
+    left: 19,
+    top: -8,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 5,
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#000000',
+    fontFamily: 'Montserrat-Medium',
+    zIndex: 1,
+  },
+  figmaDatePickerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    borderWidth: 1,
+    borderColor: '#000000',
+    borderRadius: 12,
+    backgroundColor: '#FFFFFF',
+    height: 47,
+  },
+  figmaDateText: {
+    fontSize: 14,
+    color: '#000000',
+    fontFamily: 'Montserrat-Regular',
+  },
+  figmaCalendarIconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 24,
+    height: 24,
+  },
+  figmaCalendarIcon: {
+    fontSize: 18,
+  },
+  figmaGenderPickerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    borderWidth: 1,
+    borderColor: '#000000',
+    borderRadius: 12,
+    backgroundColor: '#FFFFFF',
+    height: 47,
+  },
+  figmaGenderText: {
+    fontSize: 14,
+    color: '#000000',
+    fontFamily: 'Montserrat-Regular',
+  },
+  figmaDropdownArrow: {
+    fontSize: 14,
+    color: '#848688',
+  },
+  figmaGenderDropdown: {
+    position: 'absolute',
+    top: 50,
+    left: 0,
+    right: 0,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#000000',
+    borderRadius: 12,
+    zIndex: 1000,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  figmaDropdownOption: {
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#F0F0F0',
+  },
+  figmaDropdownOptionText: {
+    fontSize: 14,
+    color: '#000000',
+    fontFamily: 'Montserrat-Regular',
+  },
+  
+  // Address Section Styles
+  addressMainContainer: {
+    marginHorizontal: 22,
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  addressHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  addressTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000000',
+    fontFamily: 'Montserrat-Bold',
+  },
+  
+  // Figma Address Container
+  figmaAddressContainer: {
+    marginTop: 10,
+  },
+  figmaAddressWrapper: {
+    position: 'relative',
+  },
+  figmaAddressLabel: {
+    position: 'absolute',
+    left: 19,
+    top: -8,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 5,
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#000000',
+    fontFamily: 'Montserrat-Medium',
+    zIndex: 1,
+  },
+  figmaAddressInputContainer: {
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    borderWidth: 1,
+    borderColor: '#000000',
+    borderRadius: 12,
+    backgroundColor: '#FFFFFF',
+    height: 47,
+    justifyContent: 'center',
+  },
+  figmaAddressText: {
+    fontSize: 14,
+    color: '#000000',
+    fontFamily: 'Montserrat-Regular',
   },
 });
 
