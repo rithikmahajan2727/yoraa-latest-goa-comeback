@@ -154,10 +154,7 @@ const LoveUsRateUs = ({ navigation, route }) => {
     }
 
     // Here you would typically send the data to your backend
-      rating,
-      feedback,
-      images: uploadedImages.length
-    });
+    // Data includes: rating, feedback, and uploaded images
 
     setShowSuccessModal(true);
   };
