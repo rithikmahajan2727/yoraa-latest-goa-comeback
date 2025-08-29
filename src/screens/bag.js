@@ -1099,4 +1099,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BagScreen;
+export default React.memo(BagScreen);

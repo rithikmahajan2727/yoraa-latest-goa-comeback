@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -96,31 +96,62 @@ const SALE_CATEGORIES = [
 
 const TABS = ['Men', 'Women', 'Kids'];
 
-const ShopScreen = ({ navigation }) => {
+const ShopScreen = React.memo(({ navigation }) => {
   const [selectedTab, setSelectedTab] = useState('Men');
   const [favorites, setFavorites] = useState(new Set());
 
-  const toggleFavorite = (productId) => {
-    const newFavorites = new Set(favorites);
-    if (newFavorites.has(productId)) {
-      newFavorites.delete(productId);
-    } else {
-      newFavorites.add(productId);
-    }
-    setFavorites(newFavorites);
-  };
+  // Memoize static data arrays to prevent recreation on each render
+  const newArrivals = useMemo(() => NEW_ARRIVALS, []);
+  const trendingNow = useMemo(() => TRENDING_NOW, []);
+  const saleCategories = useMemo(() => SALE_CATEGORIES, []);
+  const tabs = useMemo(() => TABS, []);
 
-  const renderProductItem = ({ item }) => (
-    <TouchableOpacity style={styles.productCard}>
+  // Optimized handlers with useCallback
+  const handleNavigateToSearch = useCallback(() => {
+    navigation?.navigate('SearchScreen', { previousScreen: 'Shop' });
+  }, [navigation]);
+
+  const handleTabSelect = useCallback((tab) => {
+    setSelectedTab(tab);
+  }, []);
+
+  const toggleFavorite = useCallback((productId) => {
+    setFavorites(prevFavorites => {
+      const newFavorites = new Set(prevFavorites);
+      if (newFavorites.has(productId)) {
+        newFavorites.delete(productId);
+      } else {
+        newFavorites.add(productId);
+      }
+      return newFavorites;
+    });
+  }, []);
+
+  // Memoized render functions for better performance
+  const renderProductItem = useCallback(({ item }) => (
+    <TouchableOpacity 
+      style={styles.productCard}
+      accessibilityRole="button"
+      accessibilityLabel={`${item.name}, ${item.price}`}
+      accessibilityHint="View product details"
+    >
       <View style={styles.productImageContainer}>
         <View style={styles.productImagePlaceholder} />
         <TouchableOpacity
           style={styles.favoriteButton}
           onPress={() => toggleFavorite(item.id)}
+          accessibilityRole="button"
+          accessibilityLabel={favorites.has(item.id) ? "Remove from favorites" : "Add to favorites"}
+          accessibilityState={{ selected: favorites.has(item.id) }}
         >
           <HeartIcon filled={favorites.has(item.id)} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.cartButton}>
+        <TouchableOpacity 
+          style={styles.cartButton}
+          accessibilityRole="button"
+          accessibilityLabel="Add to cart"
+          accessibilityHint="Add product to shopping cart"
+        >
           <GlobalCartIcon />
         </TouchableOpacity>
       </View>
@@ -129,29 +160,37 @@ const ShopScreen = ({ navigation }) => {
         <Text style={styles.productPrice}>{item.price}</Text>
       </View>
     </TouchableOpacity>
-  );
+  ), [favorites, toggleFavorite]);
 
-  const renderSaleCategoryItem = ({ item }) => (
-    <TouchableOpacity style={styles.saleCategoryCard}>
+  const renderSaleCategoryItem = useCallback(({ item }) => (
+    <TouchableOpacity 
+      style={styles.saleCategoryCard}
+      accessibilityRole="button"
+      accessibilityLabel={`${item.name} category`}
+      accessibilityHint="Browse category products"
+    >
       <View style={styles.saleCategoryImagePlaceholder} />
       <View style={styles.saleCategoryOverlay}>
         <Text style={styles.saleCategoryText}>{item.name}</Text>
       </View>
     </TouchableOpacity>
-  );
+  ), []);
 
-  const renderTab = (tab) => (
+  const renderTab = useCallback((tab) => (
     <TouchableOpacity
       key={tab}
       style={styles.tabItem}
-      onPress={() => setSelectedTab(tab)}
+      onPress={() => handleTabSelect(tab)}
+      accessibilityRole="tab"
+      accessibilityLabel={`${tab} tab`}
+      accessibilityState={{ selected: selectedTab === tab }}
     >
       <Text style={[styles.tabText, selectedTab === tab && styles.activeTabText]}>
         {tab}
       </Text>
       {selectedTab === tab && <View style={styles.tabIndicator} />}
     </TouchableOpacity>
-  );
+  ), [selectedTab, handleTabSelect]);
 
   return (
     <View style={styles.container}>
@@ -159,7 +198,10 @@ const ShopScreen = ({ navigation }) => {
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.searchButton}
-          onPress={() => navigation?.navigate('SearchScreen', { previousScreen: 'Shop' })}
+          onPress={handleNavigateToSearch}
+          accessibilityRole="button"
+          accessibilityLabel="Search"
+          accessibilityHint="Navigate to search screen"
         >
           <SearchIcon />
         </TouchableOpacity>
@@ -168,53 +210,56 @@ const ShopScreen = ({ navigation }) => {
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* New Arrivals Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>New Arrivals</Text>
+          <Text style={styles.sectionTitle} accessibilityRole="header">New Arrivals</Text>
           <FlatList
-            data={NEW_ARRIVALS}
+            data={newArrivals}
             renderItem={renderProductItem}
             keyExtractor={(item) => item.id}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.horizontalList}
+            accessibilityLabel="New arrivals product list"
           />
         </View>
 
         {/* Trending Now Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Trending Now</Text>
+          <Text style={styles.sectionTitle} accessibilityRole="header">Trending Now</Text>
           <FlatList
-            data={TRENDING_NOW}
+            data={trendingNow}
             renderItem={renderProductItem}
             keyExtractor={(item) => item.id}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.horizontalList}
+            accessibilityLabel="Trending products list"
           />
         </View>
 
         {/* Sale Section */}
         <View style={styles.section}>
-          <Text style={styles.saleTitle}>Sale</Text>
+          <Text style={styles.saleTitle} accessibilityRole="header">Sale</Text>
           
           {/* Tabs */}
-          <View style={styles.tabContainer}>
-            {TABS.map(renderTab)}
+          <View style={styles.tabContainer} accessibilityRole="tablist">
+            {tabs.map(renderTab)}
           </View>
 
           {/* Sale Categories */}
           <FlatList
-            data={SALE_CATEGORIES}
+            data={saleCategories}
             renderItem={renderSaleCategoryItem}
             keyExtractor={(item) => item.id}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.horizontalList}
+            accessibilityLabel="Sale categories list"
           />
         </View>
       </ScrollView>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

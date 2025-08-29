@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -59,124 +59,158 @@ const SettingsIcon = () => (
   </Svg>
 );
 
-const ProfileScreen = ({ navigation }) => {
+const ProfileScreen = React.memo(({ navigation }) => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showContactUsModal, setShowContactUsModal] = useState(false);
 
-  const handleEditProfile = () => {
-    if (navigation && navigation.navigate) {
+  const handleEditProfile = useCallback(() => {
+    if (navigation?.navigate) {
       navigation.navigate('EditProfile', { previousScreen: 'Profile' });
     }
-  };
+  }, [navigation]);
 
-  const handleOrders = () => {
-    if (navigation && navigation.navigate) {
+  const handleOrders = useCallback(() => {
+    if (navigation?.navigate) {
       navigation.navigate('Orders', { previousScreen: 'Profile' });
     }
-  };
+  }, [navigation]);
 
-  const handleContactUs = () => {
+  const handleContactUs = useCallback(() => {
     setShowContactUsModal(true);
-  };
+  }, []);
 
-  const handleSettings = () => {
-    if (navigation && navigation.navigate) {
+  const handleSettings = useCallback(() => {
+    if (navigation?.navigate) {
       navigation.navigate('Settings', { previousScreen: 'Profile' });
     }
-  };
+  }, [navigation]);
 
-  const handleInbox = () => {
-    if (navigation && navigation.navigate) {
+  const handleInbox = useCallback(() => {
+    if (navigation?.navigate) {
       navigation.navigate('Inbox', { previousScreen: 'Profile' });
     }
-  };
+  }, [navigation]);
 
-  const handleFAQ = () => {
-    if (navigation && navigation.navigate) {
+  const handleFAQ = useCallback(() => {
+    if (navigation?.navigate) {
       navigation.navigate('FAQ', { previousScreen: 'Profile' });
     }
-  };
+  }, [navigation]);
 
-  const handleInvoices = () => {
-    if (navigation && navigation.navigate) {
+  const handleInvoices = useCallback(() => {
+    if (navigation?.navigate) {
       navigation.navigate('Invoice', { previousScreen: 'Profile' });
     }
-  };
+  }, [navigation]);
 
-  const handleLoveUs = () => {
-    if (navigation && navigation.navigate) {
+  const handleLoveUs = useCallback(() => {
+    if (navigation?.navigate) {
       navigation.navigate('LoveUsRateUs', { previousScreen: 'Profile' });
     }
-  };
+  }, [navigation]);
 
-  const handleInviteFriend = () => {
-    if (navigation && navigation.navigate) {
+  const handleInviteFriend = useCallback(() => {
+    if (navigation?.navigate) {
       navigation.navigate('InviteAFriend', { previousScreen: 'Profile' });
     }
-  };
+  }, [navigation]);
 
-  const handlePrivacyPolicy = () => {
+  const handlePrivacyPolicy = useCallback(() => {
     Linking.openURL('https://yoraa.co').catch(err => {
-      console.error('Failed to open URL:', err);
+      if (__DEV__) {
+        console.error('Failed to open URL:', err);
+      }
     });
-  };
+  }, []);
 
-  const handleTermsConditions = () => {
+  const handleTermsConditions = useCallback(() => {
     Linking.openURL('https://yoraa.app').catch(err => {
-      console.error('Failed to open URL:', err);
+      if (__DEV__) {
+        console.error('Failed to open URL:', err);
+      }
     });
-  };
+  }, []);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     setShowLogoutModal(true);
-  };
+  }, []);
 
-  const handleCloseLogoutModal = () => {
+  const handleCloseLogoutModal = useCallback(() => {
     setShowLogoutModal(false);
-  };
+  }, []);
 
-  const handleSignOut = () => {
+  const handleSignOut = useCallback(() => {
     setShowLogoutModal(false);
     // Add your sign out logic here
     // User signed out - navigation removed for production
     // For example: navigation.navigate('Login') or clear user session
-  };
+  }, []);
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         {/* Profile Header */}
         <View style={styles.profileContainer}>
-          <Text style={styles.clientName}>John Smith</Text>
-          <TouchableOpacity style={styles.editProfileButton} onPress={handleEditProfile}>
+          <Text style={styles.clientName} accessibilityRole="header">John Smith</Text>
+          <TouchableOpacity 
+            style={styles.editProfileButton} 
+            onPress={handleEditProfile}
+            accessibilityRole="button"
+            accessibilityLabel="Edit profile"
+            accessibilityHint="Navigate to edit profile screen"
+          >
             <Text style={styles.editProfileText}>Edit Profile</Text>
           </TouchableOpacity>
         </View>
 
         {/* Navigation Buttons */}
         <View style={styles.navigationContainer}>
-          <TouchableOpacity style={styles.actionButton} onPress={handleOrders}>
+          <TouchableOpacity 
+            style={styles.actionButton} 
+            onPress={handleOrders}
+            accessibilityRole="button"
+            accessibilityLabel="Orders"
+            accessibilityHint="View your order history"
+          >
             <OrdersIcon />
             <Text style={styles.actionButtonText}>Orders</Text>
           </TouchableOpacity>
           
           <View style={styles.actionDivider} />
           
-          <TouchableOpacity style={styles.actionButton} onPress={handleContactUs}>
+          <TouchableOpacity 
+            style={styles.actionButton} 
+            onPress={handleContactUs}
+            accessibilityRole="button"
+            accessibilityLabel="Contact Us"
+            accessibilityHint="Open contact support modal"
+          >
             <ContactIcon />
             <Text style={styles.actionButtonText}>Contact Us</Text>
           </TouchableOpacity>
           
           <View style={styles.actionDivider} />
           
-          <TouchableOpacity style={styles.actionButton} onPress={handleSettings}>
+          <TouchableOpacity 
+            style={styles.actionButton} 
+            onPress={handleSettings}
+            accessibilityRole="button"
+            accessibilityLabel="Settings"
+            accessibilityHint="Navigate to app settings"
+          >
             <SettingsIcon />
             <Text style={styles.actionButtonText}>Settings</Text>
           </TouchableOpacity>
         </View>
 
         {/* Menu Items */}
-        <TouchableOpacity style={styles.menuItem} onPress={handleInbox}>
+        <TouchableOpacity 
+          style={styles.menuItem} 
+          onPress={handleInbox}
+          accessibilityRole="button"
+          accessibilityLabel="Inbox - View message"
+          accessibilityHint="Navigate to your message inbox"
+        >
           <View style={styles.menuItemContent}>
             <Text style={styles.menuItemTitle}>Inbox</Text>
             <Text style={styles.menuItemSubtitle}>View message</Text>
@@ -184,7 +218,13 @@ const ProfileScreen = ({ navigation }) => {
           <ArrowIcon />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={handleFAQ}>
+        <TouchableOpacity 
+          style={styles.menuItem} 
+          onPress={handleFAQ}
+          accessibilityRole="button"
+          accessibilityLabel="FAQ - View queries"
+          accessibilityHint="Navigate to frequently asked questions"
+        >
           <View style={styles.menuItemContent}>
             <Text style={styles.menuItemTitle}>FAQ</Text>
             <Text style={styles.menuItemSubtitle}>View queries</Text>
@@ -192,42 +232,78 @@ const ProfileScreen = ({ navigation }) => {
           <ArrowIcon />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={handleInvoices}>
+        <TouchableOpacity 
+          style={styles.menuItem} 
+          onPress={handleInvoices}
+          accessibilityRole="button"
+          accessibilityLabel="Invoices"
+          accessibilityHint="View your invoice history"
+        >
           <View style={styles.menuItemContent}>
             <Text style={styles.menuItemTitle}>Invoices</Text>
           </View>
           <ArrowIcon />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={handleLoveUs}>
+        <TouchableOpacity 
+          style={styles.menuItem} 
+          onPress={handleLoveUs}
+          accessibilityRole="button"
+          accessibilityLabel="Love Us rate Us"
+          accessibilityHint="Rate and review the app"
+        >
           <View style={styles.menuItemContent}>
             <Text style={styles.menuItemTitle}>Love Us rate Us</Text>
           </View>
           <ArrowIcon />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={handleInviteFriend}>
+        <TouchableOpacity 
+          style={styles.menuItem} 
+          onPress={handleInviteFriend}
+          accessibilityRole="button"
+          accessibilityLabel="Invite a friend"
+          accessibilityHint="Share the app with friends"
+        >
           <View style={styles.menuItemContent}>
             <Text style={styles.menuItemTitle}>Invite a friend</Text>
           </View>
           <ArrowIcon />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={handlePrivacyPolicy}>
+        <TouchableOpacity 
+          style={styles.menuItem} 
+          onPress={handlePrivacyPolicy}
+          accessibilityRole="button"
+          accessibilityLabel="Privacy policy"
+          accessibilityHint="Open privacy policy in browser"
+        >
           <View style={styles.menuItemContent}>
             <Text style={styles.menuItemTitle}>Privacy policy</Text>
           </View>
           <ArrowIcon />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={handleTermsConditions}>
+        <TouchableOpacity 
+          style={styles.menuItem} 
+          onPress={handleTermsConditions}
+          accessibilityRole="button"
+          accessibilityLabel="Terms and Conditions"
+          accessibilityHint="Open terms and conditions in browser"
+        >
           <View style={styles.menuItemContent}>
             <Text style={styles.menuItemTitle}>T&C</Text>
           </View>
           <ArrowIcon />
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.menuItem, styles.lastMenuItem]} onPress={handleLogout}>
+        <TouchableOpacity 
+          style={[styles.menuItem, styles.lastMenuItem]} 
+          onPress={handleLogout}
+          accessibilityRole="button"
+          accessibilityLabel="Logout"
+          accessibilityHint="Sign out of your account"
+        >
           <View style={styles.menuItemContent}>
             <Text style={styles.menuItemTitle}>Logout</Text>
           </View>
@@ -246,7 +322,7 @@ const ProfileScreen = ({ navigation }) => {
       />
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

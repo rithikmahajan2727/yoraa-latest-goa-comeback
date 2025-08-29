@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -12,25 +12,48 @@ import LockIcon from '../assets/icons/LockIcon';
 import EYXIcon from '../assets/icons/EYXIcon';
 import RightArrowIcon from '../assets/icons/RightArrowIcon';
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = React.memo(({ navigation }) => {
   const [activeTab, setActiveTab] = useState('My');
 
-  const categories = [
+  // Memoize categories data to prevent recreation on each render
+  const categories = useMemo(() => [
     { id: '1', name: 'Sale', isSale: true },
     { id: '2', name: 'Lifestyle', isSale: false },
     { id: '3', name: 'Running', isSale: false },
     { id: '4', name: 'Soccer', isSale: false },
     { id: '5', name: 'Tennis', isSale: false },
     { id: '6', name: 'Golf', isSale: false },
-  ];
+  ], []);
 
-  const tabs = ['My', 'Men', 'Women', 'Kids'];
+  // Memoize tabs array to prevent recreation
+  const tabs = useMemo(() => ['My', 'Men', 'Women', 'Kids'], []);
 
-  const renderCategoryItem = (item) => (
+  // Optimized navigation handlers with useCallback
+  const handleNavigateToSearch = useCallback(() => {
+    navigation?.navigate('SearchScreen', { previousScreen: 'Home' });
+  }, [navigation]);
+
+  const handleNavigateToFavourites = useCallback(() => {
+    navigation?.navigate('favourites');
+  }, [navigation]);
+
+  const handleNavigateToProduct = useCallback(() => {
+    navigation?.navigate('ProductViewOne');
+  }, [navigation]);
+
+  const handleTabPress = useCallback((tab) => {
+    setActiveTab(tab);
+  }, []);
+
+  // Memoized category renderer with performance optimization
+  const renderCategoryItem = useCallback((item) => (
     <TouchableOpacity 
       key={item.id} 
       style={styles.categoryItem}
-      onPress={() => navigation?.navigate('ProductViewOne')}
+      onPress={handleNavigateToProduct}
+      accessibilityRole="button"
+      accessibilityLabel={`${item.name} category${item.isSale ? ' - On Sale' : ''}`}
+      accessibilityHint="Navigate to product listing"
     >
       <View style={styles.categoryImageContainer}>
         <View style={styles.categoryImagePlaceholder} />
@@ -42,27 +65,38 @@ const HomeScreen = ({ navigation }) => {
       </View>
       <RightArrowIcon size={24} color="#292526" />
     </TouchableOpacity>
-  );
+  ), [handleNavigateToProduct]);
 
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.shopTitle}>Shop</Text>
+        <Text style={styles.shopTitle} accessibilityRole="header">Shop</Text>
         <View style={styles.headerIcons}>
           <TouchableOpacity 
             style={styles.iconButton}
-            onPress={() => navigation?.navigate('SearchScreen', { previousScreen: 'Home' })}
+            onPress={handleNavigateToSearch}
+            accessibilityRole="button"
+            accessibilityLabel="Search"
+            accessibilityHint="Navigate to search screen"
           >
             <GlobalSearchIcon size={24} color="#000000" />
           </TouchableOpacity>
           <TouchableOpacity 
             style={styles.iconButton}
-            onPress={() => navigation?.navigate('favourites')}
+            onPress={handleNavigateToFavourites}
+            accessibilityRole="button"
+            accessibilityLabel="Favourites"
+            accessibilityHint="Navigate to favourites"
           >
             <NewIcon size={24} color="#000000" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton}>
+          <TouchableOpacity 
+            style={styles.iconButton}
+            accessibilityRole="button"
+            accessibilityLabel="Lock"
+            accessibilityHint="Lock feature"
+          >
             <LockIcon size={24} color="#000000" />
           </TouchableOpacity>
         </View>
@@ -79,7 +113,10 @@ const HomeScreen = ({ navigation }) => {
                 activeTab === tab && styles.activeTab,
                 index === 0 && styles.firstTab
               ]}
-              onPress={() => setActiveTab(tab)}
+              onPress={() => handleTabPress(tab)}
+              accessibilityRole="tab"
+              accessibilityLabel={`${tab} tab`}
+              accessibilityState={{ selected: activeTab === tab }}
             >
               <Text style={[
                 styles.tabText,
@@ -98,7 +135,10 @@ const HomeScreen = ({ navigation }) => {
             styles.eyxTab,
             activeTab === 'E⚡X' && styles.activeTab
           ]}
-          onPress={() => setActiveTab('E⚡X')}
+          onPress={() => handleTabPress('E⚡X')}
+          accessibilityRole="tab"
+          accessibilityLabel="E-X exclusive tab"
+          accessibilityState={{ selected: activeTab === 'E⚡X' }}
         >
           <View style={styles.eyxTabContent}>
             <Text style={[
@@ -123,7 +163,7 @@ const HomeScreen = ({ navigation }) => {
       </ScrollView>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

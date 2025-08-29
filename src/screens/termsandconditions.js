@@ -25,7 +25,9 @@ const TermsAndConditions = ({ navigation }) => {
         Alert.alert('Error', 'Unable to open the link');
       }
     } catch (error) {
-      console.error('Error opening URL:', error);
+      if (__DEV__) {
+        console.error('Error opening URL:', error);
+      }
       Alert.alert('Error', 'Unable to open the link');
     }
   };

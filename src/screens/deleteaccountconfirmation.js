@@ -21,7 +21,9 @@ const DeleteAccountConfirmation = ({ navigation, route }) => {
     // Replace with your actual learn more URL
     const learnMoreUrl = 'https://yoraa.com/account-deletion-info';
     Linking.openURL(learnMoreUrl).catch(err => {
-      console.error('Error opening learn more link:', err);
+      if (__DEV__) {
+        console.error('Error opening learn more link:', err);
+      }
       Alert.alert('Error', 'Unable to open link');
     });
   };

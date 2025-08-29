@@ -111,7 +111,9 @@ const ProductDetailsMain = ({ navigation, route }) => {
         // dismissed
       }
     } catch (error) {
-      console.error('Error sharing:', error.message);
+      if (__DEV__) {
+        console.error('Error sharing:', error.message);
+      }
     }
   };
 

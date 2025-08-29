@@ -19,7 +19,9 @@ const DeleteAccount = ({ navigation }) => {
     // Replace with your actual terms and conditions URL
     const termsUrl = 'https://yoraa.com/terms-and-conditions';
     Linking.openURL(termsUrl).catch(err => {
-      console.error('Error opening terms and conditions:', err);
+      if (__DEV__) {
+        console.error('Error opening terms and conditions:', err);
+      }
       Alert.alert('Error', 'Unable to open terms and conditions');
     });
   };
