@@ -14,3 +14,20 @@ export { default as ForwardArrowIcon } from './ForwardArrowIcon';
 export { default as MicrophoneIcon } from './MicrophoneIcon';
 export { default as CameraIcon } from './CameraIcon';
 export { default as ScanBarcodeIcon } from './ScanBarcodeIcon';
+export { default as CaretDownIcon } from './CaretDownIcon';
+
+// Payment Icons
+export { 
+  VisaIcon,
+  MasterCardIcon,
+  AmexIcon,
+  PayPalIcon,
+  DiscoverIcon,
+  GooglePayIcon,
+  ApplePayIcon,
+  DinersIcon,
+  UnionPayIcon,
+  JCBIcon,
+  MetroIcon,
+  MaestroIcon
+} from './PaymentIcons';

@@ -5,21 +5,39 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   StatusBar,
   Alert,
   InteractionManager,
   LayoutAnimation,
+  Animated,
+  PanResponder,
 } from 'react-native';
 import BottomNavigationBar from '../components/bottomnavigationbar';
-import GlobalBackButton from '../components/GlobalBackButton';
 import BagQuantitySelectorModalOverlay from './bagquantityselectormodaloverlay';
 import BagSizeSelectorModalOverlay from './bagsizeselectormodaloverlay';
 import BagSizeSelectorSizeChart from './bagsizeselectorsizechart';
 import DeliveryOptionsStepTwoModal from './deliveryoptionsteptwo';
+import {
+  VisaIcon,
+  MasterCardIcon,
+  AmexIcon,
+  PayPalIcon,
+  DiscoverIcon,
+  GooglePayIcon,
+  ApplePayIcon,
+  DinersIcon,
+  UnionPayIcon,
+  JCBIcon,
+  MetroIcon,
+  MaestroIcon,
+  CaretDownIcon
+} from '../assets/icons';
 
-// BagItem Component - optimized with React.memo for better performance
-const BagItem = React.memo(({ item, index, onOpenQuantityModal, onOpenSizeModal, onRemoveItem }) => {
+// SwipeableBagItem Component - with swipe-to-delete functionality using PanResponder
+const SwipeableBagItem = React.memo(({ item, index, onOpenQuantityModal, onOpenSizeModal, onRemoveItem }) => {
+  const translateX = useMemo(() => new Animated.Value(0), []);
+  const deleteButtonWidth = 100; // Width of the delete button
+
   const handleQuantityPress = useCallback(() => {
     onOpenQuantityModal(item, index);
   }, [item, index, onOpenQuantityModal]);
@@ -29,51 +47,105 @@ const BagItem = React.memo(({ item, index, onOpenQuantityModal, onOpenSizeModal,
   }, [item, index, onOpenSizeModal]);
 
   const handleRemovePress = useCallback(() => {
-    onRemoveItem(item.id, index);
-  }, [item.id, index, onRemoveItem]);
+    // Animate back to original position first
+    Animated.timing(translateX, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      onRemoveItem(item.id, index);
+    });
+  }, [item.id, index, onRemoveItem, translateX]);
+
+  const panResponder = useMemo(() => PanResponder.create({
+    onMoveShouldSetPanResponder: (evt, gestureState) => {
+      // Only respond to horizontal swipes with minimal vertical movement
+      return Math.abs(gestureState.dx) > Math.abs(gestureState.dy) && Math.abs(gestureState.dx) > 10;
+    },
+    onPanResponderGrant: () => {
+      // Set the current value as offset so animation doesn't jump
+      translateX.setOffset(translateX._value);
+      translateX.setValue(0);
+    },
+    onPanResponderMove: (evt, gestureState) => {
+      // Only allow left swipe (negative values)
+      const newValue = Math.min(0, gestureState.dx);
+      translateX.setValue(newValue);
+    },
+    onPanResponderRelease: (evt, gestureState) => {
+      // Flatten the offset
+      translateX.flattenOffset();
+      
+      const { dx, vx } = gestureState;
+      
+      // Determine if we should reveal the delete button or snap back
+      const shouldReveal = dx < -50 || vx < -0.5;
+      
+      Animated.spring(translateX, {
+        toValue: shouldReveal ? -deleteButtonWidth : 0,
+        useNativeDriver: true,
+        tension: 100,
+        friction: 8,
+      }).start();
+    },
+  }), [translateX, deleteButtonWidth]);
 
   return (
-    <View style={styles.productContainer}>
-      <View style={styles.productRow}>
-        <View style={styles.productImageContainer}>
-          <View style={styles.productImagePlaceholder}>
-            {/* Add your product image here */}
-            <Text style={styles.imagePlaceholderText}>IMG</Text>
+    <View style={styles.swipeableContainer}>
+      {/* Delete Button (hidden behind the item) */}
+      <View style={styles.deleteButtonContainer}>
+        <TouchableOpacity 
+          style={styles.deleteButton}
+          onPress={handleRemovePress}
+          accessibilityLabel={`Delete ${item.name} from bag`}
+        >
+          <Text style={styles.deleteButtonText}>Delete</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Main Item Content */}
+      <Animated.View 
+        style={[
+          styles.productContainer,
+          styles.swipeableItem,
+          { transform: [{ translateX }] }
+        ]}
+        {...panResponder.panHandlers}
+      >
+        <View style={styles.productRow}>
+          <View style={styles.productImageContainer}>
+            <View style={styles.productImagePlaceholder}>
+              {/* Add your product image here */}
+              <Text style={styles.imagePlaceholderText}>IMG</Text>
+            </View>
+          </View>
+          <View style={styles.productDetailsContainer}>
+            <View style={styles.productInfo}>
+              <Text style={styles.productName}>{item.name}</Text>
+              <Text style={styles.productDescription}>{item.description}</Text>
+            </View>
           </View>
         </View>
-        <View style={styles.productDetailsContainer}>
-          <View style={styles.productInfo}>
-            <Text style={styles.productName}>{item.name}</Text>
-            <Text style={styles.productDescription}>{item.description}</Text>
-            <TouchableOpacity 
-              style={styles.removeButton}
-              onPress={handleRemovePress}
-              accessibilityLabel={`Remove ${item.name} from bag`}
-            >
-              <Text style={styles.removeButtonText}>Remove</Text>
-            </TouchableOpacity>
-          </View>
+        <View style={styles.productActionsContainer}>
+          <TouchableOpacity 
+            style={styles.quantityContainer}
+            onPress={handleQuantityPress}
+            accessibilityLabel={`Change quantity for ${item.name}`}
+          >
+            <Text style={styles.quantityText}>Qty {item.quantity}</Text>
+            <CaretDownIcon width={24} height={24} color="#000000" />
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.sizeContainer}
+            onPress={handleSizePress}
+            accessibilityLabel={`Change size for ${item.name}`}
+          >
+            <Text style={styles.sizeText}>{item.size}</Text>
+            <CaretDownIcon width={24} height={24} color="#000000" />
+          </TouchableOpacity>
+          <Text style={styles.price}>{item.price}</Text>
         </View>
-      </View>
-      <View style={styles.productActionsContainer}>
-        <TouchableOpacity 
-          style={styles.quantityContainer}
-          onPress={handleQuantityPress}
-          accessibilityLabel={`Change quantity for ${item.name}`}
-        >
-          <Text style={styles.quantityText}>Qty {item.quantity}</Text>
-          <Text style={styles.dropdownIcon}>▼</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          style={styles.sizeContainer}
-          onPress={handleSizePress}
-          accessibilityLabel={`Change size for ${item.name}`}
-        >
-          <Text style={styles.sizeText}>{item.size}</Text>
-          <Text style={styles.dropdownIcon}>▼</Text>
-        </TouchableOpacity>
-        <Text style={styles.price}>{item.price}</Text>
-      </View>
+      </Animated.View>
     </View>
   );
 });
@@ -87,11 +159,19 @@ const PromoCodeSection = React.memo(({ onApplyPromo }) => {
   return (
     <View style={styles.voucherContainer}>
       <View style={styles.voucherCard}>
-        <View style={styles.voucherContent}>
-          <Text style={styles.voucherTitle}>30% OFF</Text>
-          <Text style={styles.voucherCode}>COUPON30</Text>
-          <Text style={styles.voucherDate}>08/08/2023 - 12/08/2023</Text>
+        {/* Main voucher background with perforated edges */}
+        <View style={styles.voucherShape}>
+          {/* Voucher content */}
+          <View style={styles.voucherContent}>
+            <Text style={styles.voucherTitle}>30% OFF</Text>
+            <Text style={styles.voucherCode}>COUPON30</Text>
+            <Text style={styles.voucherDate}>08/08/2023 - 12/08/2023</Text>
+          </View>
+          
+          {/* Dashed divider line */}
           <View style={styles.voucherDivider} />
+          
+          {/* Apply button */}
           <TouchableOpacity 
             style={styles.voucherApplyButton}
             onPress={handleApplyPress}
@@ -100,9 +180,11 @@ const PromoCodeSection = React.memo(({ onApplyPromo }) => {
             <Text style={styles.voucherApplyText}>Apply</Text>
           </TouchableOpacity>
         </View>
-        {/* Voucher perforated edges - simplified for React Native */}
-        <View style={styles.voucherLeftEdge} />
-        <View style={styles.voucherRightEdge} />
+        
+        {/* Left semicircle cutout */}
+        <View style={styles.voucherLeftCutout} />
+        {/* Right semicircle cutout */}
+        <View style={styles.voucherRightCutout} />
       </View>
     </View>
   );
@@ -161,10 +243,6 @@ const BagScreen = ({ navigation, route }) => {
   const [selectedItem, setSelectedItem] = useState(null);
 
   // Memoized calculations for performance
-  const totalItems = useMemo(() => {
-    return bagItems.reduce((total, item) => total + item.quantity, 0);
-  }, [bagItems]);
-
   const subtotal = useMemo(() => {
     return bagItems.reduce((total, item) => {
       const price = parseFloat(item.price.replace('US$', ''));
@@ -301,7 +379,7 @@ const BagScreen = ({ navigation, route }) => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       
       {/* Header */}
@@ -328,16 +406,9 @@ const BagScreen = ({ navigation, route }) => {
           </View>
         ) : (
           <>
-            {/* Bag Items Count */}
-            <View style={styles.bagHeaderContainer}>
-              <Text style={styles.bagItemsCount}>
-                {totalItems} {totalItems === 1 ? 'item' : 'items'} in your bag
-              </Text>
-            </View>
-
-            {/* Bag Items - Optimized rendering */}
+            {/* Bag Items - Optimized rendering with swipe-to-delete */}
             {bagItems.map((item, index) => (
-              <BagItem 
+              <SwipeableBagItem 
                 key={`bag-item-${item.id}`}
                 item={item} 
                 index={index}
@@ -417,18 +488,18 @@ const BagScreen = ({ navigation, route }) => {
         {/* Payment Icons */}
         <View style={styles.paymentIconsContainer}>
           <View style={styles.paymentIconsRow}>
-            {/* Simplified representation of payment method icons */}
-            <View style={styles.paymentIcon} />
-            <View style={styles.paymentIcon} />
-            <View style={styles.paymentIcon} />
-            <View style={styles.paymentIcon} />
-            <View style={styles.paymentIcon} />
-            <View style={styles.paymentIcon} />
-            <View style={styles.paymentIcon} />
-            <View style={styles.paymentIcon} />
-            <View style={styles.paymentIcon} />
-            <View style={styles.paymentIcon} />
-            <View style={styles.paymentIcon} />
+            <VisaIcon width={24} height={14} />
+            <MasterCardIcon width={24} height={14} />
+            <AmexIcon width={24} height={14} />
+            <PayPalIcon width={24} height={14} />
+            <DiscoverIcon width={24} height={14} />
+            <GooglePayIcon width={24} height={14} />
+            <ApplePayIcon width={24} height={14} />
+            <DinersIcon width={24} height={14} />
+            <UnionPayIcon width={24} height={14} />
+            <JCBIcon width={24} height={14} />
+            <MetroIcon width={24} height={14} />
+            <MaestroIcon width={24} height={14} />
             <Text style={styles.codText}>COD</Text>
           </View>
         </View>
@@ -482,7 +553,7 @@ const BagScreen = ({ navigation, route }) => {
         navigation={navigation}
         selectedDeliveryOption="standard"
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -490,6 +561,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+    paddingTop: 0, // Remove default padding
   },
   header: {
     flexDirection: 'row',
@@ -499,10 +571,12 @@ const styles = StyleSheet.create({
     paddingTop: 54,
     paddingBottom: 12,
     backgroundColor: '#FFFFFF',
+    height: 94, // 54px top padding + 24px content + 16px bottom
   },
   backButton: {
     width: 68,
     alignItems: 'flex-start',
+    paddingVertical: 8,
   },
   backIcon: {
     fontSize: 24,
@@ -515,22 +589,25 @@ const styles = StyleSheet.create({
     color: '#000000',
     textAlign: 'center',
     letterSpacing: -0.4,
+    fontFamily: 'Montserrat',
   },
   headerRight: {
     width: 68,
   },
   scrollContainer: {
     flex: 1,
+    paddingTop: 0, // Remove padding to start right after header
   },
   productContainer: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 16, // Changed from 24 to 16 to match Figma
     paddingTop: 24,
-    gap: 16,
+    paddingBottom: 0,
   },
   productRow: {
     flexDirection: 'row',
     gap: 16,
     alignItems: 'flex-start',
+    marginBottom: 16, // Added spacing between product and actions
   },
   productImageContainer: {
     flex: 1,
@@ -548,7 +625,7 @@ const styles = StyleSheet.create({
   },
   productDetailsContainer: {
     flex: 1,
-    paddingTop: 4,
+    paddingTop: 0, // Removed top padding
   },
   productInfo: {
     gap: 3,
@@ -559,6 +636,7 @@ const styles = StyleSheet.create({
     color: '#000000',
     letterSpacing: -0.14,
     lineHeight: 16.8,
+    fontFamily: 'Montserrat',
   },
   productDescription: {
     fontSize: 14,
@@ -566,6 +644,7 @@ const styles = StyleSheet.create({
     color: '#767676',
     letterSpacing: -0.14,
     lineHeight: 16.8,
+    fontFamily: 'Montserrat',
   },
   removeButton: {
     marginTop: 8,
@@ -584,36 +663,35 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     height: 24,
-    marginBottom: 16,
+    paddingHorizontal: 16, // Match the product container padding
+    marginBottom: 0, // Remove bottom margin
   },
   quantityContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
+    gap: 4, // Match Figma gap
   },
   quantityText: {
     fontSize: 16,
     fontWeight: '500',
     color: '#000000',
     lineHeight: 19.2,
+    fontFamily: 'Montserrat',
   },
   dropdownButton: {
     padding: 4,
   },
-  dropdownIcon: {
-    fontSize: 12,
-    color: '#000000',
-  },
   sizeContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
+    gap: 4, // Match Figma gap
   },
   sizeText: {
     fontSize: 16,
     fontWeight: '500',
     color: '#000000',
     lineHeight: 19.2,
+    fontFamily: 'Montserrat',
   },
   price: {
     fontSize: 16,
@@ -621,17 +699,20 @@ const styles = StyleSheet.create({
     color: '#000000',
     textAlign: 'right',
     lineHeight: 19.2,
+    fontFamily: 'Montserrat',
   },
   deliveryContainer: {
     paddingHorizontal: 24,
     paddingVertical: 16,
     gap: 8,
+    marginTop: 16, // Add spacing after products
   },
   deliveryTitle: {
     fontSize: 16,
     fontWeight: '500',
     color: '#000000',
     lineHeight: 19.2,
+    fontFamily: 'Montserrat',
   },
   deliveryDate: {
     fontSize: 16,
@@ -639,6 +720,7 @@ const styles = StyleSheet.create({
     color: '#000000',
     letterSpacing: -0.4,
     lineHeight: 16,
+    fontFamily: 'Montserrat',
   },
   deliveryLocationContainer: {
     flexDirection: 'row',
@@ -651,6 +733,7 @@ const styles = StyleSheet.create({
     color: '#000000',
     letterSpacing: -0.4,
     lineHeight: 16,
+    fontFamily: 'Montserrat',
   },
   editLocationText: {
     fontSize: 16,
@@ -659,12 +742,14 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     letterSpacing: -0.4,
     lineHeight: 16,
+    fontFamily: 'Montserrat',
   },
   applyPointsContainer: {
     paddingHorizontal: 24,
     paddingVertical: 16,
     borderTopWidth: 1,
     borderTopColor: '#E4E4E4',
+    height: 64, // Fixed height to match Figma
   },
   pointsRow: {
     flexDirection: 'row',
@@ -688,6 +773,8 @@ const styles = StyleSheet.create({
   pointsIcon: {
     justifyContent: 'center',
     alignItems: 'center',
+    width: 17.371,
+    height: 26.974,
   },
   pointsIconText: {
     fontSize: 16,
@@ -699,118 +786,150 @@ const styles = StyleSheet.create({
     color: '#000000',
     letterSpacing: -0.4,
     lineHeight: 16,
+    fontFamily: 'Montserrat',
   },
   availablePoints: {
     fontSize: 10,
     fontWeight: '400',
     color: '#6C6C6C',
     lineHeight: 12,
-    marginLeft: 32,
+    marginLeft: 28, // Adjusted to match Figma positioning
+    fontFamily: 'Montserrat',
   },
   promoToggleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 24,
-    paddingVertical: 16,
+    paddingVertical: 12, // Reduced padding
     borderTopWidth: 1,
     borderTopColor: '#E4E4E4',
+    height: 64, // Fixed height to match Figma
   },
   promoToggleText: {
     fontSize: 16,
     fontWeight: '500',
     color: '#000000',
     letterSpacing: -0.4,
+    fontFamily: 'Montserrat',
   },
   promoToggleIcon: {
     fontSize: 14,
     color: '#000000',
+    width: 14,
+    height: 14,
   },
   // Replace the old promo code styles with voucher styles
   voucherContainer: {
     paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingVertical: 0,
+    marginTop: 0,
   },
   voucherCard: {
-    backgroundColor: '#F6F6F6',
-    borderRadius: 10,
     height: 137,
+    alignSelf: 'center',
+    position: 'relative',
+    marginHorizontal: 8,
+    maxWidth: 345,
+    width: '100%',
+  },
+  voucherShape: {
+    backgroundColor: '#F6F6F6',
+    height: 137,
+    borderRadius: 10,
     position: 'relative',
     overflow: 'hidden',
+    marginHorizontal: 10, // Space for the cutouts
   },
   voucherContent: {
-    padding: 24,
-    height: '100%',
-    justifyContent: 'space-between',
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    paddingHorizontal: 24,
+    paddingVertical: 16,
   },
   voucherTitle: {
     fontSize: 25,
     fontWeight: '600',
-    color: '#333333',
-    lineHeight: 30,
+    color: '#1F2937', // Neutral-800 equivalent
+    lineHeight: 25,
+    fontFamily: 'Montserrat',
+    position: 'absolute',
+    left: 24,
+    top: 14,
   },
   voucherCode: {
     fontSize: 12,
     fontWeight: '400',
-    color: '#6C6C6C',
+    color: '#6C6C6C', // Neutral-80
+    fontFamily: 'Montserrat',
     position: 'absolute',
     left: 24,
-    bottom: 49,
+    top: 49,
   },
   voucherDate: {
     fontSize: 10,
     fontWeight: '400',
-    color: '#6C6C6C',
+    color: '#6C6C6C', // Neutral-80
+    fontFamily: 'Montserrat',
     position: 'absolute',
+    right: 52,
     top: 16,
-    right: 24,
   },
   voucherDivider: {
     position: 'absolute',
-    left: 16,
-    right: 16,
-    top: '50%',
+    left: 0.5,
+    right: 0.5,
+    top: 84, // Half of 137 height + 16.5 offset
     height: 1,
-    borderWidth: 1,
-    borderColor: '#000000',
+    backgroundColor: 'transparent',
+    borderTopWidth: 1,
+    borderTopColor: '#000000',
     borderStyle: 'dashed',
-    marginTop: 16.5,
   },
   voucherApplyButton: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 28,
+    alignSelf: 'center',
     left: '50%',
     transform: [{ translateX: -23.5 }],
   },
   voucherApplyText: {
     fontSize: 16,
     fontWeight: '500',
-    color: '#7F7F7F',
+    color: '#7F7F7F', // Neutral-70
+    fontFamily: 'Montserrat',
+    textAlign: 'center',
   },
-  voucherLeftEdge: {
+  voucherLeftCutout: {
     position: 'absolute',
-    left: -8,
+    left: -10,
     top: '50%',
-    width: 16,
-    height: 16,
-    borderRadius: 8,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
     backgroundColor: '#FFFFFF',
-    marginTop: -8,
+    marginTop: -10,
+    zIndex: 10,
   },
-  voucherRightEdge: {
+  voucherRightCutout: {
     position: 'absolute',
-    right: -8,
+    right: -10,
     top: '50%',
-    width: 16,
-    height: 16,
-    borderRadius: 8,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
     backgroundColor: '#FFFFFF',
-    marginTop: -8,
+    marginTop: -10,
+    zIndex: 10,
   },
   priceBreakdownContainer: {
     paddingHorizontal: 24,
     paddingVertical: 16,
     gap: 10,
+    marginTop: 8, // Add spacing after voucher
   },
   priceRow: {
     flexDirection: 'row',
@@ -823,6 +942,7 @@ const styles = StyleSheet.create({
     color: '#767676',
     letterSpacing: -0.4,
     lineHeight: 16,
+    fontFamily: 'Montserrat',
   },
   priceValue: {
     fontSize: 16,
@@ -831,6 +951,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     letterSpacing: -0.32,
     lineHeight: 16,
+    fontFamily: 'Montserrat',
   },
   totalRow: {
     marginTop: 8,
@@ -840,6 +961,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#000000',
     lineHeight: 19.2,
+    fontFamily: 'Montserrat',
   },
   totalValue: {
     fontSize: 16,
@@ -847,21 +969,18 @@ const styles = StyleSheet.create({
     color: '#000000',
     textAlign: 'right',
     lineHeight: 19.2,
+    fontFamily: 'Montserrat',
   },
   paymentIconsContainer: {
     paddingHorizontal: 24,
     paddingVertical: 8,
+    marginBottom: 16, // Add spacing before checkout
   },
   paymentIconsRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-  },
-  paymentIcon: {
-    width: 24,
-    height: 14,
-    backgroundColor: '#EEEEEE',
-    borderRadius: 2,
+    flexWrap: 'wrap',
   },
   codText: {
     fontSize: 10,
@@ -869,14 +988,16 @@ const styles = StyleSheet.create({
     color: '#848688',
     letterSpacing: -0.25,
     marginLeft: 8,
+    fontFamily: 'Montserrat',
   },
   bottomSpacing: {
-    height: 120,
+    height: 80, // Reduced spacing
   },
   checkoutContainer: {
     paddingHorizontal: 22,
     paddingVertical: 16,
     backgroundColor: '#FFFFFF',
+    borderTopWidth: 0, // Remove any border
   },
   checkoutButton: {
     backgroundColor: '#000000',
@@ -885,12 +1006,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 51,
     alignItems: 'center',
     justifyContent: 'center',
+    width: 331, // Fixed width to match Figma
+    alignSelf: 'center',
   },
   checkoutButtonText: {
     fontSize: 16,
     fontWeight: '500',
     color: '#FFFFFF',
     lineHeight: 19.2,
+    fontFamily: 'Montserrat',
   },
   // Empty bag styles
   emptyBagContainer: {
@@ -906,6 +1030,7 @@ const styles = StyleSheet.create({
     color: '#000000',
     marginBottom: 8,
     textAlign: 'center',
+    fontFamily: 'Montserrat',
   },
   emptyBagSubtitle: {
     fontSize: 16,
@@ -913,6 +1038,7 @@ const styles = StyleSheet.create({
     color: '#767676',
     marginBottom: 32,
     textAlign: 'center',
+    fontFamily: 'Montserrat',
   },
   continueShoppingButton: {
     backgroundColor: '#000000',
@@ -927,19 +1053,40 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#FFFFFF',
     lineHeight: 19.2,
+    fontFamily: 'Montserrat',
   },
-  // Bag header styles
-  bagHeaderContainer: {
-    paddingHorizontal: 24,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#EEEEEE',
+  // Swipe-to-delete styles
+  swipeableContainer: {
+    position: 'relative',
+    overflow: 'hidden',
+    backgroundColor: '#FFFFFF',
   },
-  bagItemsCount: {
-    fontSize: 14,
+  deleteButtonContainer: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    bottom: 0,
+    width: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#D1A1A1', // Pink background as shown in Figma
+    zIndex: 1,
+  },
+  deleteButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    width: '100%',
+  },
+  deleteButtonText: {
+    fontSize: 16,
     fontWeight: '500',
-    color: '#767676',
-    textAlign: 'center',
+    color: '#CA3327', // Red text color as shown in Figma
+    fontFamily: 'Montserrat',
+  },
+  swipeableItem: {
+    backgroundColor: '#FFFFFF',
+    zIndex: 2,
   },
 });
 

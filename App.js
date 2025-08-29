@@ -15,12 +15,22 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { EnhancedLayout } from './src/components/layout';
+import SplashScreen from './src/components/SplashScreen';
 import { Colors } from './src/constants';
 import { FavoritesProvider } from './src/contexts/FavoritesContext';
 
 // Main App Component with Routing
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleSplashFinish = () => {
+    setIsLoading(false);
+  };
+
+  if (isLoading) {
+    return <SplashScreen onFinish={handleSplashFinish} />;
+  }
 
   return (
     <FavoritesProvider>

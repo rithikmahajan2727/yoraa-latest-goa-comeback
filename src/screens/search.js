@@ -372,53 +372,54 @@ const SearchScreen = ({ navigation, onClose, route }) => {
           { transform: [{ translateY: slideAnim }] }
         ]}
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <View style={styles.searchInputContainer}>
+        {/* Search Bar */}
+        <View style={styles.searchBar}>
+          <View style={styles.searchInputRow}>
             <View style={styles.searchIcon}>
-              <SearchIcon size={20} color="#9E9E9E" />
+              <SearchIcon size={24} color="#000000" />
             </View>
             
             <TextInput
               style={styles.searchInput}
               placeholder="Search Product"
-              placeholderTextColor="#9E9E9E"
+              placeholderTextColor="#767676"
               value={searchText}
               onChangeText={setSearchText}
               autoFocus={true}
               returnKeyType="search"
             />
             
-            <TouchableOpacity 
-              style={styles.micButton}
-              onPress={handleVoiceSearch}
-            >
-              <MicrophoneIcon 
-                color={isRecording ? Colors.primary : Colors.textSecondary} 
-                width={20}
-                height={20}
-              />
+            <TouchableOpacity style={styles.cancelButton} onPress={handleClose}>
+              <Text style={styles.cancelText}>Cancel</Text>
             </TouchableOpacity>
           </View>
           
-          <TouchableOpacity style={styles.cancelButton} onPress={handleClose}>
-            <Text style={styles.cancelText}>Cancel</Text>
+          {/* Microphone positioned absolutely like in Figma */}
+          <TouchableOpacity 
+            style={styles.micButtonAbsolute}
+            onPress={handleVoiceSearch}
+          >
+            <MicrophoneIcon 
+              color={isRecording ? Colors.primary : "#000000"} 
+              width={20}
+              height={20}
+            />
           </TouchableOpacity>
         </View>
 
         {/* Action Buttons - only show when no search results */}
         {!searchResults.length && (
-          <View style={styles.actionButtons}>
-            <TouchableOpacity style={styles.actionButton} onPress={handleCameraPress}>
-              <CameraIcon color={Colors.textPrimary} width={19} height={19} />
+          <>
+            <TouchableOpacity style={[styles.actionButton, styles.cameraButton]} onPress={handleCameraPress}>
+              <CameraIcon color="#000000" width={19} height={19} />
               <Text style={styles.actionButtonText}>Camera</Text>
             </TouchableOpacity>
             
-            <TouchableOpacity style={styles.actionButton} onPress={handleScanBarcode}>
-              <ScanBarcodeIcon color={Colors.textPrimary} width={20} height={20} />
-              <Text style={styles.actionButtonText}>Scan Barcode</Text>
+            <TouchableOpacity style={[styles.actionButton, styles.scanBarcodeButton]} onPress={handleScanBarcode}>
+              <ScanBarcodeIcon color="#000000" width={19} height={19} />
+              <Text style={styles.actionButtonText}> Scan Barcode</Text>
             </TouchableOpacity>
-          </View>
+          </>
         )}
 
         {/* Search Results */}
@@ -491,74 +492,109 @@ const SearchScreen = ({ navigation, onClose, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
   },
   searchContainer: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: '#FFFFFF',
   },
-  header: {
+  searchBar: {
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#CDCDCD',
+    position: 'relative',
+  },
+  searchInputRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.md,
-    paddingTop: Spacing.lg,
-  },
-  searchInputContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F7F7F7',
-    borderRadius: BorderRadius.xl,
-    paddingHorizontal: Spacing.lg,
-    marginRight: Spacing.lg,
-    height: 44,
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+    paddingTop: 54,
+    gap: 21,
   },
   searchIcon: {
-    marginRight: Spacing.md,
+    width: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   searchInput: {
     flex: 1,
-    fontSize: FontSizes.md,
-    color: Colors.textPrimary,
-    fontWeight: FontWeights.normal,
+    fontSize: 16,
+    fontFamily: 'Montserrat-Regular',
+    fontWeight: '400',
+    color: '#767676',
+    letterSpacing: -0.4,
+    lineHeight: 16,
+    minHeight: 16,
   },
   micButton: {
-    padding: Spacing.xs,
-    marginLeft: Spacing.sm,
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  micButtonAbsolute: {
+    position: 'absolute',
+    left: 262,
+    top: 56,
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cancelButton: {
-    paddingVertical: Spacing.sm,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
   },
   cancelText: {
-    fontSize: FontSizes.md,
-    color: Colors.textSecondary,
-    fontWeight: FontWeights.normal,
+    fontSize: 16,
+    fontFamily: 'Montserrat-Regular',
+    fontWeight: '400',
+    color: '#767676',
+    letterSpacing: -0.32,
+    lineHeight: 16,
   },
   actionButtons: {
     flexDirection: 'row',
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.lg,
-    gap: Spacing.md,
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    gap: 12,
+    position: 'absolute',
+    top: 98,
+    left: 0,
+    right: 0,
   },
   actionButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.background,
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.md,
-    borderRadius: BorderRadius.xxl,
-    borderWidth: 1.5,
-    borderColor: '#E8E8E8',
-    flex: 1,
-    height: 50,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: '#000000',
+    height: 36,
+    position: 'absolute',
+  },
+  cameraButton: {
+    width: 128,
+    left: 24,
+    top: 98,
+  },
+  scanBarcodeButton: {
+    width: 191,
+    left: 160,
+    top: 98,
   },
   actionButtonText: {
-    fontSize: FontSizes.md,
-    color: Colors.textPrimary,
-    fontWeight: FontWeights.normal,
-    marginLeft: Spacing.sm,
+    fontSize: 16,
+    fontFamily: 'Montserrat-Medium',
+    fontWeight: '500',
+    color: '#000000',
+    marginLeft: 8,
+    lineHeight: 19.2,
   },
   suggestionsList: {
     flex: 1,
